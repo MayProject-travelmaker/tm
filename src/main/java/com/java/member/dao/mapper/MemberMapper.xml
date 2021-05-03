@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="dto.memberDto">
+
+<resultMap type="com.java.member.dto.MemberDto" id="member_dto">
+	<result column = "id" property = "id"/>
+	<result column = "password" property = "password"/>
+	<result column = "gender" property = "gender"/>
+	<result column = "jumin1" property = "jumin1"/>
+	<result column = "jumin2" property = "jumin2"/>
+	<result column = "phone" property = "phone"/>
+	<result column = "email" property = "email"/>
+	<result column = "domain" property = "domain"/>
+	
+	<!-- db와 java 간의 컬럼이 다른 것들 -->
+	<result column = "member_level" property = "memberLevel"/>
+	<result column = "report_count" property = "reportCount"/>
+	<result column = "register_date" property = "registerDate"/>
+	<result column = "block_date" property = "blockDate"/>
+	<result column = "del_date" property = "delDate"/>
+	<result column = "user_key" property = "userKey"/>
+	
+</resultMap>
+	<insert id="member_insert" parameterType="com.java.member.dto.MemberDto">
+		insert into member
+		values(
+				
+				#{id},
+				#{password},
+				#{name},
+				#{gender},
+				#{jumin1},
+				#{jumin2},
+				#{phone},
+				#{email},
+				#{domain},
+				#{memberLevel},
+				#{reportCount},
+				sysdate,
+				#{blockDate},
+				#{delDate},
+				#{userKey}
+				
+				)
+	</insert>
+	
+	
+	<!-- 회원정보수정 버튼 누를때 정보 불러오기 -->
+	<select id="member_select" parameterType="String" resultMap="member_dto">
+		select id,password,name,jumin1,jumin2,gender,phone,email
+		from member
+		where id=#{id}
+	
+	</select>
+	
+	<!--	AJAX처리 
+	<select id="id_doublecheck" parameterType="String" resultType="int">
+		select count(*)
+		from member
+		where id=#{id}
+	</select> -->
+	
+	
+	<!-- 로그인  -->
+	<select id="member_login" parameterType="java.util.Map" resultType="int">
+		select member_level
+		from member
+		where id=#{id} and
+		password=#{password}
+	</select>
+	
+	<!-- 수정완료 버튼 변경되기로 한 항목들 추가로 적어주기-->
+	<update id="member_update" parameterType="com.java.member.dto.MemberDto">
+		update member
+		set 
+			password = #{password},
+			email = #{email},\
+			
+		where id = #{id}
+	</update>
+
+
+
+
+
+
+
+</mapper>
