@@ -1,5 +1,11 @@
 package com.java.board.service;
 
-public interface BoardService {
+import org.springframework.web.servlet.ModelAndView;
 
+public interface BoardService {
+	
+	
+	
+	
+	
 }

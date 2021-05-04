@@ -18,6 +18,7 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
+	
 	@RequestMapping(value="/member/register.do", method= RequestMethod.GET)
 	public ModelAndView memberRegister(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("member/register");
@@ -102,5 +103,40 @@ public class MemberController {
 		
 		return null;
 	}
+	
+	//-----------------------------------------------------------------추가--------------------------------------
+	//마이페이지
+	@RequestMapping(value="/member/mypage.do")
+	public ModelAndView memberMypage(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/mypage");
+		
+	}
+	
+	//회원관리
+	@RequestMapping(value="/member/management.do")
+	public ModelAndView memberManagement(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/management");
+		
+	}
+	//회원정보수정
+	@RequestMapping(value="/member/memberupdate.do")
+	public ModelAndView memberMemberUpdate(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/memberupdate");
+		
+	}
+	//회원탈퇴
+	@RequestMapping(value="/member/memberdelete.do")
+	public ModelAndView memberMemerDelete(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/memberdelete");
+		
+	}
+	
+	
+	
+
+	
+	
+	
+	
 	
 }
