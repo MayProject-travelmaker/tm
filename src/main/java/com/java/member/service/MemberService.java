@@ -1,5 +1,7 @@
 package com.java.member.service;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.servlet.ModelAndView;
 
 public interface MemberService {
@@ -22,4 +24,7 @@ public void memberRegisterOk(ModelAndView mav);
 	public void memberDelete(ModelAndView mav);
 	
 	public void memberDeleteOk(ModelAndView mav);
+
+	// 새로 추가함 
+	public void sendEmail(ModelAndView mav);
 }

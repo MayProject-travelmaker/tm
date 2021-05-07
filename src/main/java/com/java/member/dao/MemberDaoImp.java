@@ -29,12 +29,12 @@ public class MemberDaoImp implements MemberDao{
 	}
 
 	@Override
-	public String loginOk(String id, String password) {
+	public HashMap<String,Object> loginOk(String id, String password) {
 		Map<String, String> map = new HashMap<String,String>();
 		map.put("id", id);
 		map.put("password", password);
-
-		return sqlSessionTemplate.selectOne("member_login", map);
+		HashMap<String,Object> result = sqlSessionTemplate.selectOne("member_login", map);
+		return result;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.java.member.dao;
 
+import java.util.HashMap;
+
 import com.java.member.dto.MemberDto;
 
 public interface MemberDao {
@@ -7,7 +9,7 @@ public interface MemberDao {
 	
 	public int memberidCheck(String id);
 
-	public String loginOk(String id, String password);
+	public HashMap<String, Object> loginOk(String id, String password);
 
 	public MemberDto memberUpdate(String id);
 	

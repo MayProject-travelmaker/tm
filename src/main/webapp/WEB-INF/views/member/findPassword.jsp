@@ -27,14 +27,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
-        <script type="text/javascript">
-        	$(function(){
-        		var loginMessage = "<c:out value="${message}"/>";
-        		if(loginMessage != ""){
-        			alert(loginMessage)
-        		}
-        	})
-        </script>
+        
     </head>
     <body>
         <!-- Navigation-->
@@ -56,31 +49,39 @@
                 </div>
             </div>
         </nav>
-        
-        
         <br><br><br><br><br><br>
         <div align="center">
 		
 			<div class="container">
-		<div class="col-lg-4"></div>
-		<div class="col-lg-4">
+		<div class="col-lg-6"></div>
+		<div class="col-lg-6">
 			<div class="jumbotron" style="padding-top: 20px;">
-				<form method="post" action="loginOk.do">
-					<h3 style="text-align: center;">로그인</h3>
+				<form method="post" action="findPasswordOk.jsp">
+				<h3 style="text-align: center;">비밀번호 찾기</h3>
+				<div align ="left">아이디</div>
 					<div class="form-group">
-					<div align ="left">아이디</div>
-						<input type="text" class="form-control" placeholder="ID" name="id" maxlength="20">
-					</div>
-					<div class="form-group">
-					<div align ="left">비밀번호</div>
-						<input type="password" class="form-control" placeholder="비밀번호" name="password" maxlength="20">
-					</div>
-					<input type="submit" class="btn btn-primary form-control" value="로그인">
-					<div align ="left">
-					&nbsp;<a href="findId.do">아이디 찾기</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="findPassword.do">비밀번호 찾기</a>
+						<input type="text" class="form-control" placeholder="아이디" name="id" maxlength="20">
 					</div>
 				</form>
+				<div align ="left">e-mail</div>
+				<form method="post" action="loginOk.jsp" class ="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="이메일 주소" name="id" maxlength="20">
+                            <label>&nbsp;@&nbsp;</label>
+                            <div class="checkbox">
+                            <select id="emailaddress" name="emailaddress" size="1"> 
+								<option value="@naver.com" selected>naver.com</option>
+								<option value="@daum.net">daum.net</option>
+								<!-- 우선설정됨 -->
+								<option value="@gmail.com" >gmail.com</option>
+							</select>
+							</div>
+							&nbsp;&nbsp;
+                            <button class="btn btn-primary" onclick="registerCheckFuntion();" type="button">인증</button>
+                        </div>
+                </form>
+                <br>
+                <input type="submit" class="btn btn-primary form-control" value="확인">
 			</div>
 		</div>
 		

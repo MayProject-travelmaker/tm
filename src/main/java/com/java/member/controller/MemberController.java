@@ -1,12 +1,17 @@
 package com.java.member.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.java.member.dto.MemberDto;
@@ -18,13 +23,26 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	
+	// 아이디 찾기
+	@RequestMapping(value="/member/findId.do", method= RequestMethod.GET)
+	public ModelAndView memberFindId(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/findId");
+		
+	}
+	// 비밀번호 찾기
+	@RequestMapping(value="/member/findPassword.do", method= RequestMethod.GET)
+	public ModelAndView memberFindPassword(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/findPassword");
+		
+	}
+	// 회원가입
 	@RequestMapping(value="/member/register.do", method= RequestMethod.GET)
 	public ModelAndView memberRegister(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("member/register");
 		
 	}
 	
+	// 회원 가입 완료
 	@RequestMapping(value="/member/registerOk.do", method=RequestMethod.POST) 
 	public ModelAndView memberRegisterOk(HttpServletRequest request, HttpServletResponse response , MemberDto memberDto) {
 		
@@ -35,26 +53,44 @@ public class MemberController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/member/idCheck.do", method=RequestMethod.GET) 
-	public ModelAndView memberIdCheckOk(HttpServletRequest request, HttpServletResponse response){
-		
+	// 아이디 중복 확인
+	@ResponseBody
+	@RequestMapping(value="/member/idCheck.do", method=RequestMethod.POST) 
+	public String memberIdCheckOk(@RequestParam("id")String id, HttpServletRequest request, HttpServletResponse response){
 		ModelAndView mav = new ModelAndView();
-		
-		
-		mav.addObject("request",request);
+		mav.addObject("id",id);
 		
 		memberService.memberidCheck(mav);
+		Map<String,Object> map = mav.getModelMap();
+		String check = Integer.toString((int)map.get("check"));
+		return check;
+	}
+	
+	// 이메일 인증 발송
+	@ResponseBody
+	@RequestMapping(value="/member/sendEmail.do", method=RequestMethod.POST)
+	public String sendEmail(@RequestParam("email")String email, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("email", email);
 		
-		return mav;
+		memberService.sendEmail(mav);
+		
+		Map<String, Object> map = mav.getModelMap();
+		String randomNumber = Integer.toString((int)map.get("randomNumber"));
+		return randomNumber;
 	}
 	
 	@RequestMapping(value="/member/update.do", method=RequestMethod.GET)
 	public ModelAndView memberUpdate(HttpServletRequest request, HttpServletResponse response) {
 		
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("request", request);
-		memberService.memberUpdate(mav);
-		return mav;
+		/*
+		 * ModelAndView mav = new ModelAndView(); mav.addObject("request", request);
+		 * memberService.memberUpdate(mav);
+		 * 
+		 * return mav;
+		 */
+		//업데이트 화면 확인
+		return new ModelAndView("member/update");
 	}
 	
 	@RequestMapping(value="/member/updateOk.do", method=RequestMethod.POST)
@@ -65,17 +101,20 @@ public class MemberController {
 		return mav;
 	}
 	
+	// 로그인
 	@RequestMapping(value="/member/login.do")
 	public ModelAndView memberLogin(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("member/login");
 		
 	}
 	
-	@RequestMapping(value="/member/loginOk.do")
+	// 로그인 완료
+	@RequestMapping(value="/member/loginOk.do", method=RequestMethod.POST)
 	public ModelAndView memberLoginOk(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request",request);
 		memberService.memberloginOk(mav);
+		
 		return mav;
 	}
 	
@@ -130,13 +169,6 @@ public class MemberController {
 		return new ModelAndView("member/memberdelete");
 		
 	}
-	
-	
-	
-
-	
-	
-	
 	
 	
 }
