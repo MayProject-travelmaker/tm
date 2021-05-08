@@ -39,5 +39,12 @@ public class BoardController {
 			
 	}
 	
+	//나의여행일기게시판으로 넘어가기
+	@RequestMapping(value="/board/mydiary.do", method= RequestMethod.GET)
+	public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("board/mydiary");
+		
+	}
+	
 	
 }

@@ -568,14 +568,21 @@ pre code {
 }
 @media (min-width: 1200px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1140px;
+    max-width: 1280px;
   }
 }
+
 .row {
   display: flex;
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+}
+.diaryrow {
+	display: flex;
+	flex-wrap: wrap;  
+	margin-left: 22%;
+	margin-right: 22%;
 }
 
 .no-gutters {
@@ -593,10 +600,10 @@ pre code {
 .col-lg-auto, .col-lg-12, .col-lg-11, .col-lg-10, .col-lg-9, .col-lg-8, .col-lg-7, .col-lg-6, .col-lg-5, .col-lg-4, .col-lg-3, .col-lg-2, .col-lg-1, .col-md,
 .col-md-auto, .col-md-12, .col-md-11, .col-md-10, .col-md-9, .col-md-8, .col-md-7, .col-md-6, .col-md-5, .col-md-4, .col-md-3, .col-md-2, .col-md-1, .col-sm,
 .col-sm-auto, .col-sm-12, .col-sm-11, .col-sm-10, .col-sm-9, .col-sm-8, .col-sm-7, .col-sm-6, .col-sm-5, .col-sm-4, .col-sm-3, .col-sm-2, .col-sm-1, .col,
-.col-auto, .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 {
+.col-auto, .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1, .right {
   position: relative;
   width: 100%;
-  padding-right: 50px;
+  padding-right: 13px;
   padding-left: 15px;
 }
 
@@ -1283,11 +1290,11 @@ pre code {
 
   .col-lg-3 {
     flex: 0 0 25%;
-    max-width: 25%;
+    max-width: 20%;
   }
 
   .col-lg-4 {
-    flex: 0 0 33.3333333333%;
+    flex: 0 0 50.3333333333%;
     max-width: 33.3333333333%;
   }
 
@@ -1312,8 +1319,8 @@ pre code {
   }
 
   .col-lg-9 {
-    flex: 0 0 75%;
-    max-width: 75%;
+    flex: 0 0 61%;
+    max-width: 61%;
   }
 
   .col-lg-10 {
@@ -5033,11 +5040,11 @@ a.badge-dark:focus, a.badge-dark.focus {
 	font-size: 26px;
 	margin-top: 5px;
 	margin-left: 10px;
-	margin-bottom: 7px;
+	margin-bottom: 18px;
 }
 .table-body {	
 	margin-bottom:70px;
-	margin-right: 36px;
+	margin-right: 0px;
 	background-color: white;
 	border: 1px solid rgba(0, 0, 0, 0.125);
 	border-radius: 5px;
@@ -7628,7 +7635,8 @@ button.bg-dark:focus {
 
 .mt-4,
 .my-4 {
-  width:750px;	
+  width:750px;
+  padding-left: 20px;	
   padding-top: 50px;	
   font-size: 30px;
   margin-top: 1.5rem !important;
@@ -10036,4 +10044,31 @@ h3 {
     border-color: #dee2e6;
   }
   
+  
+}
+.right {
+	padding-bottom : 50px;
+	padding-left: 27px;
+	padding-top: 100px;
+  }
+ 
+ @media (min-width: 992px){
+	 .right {
+	 	flex: 0 0 150%;
+	 	max-width: 120%;
+	 }
+ }
+ 
+hr {
+	margin-top: 10%;
+	margin-left: 22%;
+	margin-right: 22%;
+	margin-bottom: 30px;
+	border: solid 1px #96ADD1;
+}
+
+
+.my-id {
+	margin-top: 6%;
+	margin-left: 29%;
 }
