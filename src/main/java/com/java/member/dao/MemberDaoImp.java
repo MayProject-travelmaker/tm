@@ -55,4 +55,13 @@ public class MemberDaoImp implements MemberDao{
 		return 0;
 	}
 
+	// 아이디 찾기
+	@Override
+	public String memberFindId(String name, String phone) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("name", name);
+		map.put("phone", phone);
+		return sqlSessionTemplate.selectOne("member_findId", map);
+	}
+
 }

@@ -26,8 +26,16 @@ public class MemberController {
 	// 아이디 찾기
 	@RequestMapping(value="/member/findId.do", method= RequestMethod.GET)
 	public ModelAndView memberFindId(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("member/findId");
+		return new ModelAndView("member/findId");	
+	}
+	// 아이디 찾기 완료
+	@RequestMapping(value="/member/findIdOk.do", method= RequestMethod.POST)
+	public ModelAndView memberFindIdOk(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request",request);
+		memberService.memberFindId(mav);
 		
+		return mav;	
 	}
 	// 비밀번호 찾기
 	@RequestMapping(value="/member/findPassword.do", method= RequestMethod.GET)
@@ -123,7 +131,7 @@ public class MemberController {
 		return new ModelAndView("member/main");
 		
 	}
-	
+	// 로그아웃
 	@RequestMapping(value="/member/logout.do")
 	public ModelAndView memberLogOut(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("member/logout");

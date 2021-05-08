@@ -177,6 +177,26 @@ public class MemberServiceImp implements MemberService{
 		// TODO Auto-generated method stub
 		
 	}
+	// 아이디 찾기
+	@Override
+	public void memberFindId(ModelAndView mav) {
+		Map<String,Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		
+		String id = memberDao.memberFindId(name, phone);
+		
+		if(id == null) {
+			// 아이디 찾기 실패
+			mav.addObject("message","일치하는 회원정보가 없습니다.");
+			mav.setViewName("/member/findId");
+		} else {
+			// 아이디 찾기 성공
+			mav.addObject("id", id);
+			mav.setViewName("/member/findIdOk");
+		}
+	}
 
 	
 }

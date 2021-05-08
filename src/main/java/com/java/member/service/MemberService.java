@@ -27,4 +27,6 @@ public void memberRegisterOk(ModelAndView mav);
 
 	// 새로 추가함 
 	public void sendEmail(ModelAndView mav);
+
+	public void memberFindId(ModelAndView mav);
 }

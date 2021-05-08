@@ -16,4 +16,6 @@ public interface MemberDao {
 	public int memberUpdateOk(MemberDto memberDto);
 	
 	public int memberDelete(String id, String password);
+
+	public String memberFindId(String name, String phone);
 }

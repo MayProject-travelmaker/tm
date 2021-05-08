@@ -74,6 +74,14 @@
 			
 		where id = #{id}
 	</update>
+	
+	<!-- 아이디 찾기 -->
+	<select id="member_findId" parameterType="java.util.Map" resultType="String">
+		select id from member where name=#{name} and phone=#{phone}
+	</select>
+	
+	
+	
 
 
 
