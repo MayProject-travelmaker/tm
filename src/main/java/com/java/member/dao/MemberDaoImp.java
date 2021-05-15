@@ -37,22 +37,22 @@ public class MemberDaoImp implements MemberDao{
 		return result;
 	}
 
+	// 회원정보 수정 화면
 	@Override
 	public MemberDto memberUpdate(String id) {
-		
 		return sqlSessionTemplate.selectOne("member_select",id);
 	}
 	
+	// 회원정보 수정 완료
 	@Override
 	public int memberUpdateOk(MemberDto memberDto) {
 		return sqlSessionTemplate.update("member_update",memberDto);
 	}
 	
-	
+	// 회원탈퇴
 	@Override
 	public int memberDelete(String id, String password) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSessionTemplate.update("member_delete", id);
 	}
 
 	// 아이디 찾기
@@ -62,6 +62,34 @@ public class MemberDaoImp implements MemberDao{
 		map.put("name", name);
 		map.put("phone", phone);
 		return sqlSessionTemplate.selectOne("member_findId", map);
+	}
+	// 비밀번호 찾기 - 아이디, 이메일 찾기
+	@Override
+	public int checkIdAndEmail(String id, String email) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("id", id);
+		map.put("email", email);
+		return sqlSessionTemplate.selectOne("checkIdandEmail", map);
+	}
+
+	// 비밀번호 찾기 - 인증키 저장
+	@Override
+	public int updateAuthKey(String id, String email, String authKey) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("id", id);
+		map.put("email", email);
+		map.put("authKey", authKey);
+		return sqlSessionTemplate.update("updateAuthkey", map);
+	}
+	// 비밀번호 찾기 - 비밀번호 변경
+	@Override
+	public int changePassword(String id, String password, String authKey) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("id", id);
+		map.put("password", password);
+		map.put("authKey", authKey);
+		
+		return sqlSessionTemplate.update("changePassword", map);
 	}
 
 }

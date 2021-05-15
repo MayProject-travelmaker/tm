@@ -1,13 +1,17 @@
 package com.java.member.service;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +21,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.java.member.dao.MemberDao;
 import com.java.member.dto.MemberDto;
+import com.sun.mail.iap.Response;
 
 @Component
 public class MemberServiceImp implements MemberService{
@@ -139,31 +145,64 @@ public class MemberServiceImp implements MemberService{
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 회원정보 확인
 	@Override
-	public void memberUpdateOk(ModelAndView mav) {
-		// TODO Auto-generated method stub
-		Map<String, Object> map = mav.getModelMap();
-		MemberDto memberDto = (MemberDto)map.get("memberDto");
+	public void memberProfileOk(ModelAndView mav) {
+		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
+		Map<String,Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("id");
+		String password = request.getParameter("password");
 		
-		int check =  memberDao.memberUpdateOk(memberDto);
-		mav.addObject("check",check);
-		mav.setViewName("member/updateOk");
+		Map<String, Object> result = memberDao.loginOk(id, password);
+		if(result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD"))) {
+			// 회원정보 일치
+			mav.setViewName("redirect:memberupdate.do"); // 회원정보 출력 화면으로 이동
+		} else {
+			// 회원정보 불일치
+			mav.addObject("message","비밀번호가 일치하지 않습니다.");
+			mav.setViewName("member/memberProfile");
+		}
 		
 	}
-
+	// 회원정보 수정 화면
 	@Override
 	public void memberUpdate(ModelAndView mav) {
-		
 		Map<String, Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
 		HttpSession session = request.getSession();
 		String id = (String)session.getAttribute("id");
 		MemberDto memberDto = memberDao.memberUpdate(id);
 		
-		mav.addObject("memberDto",memberDto);
-		mav.setViewName("member/update");
+		mav.addObject("member",memberDto);
+		mav.setViewName("member/memberupdate");
 		
+	}
+	// 회원정보 수정 완료
+	@Override
+	public void memberUpdateOk(ModelAndView mav) {
+		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
+		Map<String, Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto)map.get("memberDto");
+		String id = (String) session.getAttribute("id"); 					// 아이디
+		String password = cryptPassword.encode(memberDto.getPassword());	// 비밀번호
+		
+		memberDto.setId(id);
+		memberDto.setPassword(password);
+
+		int check =  memberDao.memberUpdateOk(memberDto);
+		mav.addObject("check",check);
+		if(check > 0) {
+			mav.addObject("message","회원정보 수정이 완료되었습니다.");
+		} else {
+			mav.addObject("message","회원정보 수정이 실패했습니다.");
+		}
+		mav.addObject("member",memberDto);
+		mav.setViewName("member/memberupdate");
 	}
 	
 	@Override
@@ -172,10 +211,50 @@ public class MemberServiceImp implements MemberService{
 		
 	}
 
+	// 회원탈퇴
 	@Override
-	public void memberDeleteOk(ModelAndView mav) {
-		// TODO Auto-generated method stub
-		
+	public int memberDeleteOk(ModelAndView mav) {
+		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
+		Map<String,Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		HttpServletResponse response = (HttpServletResponse) map.get("response");
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("id");
+		String password = request.getParameter("password");
+		System.out.println("session id: "+id);
+		HashMap<String,Object> result = memberDao.loginOk(id, password);
+		int check = 0;
+		if(result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD"))) {
+			// 회원정보 일치
+			System.out.println("성공");
+			check = memberDao.memberDelete(id, password); // 회원등급(탈퇴회원) 변경
+			if(check > 0) {
+				mav.addObject("message", "회원탈퇴가 완료되었습니다.");
+//				mav.setViewName("member/memberdelete");
+////
+//				response.setContentType("text/html; charset=UTF-8");
+//				PrintWriter out = null;
+//				try {
+//					out = response.getWriter();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//				out.println("<script>alert('회원탈퇴가 완료되었습니다.'); </script>");
+//				out.flush();
+				 
+//				mav.setViewName("redirect:/");
+			} else {
+				System.out.println("실패");
+				mav.addObject("message", "회원탈퇴가 실패했습니다.");
+				mav.setViewName("member/memberdelete");
+			}
+		} else {
+			// 회원정보 불일치
+			System.out.println("실패2");
+			mav.addObject("message","비밀번호가 일치하지 않습니다.");
+			mav.setViewName("member/memberdelete");
+		}
+		return check;
 	}
 	// 아이디 찾기
 	@Override
@@ -197,6 +276,81 @@ public class MemberServiceImp implements MemberService{
 			mav.setViewName("/member/findIdOk");
 		}
 	}
+	// 비밀번호 찾기 - 아이디, 이메일 존재 확인
+	@Override
+	public int checkIdAndEmail(ModelAndView mav) {
+		Map<String,Object> map = mav.getModel();
+		String id = (String) map.get("id");
+		String email = (String) map.get("email");
+		
+		
+		int check = memberDao.checkIdAndEmail(id, email);
+		return check;
+	}
+	// 비밀번호 찾기 - 인증 이메일 전송하기
+	@Override
+	public void sendEmailToFindPwd(ModelAndView mav) {
+		Map<String,Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		String id = request.getParameter("id");
+		String email = request.getParameter("email");
+		String domain = request.getParameter("domain");
+		String from = "projeun2@gmail.com";
+		String to = email+domain;
+		System.out.println("MAIL: "+to);
+		
+		// 임의의 인증키 생성 & DB에 인증키 업데이트하기
+		Random random = new Random();
+		int authKey = random.nextInt(4589362) + 49311;
+		
+		int check = memberDao.updateAuthKey(id,email,Integer.toString(authKey));
+		
+		// 인증이메일 전송하기
+		String subject = "[TRAVLE MAKER] 비밀번호 찾기 인증 이메일 입니다.";
+		String content = "<h4>[비밀번호 찾기 이메일 인증]</h4><br>"+
+				"<a href='http://localhost/project/member/changePassword.do?id="+id+
+				"&authKey="+authKey+
+				"' target='_blank'>이메일 인증 확인</a>";
+		System.out.println("MemberServiceImple email: "+email);
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper messageHelper;
+		try {
+			messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setFrom(from); // 보내는 사람 이메일
+			messageHelper.setTo(to); // 받는 사람 이메일
+			messageHelper.setSubject(subject); // 메일 제목
+			messageHelper.setText(content,true);
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		mav.setViewName("/member/login");
+	}
+	// 비밀번호 찾기 - 비밀번호 변경하기
+	@Override
+	public void changePassword(ModelAndView mav) {
+		Map<String,Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		
+		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
+		String id = request.getParameter("id");
+		String password = cryptPassword.encode(request.getParameter("password"));
+		String authKey = request.getParameter("authKey");
+		
+		int check = memberDao.changePassword(id,password,authKey);
+		mav.addObject("check",check);
+		if(check == 1) {
+			// 비밀번호 변경 성공
+			memberDao.updateAuthKey(id, password, "Y"); // 비밀번호 인증키 변경
+			mav.setViewName("member/changePasswordOk");
+		} else {
+			// 비밀번호 변경 실패
+			mav.setViewName("member/changePasswordOk");
+		}
+	}
+	
 
 	
 }

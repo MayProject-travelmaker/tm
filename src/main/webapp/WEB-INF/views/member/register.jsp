@@ -65,8 +65,7 @@
 							<span>아이디</span>
 							<div class="form-inline">
 								<div class="form-group">
-									<input type="text" class="form-control" placeholder="ID" id="id" name="id" maxlength="20">&nbsp;&nbsp;
-									<button class="btn btn-primary" onclick="registerCheckFuntion();" type="button">중복체크</button>
+									<input type="text" class="form-control" placeholder="ID" id="id" name="id" maxlength="20">
 								</div>
 							</div>
 							<span id="id_check"></span>
@@ -84,8 +83,8 @@
 						</div>
 						<div align="left">
 							<span>이름</span> <input type="text" class="form-control"
-								placeholder="이름" id="name" name="name" maxlength="20"> <span
-								id="name_check"></span>
+								placeholder="이름" id="name" name="name" maxlength="20" >
+								<span id="name_check"></span>
 						</div>
 						<div align="left">
 							<span>주민등록번호</span>

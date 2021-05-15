@@ -26,7 +26,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
-        <script src="${root}/resources/js/findIdPwd.js"></script>
+        <script src="${root}/resources/js/findId.js"></script>
         
         <!-- 아이디 찾기 실패 시, 메시지 출력 -->
         <script type="text/javascript">

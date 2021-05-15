@@ -9,22 +9,8 @@ function findId(){
 	}
 	return true;
 }
-function findPwd(){
-	
-}
+
 $(function() {
-	// 아이디 유효성 검사
-	$('#id').blur(function() {
-		idxId = false
-		var getIdCheck = /^[a-zA-Z0-9]{4,12}$/;
-		if ($("#id").val() == '' || !getIdCheck.test($("#id").val())) {
-			$('#id_check').text("영문자,숫자 4~12자리의 아이디를 입력해주세요.");
-			$('#id_check').css('color','red');
-		} else{
-			$('#id_check').text("");
-			idxId = true;
-		}
-	});
 	// 이름 유효성 검사
 	$("#name").blur(function() {
 		idxName = false;

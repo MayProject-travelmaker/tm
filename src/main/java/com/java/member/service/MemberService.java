@@ -23,10 +23,18 @@ public void memberRegisterOk(ModelAndView mav);
 	
 	public void memberDelete(ModelAndView mav);
 	
-	public void memberDeleteOk(ModelAndView mav);
+	public int memberDeleteOk(ModelAndView mav);
 
 	// 새로 추가함 
 	public void sendEmail(ModelAndView mav);
 
 	public void memberFindId(ModelAndView mav);
+
+	public int checkIdAndEmail(ModelAndView mav);
+
+	public void sendEmailToFindPwd(ModelAndView mav);
+
+	public void changePassword(ModelAndView mav);
+
+	public void memberProfileOk(ModelAndView mav);
 }

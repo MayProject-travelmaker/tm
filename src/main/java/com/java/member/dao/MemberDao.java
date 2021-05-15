@@ -18,4 +18,10 @@ public interface MemberDao {
 	public int memberDelete(String id, String password);
 
 	public String memberFindId(String name, String phone);
+
+	public int checkIdAndEmail(String id, String email);
+
+	public int updateAuthKey(String id, String email, String authKey);
+
+	public int changePassword(String id, String password, String authKey);
 }

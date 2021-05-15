@@ -43,6 +43,36 @@ public class MemberController {
 		return new ModelAndView("member/findPassword");
 		
 	}
+	// 비밀번호 찾기 - 아이디, 이메일 존재하는 회원 확인 할 때
+	@ResponseBody
+	@RequestMapping(value="/member/checkIdAndEmail.do", method=RequestMethod.POST)
+	public String checkIdAndEmail(@RequestParam("id")String id, @RequestParam("email")String email) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("id", id);
+		mav.addObject("email",email);
+		
+		String check = Integer.toString(memberService.checkIdAndEmail(mav));
+		return check;
+	}
+	// 비밀번호 찾기 - 이메일 인증 전송
+	@RequestMapping(value="/member/findPasswordSendEmail.do", method=RequestMethod.POST)
+	public ModelAndView findPasswordSendEmail(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request",request);
+		memberService.sendEmailToFindPwd(mav);
+		return mav;
+	}
+	@RequestMapping(value="/member/changePassword.do", method=RequestMethod.GET)
+	public ModelAndView memberChangePassword(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("member/changePassword");
+	}
+	@RequestMapping(value="/member/changePwd.do", method=RequestMethod.POST)
+	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		memberService.changePassword(mav);
+		return mav;
+	}
 	// 회원가입
 	@RequestMapping(value="/member/register.do", method= RequestMethod.GET)
 	public ModelAndView memberRegister(HttpServletRequest request, HttpServletResponse response) {
@@ -88,23 +118,40 @@ public class MemberController {
 		return randomNumber;
 	}
 	
-	@RequestMapping(value="/member/update.do", method=RequestMethod.GET)
-	public ModelAndView memberUpdate(HttpServletRequest request, HttpServletResponse response) {
-		
-		/*
-		 * ModelAndView mav = new ModelAndView(); mav.addObject("request", request);
-		 * memberService.memberUpdate(mav);
-		 * 
-		 * return mav;
-		 */
-		//업데이트 화면 확인
-		return new ModelAndView("member/update");
+	// 회원정보
+	@RequestMapping(value="/member/memberProfile.do", method=RequestMethod.GET)
+	public ModelAndView memberProfile(HttpServletRequest request, HttpServletResponse response) {
+
+		return new ModelAndView("member/memberProfile");
+	}
+	// 회원정보 확인
+	@RequestMapping(value="/member/memberProfileOk.do", method=RequestMethod.POST)
+	public ModelAndView memberProfileOk(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request",request);
+		memberService.memberProfileOk(mav);
+		return mav;
 	}
 	
+	// 회원정보 수정화면
+	@RequestMapping(value="/member/memberupdate.do", method=RequestMethod.GET)
+	public ModelAndView memberUpdate(HttpServletRequest request, HttpServletResponse response) {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		memberService.memberUpdate(mav);
+
+		return mav;
+
+		// 업데이트 화면 확인
+	}
+	// 회원정보 수정 완료
 	@RequestMapping(value="/member/updateOk.do", method=RequestMethod.POST)
 	public ModelAndView memberUpdateOk(HttpServletRequest request, HttpServletResponse response, MemberDto memberDto) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("MemberDto",memberDto);
+		mav.addObject("request",request);
+		mav.addObject("response", response);
+		mav.addObject("memberDto",memberDto);
 		memberService.memberUpdateOk(mav);
 		return mav;
 	}
@@ -136,19 +183,27 @@ public class MemberController {
 	public ModelAndView memberLogOut(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("member/logout");
 	}
-	
+	// 회원 탈퇴
 	@RequestMapping(value="/member/delete.do")
 	public ModelAndView memberDelete(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("member/delete");
 	}
 	
+	// 회원 탈퇴 완료
 	@RequestMapping(value="/member/deleteOk.do")
 	public ModelAndView memberDeleteOk(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request",request);
-		memberService.memberDeleteOk(mav);
-		
-		return null;
+		mav.addObject("response",response);
+		if(memberService.memberDeleteOk(mav)>0) {
+			// 회원탈퇴가 성공 할 경우
+			HttpSession session = request.getSession();
+			session.invalidate();
+			return new ModelAndView("redirect:/");
+		} else {
+			// 회원탈퇴가 실패 할 경우
+			return mav;
+		}
 	}
 	
 	//-----------------------------------------------------------------추가--------------------------------------
@@ -165,12 +220,12 @@ public class MemberController {
 		return new ModelAndView("member/management");
 		
 	}
-	//회원정보수정
-	@RequestMapping(value="/member/memberupdate.do")
-	public ModelAndView memberMemberUpdate(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("member/memberupdate");
-		
-	}
+//	//회원정보수정
+//	@RequestMapping(value="/member/memberupdate.do")
+//	public ModelAndView memberMemberUpdate(HttpServletRequest request, HttpServletResponse response) {
+//		return new ModelAndView("member/memberupdate");
+//		
+//	}
 	//회원탈퇴
 	@RequestMapping(value="/member/memberdelete.do")
 	public ModelAndView memberMemerDelete(HttpServletRequest request, HttpServletResponse response) {
