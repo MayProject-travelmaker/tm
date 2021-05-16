@@ -70,7 +70,8 @@ $(function() {
 		} else {
 			$('#id_check').text("");
 			$.ajax({
-				url: "/member/idCheck.do",
+				url: "idCheck.do",
+				cache: false,
 				type: "POST",
 				data: {
 					id: $("#id").val()
@@ -210,7 +211,7 @@ $(function() {
 			alert("인증 이메일이 발송되었습니다. 이메일을 확인 해 주세요.");
 			
 			$.ajax({
-				url: "/member/sendEmail.do",
+				url: "sendEmail.do",
 				type: "POST",
 				data: {
 					email: email

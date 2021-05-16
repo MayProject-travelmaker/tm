@@ -1,17 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-    
- <mapper namespace="dto.boardDto">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<mapper namespace="dto.boardDto">
 
+	<resultMap type="com.java.board.dto.BoardDto" id="boardDto">
+		<result column="board_no" property="boardNo" />
+		<result column="post_id" property="postId" />
+		<result column="board_code" property="boardCode" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="area" property="area" />
+		<result column="write_date" property="writeDate" />
+		<result column="update_date" property="updateDate" />
+		<result column="read_cnt" property="readCnt" />
+		<result column="like_cnt" property="likeCnt" />
+		<result column="is_del" property="isDel" />
+		<result column="is_popular" property="isPopular" />
+	</resultMap>
+	<resultMap type="com.java.board.dto.BoardFileDto" id="boardFileDto">
+		<result column="file_no" property="fileNo"/>
+		<result column="file_name" property="fileName"/>
+		<result column="file_path" property="filePath"/>
+		<result column="file_extension" property="fileExtension"/>
+	</resultMap>
+	<resultMap type="com.java.board.dto.MapDto" id="mapDto">
+		<result column="map_no" property="mapNo"/>
+		<result column="x_axis" property="xAxis"/>
+		<result column="y_axis" property="yAxis"/>
+	</resultMap>
+	<resultMap type="com.java.board.dto.NoticeDto" id="noticeDto">
+		<result column="notice_no" property="noticeNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="read_cnt" property="readCnt"/>
+		<result column="is_notice" property="isNotice"/>
+		<result column="write_date" property="writeDate"/>
+		<result column="update_date" property="updateDate"/>
+	</resultMap>
 
-
-
-
-
-
-
+	<!-- 일반글작성 -->
+	<insert id="board_insert" parameterType="java.util.Map">
+		insert all
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
+		values(
+				file_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardFileDto.fileName}, 
+				#{boardFileDto.filePath}, 
+				#{boardFileDto.fileExtension}
+				)
+		into map (map_no, board_no, post_id, board_code, x_axis, y_axis)
+		values(
+				map_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{mapDto.xAxis},
+				#{mapDto.yAxis}
+				)
+		select * from dual
+	</insert>
+	
+	<!-- 공지글작성 -->
+	<insert id="notice_insert" parameterType="java.util.Map">
+		insert all
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+		into notice (notice_no, board_no, post_id, board_code, title, content, read_cnt, is_notice, write_date)
+		values(
+				notice_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.readCnt},
+				#{noticeDto.isNotice},
+				sysdate
+				)
+		select * from dual
+	</insert>
+	
+	<!-- 동행 게시판 리스트, 카운트 -->
+	<select id="accompanyboard_list" resultMap="boardDto">
+         <![CDATA[
+         select board_no, title, post_id, write_date, read_cnt, area from
+         (select rownum as rnum, a.* from
+         (select * from board order by BOARD_NO desc) a) b
+          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 11
+         ]]>
+   </select>
+	<select id="accompanyboard_getCount" resultType="int">
+		select nvl(count(*),0) from board where board_code = 11
+	</select>
+	
+	<!-- 동행 후기 게시판 리스트, 카운트 -->
+	<select id="accompanyreview_list" resultMap="boardDto">
+         <![CDATA[
+         select board_no, title, post_id, write_date, read_cnt, area from
+         (select rownum as rnum, a.* from
+         (select * from board order by BOARD_NO desc) a) b
+          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 12
+         ]]>
+   </select>
+	<select id="accompanyreview_getCount" resultType="int">
+		select nvl(count(*),0) from board where board_code = 12
+	</select>
+	
+	<!-- 추천 여행 경로 게시판 리스트, 카운트 -->
+	<select id="recommendpath_list" resultMap="boardDto">
+         <![CDATA[
+         select board_no, title, post_id, write_date, read_cnt, area from
+         (select rownum as rnum, a.* from
+         (select * from board order by BOARD_NO desc) a) b
+          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 13
+         ]]>
+   </select>
+	<select id="recommendpath_getCount" resultType="int">
+		select nvl(count(*),0) from board where board_code = 13
+	</select>
+	
+	<!-- 여행지 후기 게시판 리스트, 카운트 -->
+	<select id="travelreview_list" resultMap="boardDto">
+         <![CDATA[
+         select board_no, title, post_id, write_date, read_cnt, area from
+         (select rownum as rnum, a.* from
+         (select * from board order by BOARD_NO desc) a) b
+          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 14
+         ]]>
+   </select>
+	<select id="travelreview_getCount" resultType="int">
+		select nvl(count(*),0) from board where board_code = 14
+	</select>
+	
+	<!-- 카운트++ -->
+	<update id="board_view" parameterType="int">
+		<![CDATA[
+		update board set read_cnt=read_cnt+1 where board_no=#{boardNo}
+		]]>
+	</update>
+	
+	<!-- 상세보기 -->
+	<select id="board_read" parameterType="int" resultMap="boardDto">
+		select board_no, post_id, write_date, area, title, content, read_cnt, board_code  
+		from board 
+		where board_no=#{boardNo}
+	</select>
+	
+	<!-- update -->
+	<select id="board_update" parameterType="int" resultMap="boardDto">
+		select board_no, post_id, write_date, title, content, board_code
+		from board 
+		where board_no=#{boardNo}
+	</select>
+	
 </mapper>

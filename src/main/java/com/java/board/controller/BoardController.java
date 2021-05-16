@@ -2,42 +2,109 @@ package com.java.board.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import com.java.board.dto.BoardDto;
+import com.java.board.service.BoardService;
 
 @Controller
 public class BoardController {
 	
-	//ë™í–‰ê²Œì‹œíŒ ë„˜ì–´ê°€ê¸°
+	@Autowired
+	private BoardService boardService;
+	
+	//µ¿Çà°Ô½ÃÆÇ ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/accompanylist.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyList(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/accompanylist");
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.accompanyboardList(mav);
+		return mav;
 			
 	}
 		
-	//ë™í–‰í›„ê¸°ê²Œì‹œíŒ ë„˜ì–´ê°€ê¸°
+	//µ¿ÇàÈÄ±â°Ô½ÃÆÇ ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/accompanyreview.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyReview(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/accompanyreview");
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.accompanyreviewList(mav);
+		return mav;
 			
 	}
 	
-	//ì¶”ì²œê²½ë¡œê²Œì‹œíŒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
+	//ÃßÃµ°æ·Î°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/recommendpath.do", method= RequestMethod.GET)
 	public ModelAndView boardRecommendPath(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/recommendpath");
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.recommendpathList(mav);
+		return mav;
 			
 	}
 	
-	//ì—¬í–‰ì§€í›„ê¸°ê²Œì‹œíŒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
+	//¿©ÇàÁöÈÄ±â°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/travelreview.do", method= RequestMethod.GET)
 	public ModelAndView boardTravelReview(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/travelreview");
-			
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.travelreviewList(mav);
+		return mav;	
+	}
+	
+	//±Û¾²±â
+	@RequestMapping(value="/board/write.do")
+	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("board/write");
 	}
 	
 	
+	//±Û¾²±â¿Ï·á
+	@RequestMapping(value="/board/writeOk.do", method= RequestMethod.POST)
+	public ModelAndView boardWriteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		mav.addObject("boardDto", boardDto);
+		
+		boardService.boardWriteOk(mav);
+		return mav;
+	}
+
+	//±ÛÀĞ±â
+	@RequestMapping(value="/board/read.do")
+	public ModelAndView boardRead(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.boardRead(mav);
+		return mav;
+	}
+	//±Û¼öÁ¤
+	@RequestMapping(value="/board/update.do")
+	public ModelAndView boardUpdate(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.boardUpdate(mav);
+		return mav;
+	}
+	//±Û¼öÁ¤¿Ï·á
+	@RequestMapping(value="/board/updateOk.do")
+	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("board/updateOk");	
+	}
+	//±Û»èÁ¦¿Ï·á
+	@RequestMapping(value="/board/deleteOk.do")
+	public ModelAndView boardDeleteOk(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("board/deleteOk");	
+	}
 }

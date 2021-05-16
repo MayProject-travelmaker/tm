@@ -25,7 +25,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
-        <script src="${root}/resources/js/memberUpdate.js"></script>
+        <script src="${root}/resources/js/member/memberUpdate.js"></script>
          <!-- 회원정보 후, 메시지 출력 -->
         <script type="text/javascript">
 	        	$(function(){

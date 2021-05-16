@@ -26,7 +26,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
-        <script src="${root}/resources/js/register.js"></script>
+        <script src="${root}/resources/js/member/register.js"></script>
       
       
     </head>
