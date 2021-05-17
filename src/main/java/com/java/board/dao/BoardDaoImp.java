@@ -14,16 +14,27 @@ public class BoardDaoImp implements BoardDao {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 
-	//±Û¾²±â
+	//ê¸€ì“°ê¸°
 	@Override
-	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice) {
+	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2) {
+		
 		if (isNotice == 1) {
-			return sqlSessionTemplate.insert("notice_insert", dtoMap);
-		}
-		return sqlSessionTemplate.insert("board_insert", dtoMap);
+			return sqlSessionTemplate.insert("notice_insert", dtoMap);	//ê³µì§€ê¸€
+			
+		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
+			return sqlSessionTemplate.insert("board_file_map_insert", dtoMap);	//ì¼ë°˜ê¸€_íŒŒì¼,ì§€ë„ í¬í•¨
+			
+		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() == true) {
+			return sqlSessionTemplate.insert("board_file_insert", dtoMap);	//ì¼ë°˜ê¸€_íŒŒì¼ë§Œ
+			
+		} else if (map2.get("file") == "true" && map2.get("map").isEmpty() != true) {
+			return sqlSessionTemplate.insert("board_map_insert", dtoMap);	//ì¼ë°˜ê¸€_ì§€ë„ë§Œ
+			
+		} 
+		return sqlSessionTemplate.insert("board_insert", dtoMap);	//ì¼ë°˜ê¸€_ê¸€ë§Œ
 	}
 
-	//µ¿Çà °Ô½ÃÆÇ ¸®½ºÆ®
+	//ë™í–‰ ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> accompanyboardList(int startRow, int endRow) {
 		Map<String, Integer> Map = new HashMap<String, Integer>();
@@ -33,14 +44,14 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectList("accompanyboard_list", Map);
 	}
 
-	//µ¿Çà °Ô½ÃÆÇ read Ä«¿îÆ®
+	//ë™í–‰ ê²Œì‹œíŒ read ì¹´ìš´íŠ¸
 	@Override
 	public int accompanyboardCount() {
 		
 		return sqlSessionTemplate.selectOne("accompanyboard_getCount");
 	}
 
-	//µ¿Çà ÈÄ±â °Ô½ÃÆÇ ¸®½ºÆ®
+	//ë™í–‰ í›„ê¸° ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> accompanyreviewList(int startRow, int endRow) {
 		Map<String, Integer> Map = new HashMap<String, Integer>();
@@ -50,14 +61,14 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectList("accompanyreview_list", Map);
 	}
 
-	//µ¿Çà ÈÄ±â °Ô½ÃÆÇ read Ä«¿îÆ®
+	//ë™í–‰ í›„ê¸° ê²Œì‹œíŒ read ì¹´ìš´íŠ¸
 	@Override
 	public int accompanyreviewCount() {
 		
 		return sqlSessionTemplate.selectOne("accompanyreview_getCount");
 	}
 
-	//ÃßÃµ ¿©Çà °æ·Î °Ô½ÃÆÇ ¸®½ºÆ®
+	//ì¶”ì²œ ì—¬í–‰ ê²½ë¡œ ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> recommendpathList(int startRow, int endRow) {
 		Map<String, Integer> Map = new HashMap<String, Integer>();
@@ -68,7 +79,7 @@ public class BoardDaoImp implements BoardDao {
 	}
 
 	
-	//ÃßÃµ ¿©Çà °æ·Î read Ä«¿îÆ®
+	//ì¶”ì²œ ì—¬í–‰ ê²½ë¡œ read ì¹´ìš´íŠ¸
 	@Override
 	public int recommendpathCount() {
 		
@@ -76,7 +87,7 @@ public class BoardDaoImp implements BoardDao {
 	}
 
 
-	//¿©ÇàÁö ÈÄ±â °Ô½ÃÆÇ ¸®½ºÆ®
+	//ì—¬í–‰ì§€ í›„ê¸° ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> travelreviewList(int startRow, int endRow) {
 		Map<String, Integer> Map = new HashMap<String, Integer>();
@@ -86,14 +97,14 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectList("travelreview_list", Map);
 	}
 	
-	//¿©ÇàÁö ÈÄ±â read Ä«¿îÆ®
+	//ì—¬í–‰ì§€ í›„ê¸° read ì¹´ìš´íŠ¸
 	@Override
 	public int travelreviewCount() {
 
 		return sqlSessionTemplate.selectOne("travelreview_getCount");
 	}
 
-	//±Û »ó¼¼º¸±â
+	//ê¸€ ìƒì„¸ë³´ê¸°
 	@Override
 	public BoardDto boardRead(int boardNo) {
 		sqlSessionTemplate.update("board_view", boardNo);

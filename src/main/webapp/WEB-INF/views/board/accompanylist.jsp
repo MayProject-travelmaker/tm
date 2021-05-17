@@ -107,9 +107,12 @@
 								<input type="hidden" name="boardCode" value="${boardDto.boardCode}">
 									<tr>
 										<td>${boardDto.boardNo}</td>
-										<td><a
-											href="${root}/board/read.do?boardNo=${boardDto.boardNo}">[${boardDto.area}]
-												${boardDto.title}</a></td>
+										<td>
+											<c:if test="${boardDto.area == null}">	<!-- 공지글일경우 -->
+												<a href="${root}/board/read.do?boardNo=${boardDto.boardNo}">${boardDto.title}</a></c:if>
+											<c:if test="${boardDto.area != null}">	<!-- 공지글아닐경우 -->
+												<a href="${root}/board/read.do?boardNo=${boardDto.boardNo}">[${boardDto.area}] ${boardDto.title}</a></c:if>
+										</td>
 										<td>${boardDto.postId}</td>
 										<td><fmt:formatDate value="${boardDto.writeDate}"
 												pattern="yyyy-MM-dd" /></td>

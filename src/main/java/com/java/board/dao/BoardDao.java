@@ -7,7 +7,7 @@ import com.java.board.dto.BoardDto;
 public interface BoardDao {
 
 	//글쓰기
-	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice);
+	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
 
 	//동행 게시판 리스트, 카운트
 	public List<BoardDto> accompanyboardList(int startRow, int endRow);

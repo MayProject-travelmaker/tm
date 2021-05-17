@@ -40,8 +40,8 @@
 		<result column="update_date" property="updateDate"/>
 	</resultMap>
 
-	<!-- 일반글작성 -->
-	<insert id="board_insert" parameterType="java.util.Map">
+	<!-- 일반글작성_파일,지도 포함 -->
+	<insert id="board_file_map_insert" parameterType="java.util.Map">
 		insert all
 		into board (board_no, post_id, board_code, title, content, area, write_date)
 		values(
@@ -73,6 +73,69 @@
 				#{mapDto.yAxis}
 				)
 		select * from dual
+	</insert>
+	<!-- 일반글_파일만 -->
+	<insert id="board_file_insert" parameterType="java.util.Map">
+		insert all
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
+		values(
+				file_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardFileDto.fileName}, 
+				#{boardFileDto.filePath}, 
+				#{boardFileDto.fileExtension}
+				)
+		select * from dual
+	</insert>
+	<!-- 일반글_지도만 -->
+	<insert id="board_map_insert" parameterType="java.util.Map">
+		insert all
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+		into map (map_no, board_no, post_id, board_code, x_axis, y_axis)
+		values(
+				map_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{mapDto.xAxis},
+				#{mapDto.yAxis}
+				)
+		select * from dual
+	</insert>
+	<!-- 일반글_글만 -->
+	<insert id="board_insert" parameterType="java.util.Map">
+		insert
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
 	</insert>
 	
 	<!-- 공지글작성 -->
