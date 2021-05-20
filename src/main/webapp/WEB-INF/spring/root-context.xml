@@ -11,8 +11,8 @@
 	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="driverManagerDataSource">
 		<property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" />
 		<property value="jdbc:oracle:thin:@localhost:1521:xe" name="url" />
-		<property value="mvc" name="username" />
-		<property value="mvc" name="password" />
+		<property value="hmj" name="username" />
+		<property value="1234" name="password" />
 
 	</bean>
 	
@@ -74,7 +74,17 @@
 	<!--propagation="REQUIRED" 이미 하나의 트랜잭션이 존재하면 지원하고 없다면 새로 지원 -->
 
 
-	
+
+<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+
+		<property name="suffix" value=".jsp" />
+
+</bean>
+
+
+
 	
 	
 </beans>

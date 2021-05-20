@@ -1,6 +1,11 @@
 package com.java.member.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.servlet.ModelAndView;
+
+import com.java.member.dto.MemberDto;
 
 public interface MemberService {
 public void memberRegisterOk(ModelAndView mav);
@@ -22,4 +27,8 @@ public void memberRegisterOk(ModelAndView mav);
 	public void memberDelete(ModelAndView mav);
 	
 	public void memberDeleteOk(ModelAndView mav);
+
+	//회원차단
+	public void addBlack(String id);
+	
 }

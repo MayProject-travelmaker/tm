@@ -51,7 +51,79 @@
         
         <div>
         <br><br><br><br><br><br>
-        여기에 회원가입 만들면 됩니다.
+        <div align ="center">
+         <div class="col-lg-6"></div>
+            <div
+                class="col-lg-6">
+                <!-- 점보트론 -->
+                <div
+                    class="jumbotron" style="padding-top: 20px;">
+                    <!-- 로그인 정보를 숨기면서 전송post -->
+                     <h3 style="text-align: center;">회원가입</h3>
+                     <div align ="left">아이디</div>
+                    <form method="post" action="loginOk.jsp" class ="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="ID" name="id" maxlength="20">&nbsp;&nbsp;
+                            <button class="btn btn-primary" onclick="registerCheckFuntion();" type="button">중복체크</button>
+                        </div>
+                    </form>
+                    <form method="post" action="loginOk.jsp">
+                    	<div align ="left">비밀번호</div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="비밀번호" name="password" maxlength="20">                   
+                        <div align ="left">비밀번호재확인</div>
+                            <input type="password" class="form-control" placeholder="비밀번호재확인" name="password" maxlength="20">
+                     	<div align ="left">이름</div>
+                            <input type="text" class="form-control" placeholder="이름" name="name" maxlength="20">
+                        </div>
+                     <div align ="left">주민등록번호</div>
+                     </form>
+                     <form method="post" action="loginOk.jsp" class ="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="jumin1" maxlength="6">
+                        	<label>-</label>
+                            <input type="password" class="form-control" name="jumin2" maxlength="7">
+                        </div>
+                    </form>
+                    <form method="post" action="loginOk.jsp" class ="form-inline">
+                        <label class="plabel">성별</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-default">
+                                    <input type="radio" name="gender" autocomplete="off" value="남자">남자
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="gender" autocomplete="off" value="여자">여자
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                    <form method="post" action="loginOk.jsp">
+                    <div align ="left">전화번호</div>
+                       	<input type="text" class="form-control" placeholder="010-1234-5678" name="phone" maxlength="20">
+                    </form>
+                    <div align ="left">e-mail</div>
+                    <form method="post" action="loginOk.jsp" class ="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="이메일 주소" name="email" maxlength="20">
+                            <label>&nbsp;@&nbsp;</label>
+                            <div class="checkbox">
+                            <select id="domain" name="domain" size="1"> 
+								<option value="@naver.com" selected>naver.com</option>
+								<option value="@daum.net">daum.net</option>
+								<!-- 우선설정됨 -->
+								<option value="@gmail.com" >gmail.com</option>
+							</select>
+							</div>
+							&nbsp;&nbsp;
+                            <button class="btn btn-primary" onclick="registerCheckFuntion();" type="button">인증</button>
+                        </div>
+                    </form>
+                    <br>
+                    <input type="submit" class="btn btn-primary form-control" value="회원가입">
+                </div>
+            </div>
+        </div>
         <br><br><br><br><br><br>
         </div>
         

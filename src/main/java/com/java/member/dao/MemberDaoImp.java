@@ -1,6 +1,7 @@
 package com.java.member.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -53,6 +54,26 @@ public class MemberDaoImp implements MemberDao{
 	public int memberDelete(String id, String password) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+//	회원조회
+	@Override
+	public List<MemberDto> memberList() {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.selectList("member_list");
+	}
+
+	//회원차단
+	@Override
+	public int  addBlack(String id) {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.update("addblack",id);
+	}
+
+	@Override
+	public List<MemberDto> blackList() {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.selectList("blacklist_select");
 	}
 
 }

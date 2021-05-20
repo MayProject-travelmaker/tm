@@ -16,11 +16,6 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	
 	
-	
-	
-	
-	
-	
 	<!-- 환경설정 위해 추가한 내역들 -->
 	<resources mapping="/css/**" location="/css/"/>
 	<resources mapping="/javascript/**" location="/javascript/" />
@@ -38,12 +33,6 @@
 	<!-- 여기까지가 servlet-context에서 추가한 내역들 -->
 	
 	
-	
-	
-	
-	
-	
-	
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
@@ -51,6 +40,8 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.java.homepage" />
+	
+	
 	
 	
 	

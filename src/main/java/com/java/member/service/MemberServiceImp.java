@@ -1,5 +1,8 @@
 package com.java.member.service;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -116,5 +119,19 @@ public class MemberServiceImp implements MemberService{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	//회원차단
+	@Override
+	public void addBlack(String id) {
+		
+		System.out.println(id);
+		int check = memberDao.addBlack(id);
+		
+		System.out.println("블랙리스트 성공:1, 실패:0"+" "+check);
+		
+		
+	}
+
 	
 }

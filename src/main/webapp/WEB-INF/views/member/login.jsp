@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
+<%@ taglib prefix="c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -13,9 +14,10 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Travel Maker</title>
+        <script type="text/javascript" src="../../../resources/js/member/rutil.js"></script>
         
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="/webapp/resources/assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="${root}/resources/assets/favicon.ico" />
         
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="${root}/resources/css/styles.css" rel="stylesheet" />
@@ -49,11 +51,36 @@
         </nav>
         
         
-        <div>
         <br><br><br><br><br><br>
-        여기에 로그인 만들면 됩니다.
+        <div align="center">
+		
+			<div class="container">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4">
+			<div class="jumbotron" style="padding-top: 20px;">
+				<form method="post" action="loginOk.jsp">
+					<h3 style="text-align: center;">로그인</h3>
+					<div class="form-group">
+					<div align ="left">아이디</div>
+						<input type="text" class="form-control" placeholder="ID" name="id" maxlength="20">
+					</div>
+					<div class="form-group">
+					<div align ="left">비밀번호</div>
+						<input type="password" class="form-control" placeholder="비밀번호" name="password" maxlength="20">
+					</div>
+					<input type="submit" class="btn btn-primary form-control" value="로그인">
+					<div align ="left">
+					&nbsp;<a href="findId.do">아이디 찾기</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="findPassword.do">비밀번호 찾기</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		</div>
+		</div>
         <br><br><br><br><br><br>
-        </div>
+        
         
         
         
