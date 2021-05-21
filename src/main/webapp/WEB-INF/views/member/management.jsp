@@ -32,177 +32,129 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ko.min.js" ></script>
+        <script type="text/javascript" charset="utf8" src="https:////cdn.datatables.net/plug-ins/1.10.24/dataRender/datetime.js"></script>
         
-        <!-- 테이블 정렬 기능 // 테이블 스크롤 -->
-        <script src="${root }/resources/js/listtable/jquery.tablesorter.min.js"></script>  
-       	<script src="${root }/resources/js/listtable/widget-scroller.js"></script>  
+        <!-- 테이블 정렬 기능 및 css -->
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+      	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
         
-        <!-- 리스트 페이징처리 x , 스크롤 형식 -->
-        
+     
+      	<!-- 회원조회 -->
+      	<script type="text/javascript">
+      	
+      		 $(document).on("click","button[name='list']",function() {
+      			$('.black_list_tableDiv').css('display','none');
+      			$('.member_list_tableDiv').css('display','block');
+      			$('#member_list_page').DataTable({
+      				destroy:true,
+   			    	searching:false,
+   			    	ordering: true,
+   			    	serverSide:false,
+   			    	paging:false,
+   			    	scrollY:"500px",
+   			        scrollCollapse: true,
+			    	ajax:{
+		        		   url:"memberlist",
+		        		   method:"post",
+		        		   /* dataType:"JSON", */
+		        		   dataSrc:''
+			    	},
+			    	columns:[
+			    		{data:"id"},
+			    		{data:"name"},
+			    		{data:"phone"},
+			    		{data:"gender"},
+			    		{data:"registerDate"}
+			    		
+			    	],
+			    	columnDefs: [ 
+			    		{	targets: [4],
+			    	      	render: function (data,type,row){
+			    	    	  return moment(row.updatedDate).format('YYYY년 MM월 DD일');
+			    	      }
+			    		},
+			    	 {	targets:[5],
+			    		 data:null,
+			    		 render:function(data,type,row){
+			    			 return '<input type="button" class="blockBtn" value="차단"/>'
+			    		 },
+			    		 orderable:false
+			    	 }]
+      		 	});
+      		 });
+		        		   
+		</script>
+    	
        
-        <!-- 회원조회 -->
-         <script type="text/javascript">
-         $(document).ready(function(){
-        	 $("#member_list_page").tablesorter();
-        	 $("#member_list_page").trigger("update");
-		     $(document).on("click","button[name='list']",function() {
-		        	$.ajax({
-	        		   url:"memberlist",
-	        		   method:"post",
-	        		   dataType:"JSON",
-	        		   success:function(data) {
-	        			   
-	        			   $('#list_head').empty();// 클릭 시 초기화, (초기화 안하면 계속 추가된다고 하니 시도해보자)
-	        			   $('#list_body').empty();//			상동
-	        			   
-	        			   var head = '';
-	        			   head += '<tr style= "text-align : center; font-size:10px;">';
-	        			   head += '<th>ID</th>' ;
-	        			   head += '<th>이름</th>' ;
-	        			   head += '<th>휴대폰 번호</th>' ;
-	        			   head += '<th>성별</th>' ;
-	        			   head += '<th>가입날짜</th>' ;
-	        			   $('#list_head').append(head);
-	        			   
-	        			   $.each(data, function(index) {
-	        				   
-	        				   var body = '' ;
-	        				   if(data[0].name == null) {
-	        					   body += '<tr style="text-align: center;">';
-	        					   body += '<td>정보가 없습니다</td>';
-	        					   body += '</tr>'
-	        				   } else {
-	        					   /* for(var i=0; i<data.length; i++) { */
-		        					   body += '<tr style="text-align: center;">';
-		        					   body += '<td>' + data[index].id + '</td>' ;
-		        					   body += '<td>' + data[index].name + '</td>' ;
-		        					   body += '<td>' + data[index].phone + '</td>' ;
-		        					   body += '<td>' + data[index].gender + '</td>' ;
-		        					   body += '<td>' + moment(data[index].registerDate).format('YYYY-MM-DD') + '</td>' ;
-		        					   body += '<td> <input type="button" class="blockBtn" value="차단"/></td>';
-		        					   body += '</tr>';
-	        					  /*  } */
-	        				   }	//else문
-	        				   $('#list_body').append(body);
-	        			   });		//$.each문 닫기 
-	        			   
-	        			   
-	        		   },		//success문 닫기
-	        		   error : function() {
-	        			   alert("에러");
-	        		   }
-	        	   }); 		//ajax 괄호 닫기  
-	           }); 
-	         });
-         
-         
-        </script>
-        
-         
         
         
         <!-- 신고 리스트  -->
-        <script>
-        	$(document).on("click", "button[name='reported']",function(){
-        		$.ajax({
-        			url: "reportlist",
-        			method: "post",
-        			dataType:"JSON",
-        			
-        			success : function(data) {
-        				alert("신고리스트 조회")
-        				console.log(data)
-        				$('#list_head').empty();// 클릭 시 초기화, (초기화 안하면 계속 추가된다고 하니 시도해보자)
-        			 	$('#list_body').empty();//			상동
-        			   
-        			   var head = '';
-        			   head += '<tr style= "text-align : center; font-size:10px;">';
-        			   head += '<th>게시글번호</th>' ;
-        			   head += '<th>신고 당한 ID</th>' ;
-        			   head += '<th>신고한 ID</th>' ;
-        			   head += '<th>게시글 URL</th>' ;
-        			   $('#list_head').append(head);
-        			   
-        			   $.each(data, function(index) {
-        				   
-        				   var body = '' ;
-        				   if(data[0].name == null) {
-        					   body += '<tr style="text-align: center;">';
-        					   body += '<td>정보가 없습니다</td>';
-        					   body += '</tr>'
-        				   } else {
-        					   /* for(var i=0; i<data.length; i++) { */
-	        					   body += '<tr style="text-align: center;">';
-	        					   body += '<td>' + data[index].게시글번호 + '</td>' ;
-	        					   body += '<td>' + data[index].신고당한 id + '</td>' ;
-	        					   body += '<td>' + data[index].신고한 id + '</td>' ;
-	        					   body += '<td>' + data[index].게시글url + '</td>' ;
-	        					   body += '</tr>';
-        					  /*  } */
-        				   }	//else문
-        				   $('#list_body').append(body);
-        			   });		//$.each문 닫기 
-        			},//success
-        			
-        			error : function(){
-        				alert("신고리스트 조회 실패")
-        			}//error
-        		})
-        	})
-        </script>
+        <!-- <script type="text/javascript">
+      	
+      		 $(document).on("click","button[name='list']",function() {
+      			$('.member_list_tableDiv').css('display','block');
+      			 $('#member_list_page').DataTable({
+      				destroy:true,
+   			    	searching:false,
+   			    	ordering: true,
+   			    	serverSide:false,
+   			    	paging:false,
+			    	ajax:{
+		        		   url:"memberlist",
+		        		   method:"post",
+		        		   /* dataType:"JSON", */
+		        		   dataSrc:''
+			    	},
+			    	columns:[
+			    		{data:"id"},
+			    		{data:"name"},
+			    		{data:"phone"},
+			    		{data:"gender"},
+			    		{data:"registerDate"}
+			    	],
+			    	columnDefs: [ {
+			    	      targets: [4],
+			    	      render: function (data,type,row){
+			    	    	  return moment(row.updatedDate).format('YYYY년 MM월 DD일');
+			    	      }
+			    	    } ]
+      		 	});
+      		 });
+		        		   
+		</script> -->
         
         
         
         
         <!-- 차단 리스트  -->
         <script>
-        	$(document).on("click","button[name='black']",function(){
-        		$.ajax({
-        			url:"blacklist",
-        			dataType:"JSON",
-        			method:"POST",
-        			
-        			success : function(data){
-        				console.log(data)
-        				$('#list_head').empty();// 클릭 시 초기화, (초기화 안하면 계속 추가된다고 하니 시도해보자)
-        			 	$('#list_body').empty();//			상동
-        			   
-        			   var head = '';
-        			   head += '<tr style= "text-align : center; font-size:10px;">';
-        			   head += '<th>ID</th>' ;
-        			   head += '<th>이름</th>' ;
-        			   head += '<th>휴대폰 번호</th>' ;
-        			   head += '<th>성별</th>' ;
-        			   head += '<th>이메일</th>' ;
-        			   $('#list_head').append(head);
-        			   
-        			   $.each(data, function(index) {
-        				   
-        				   var body = '' ;
-        				   if(data[0].name == null) {
-        					   body += '<tr style="text-align: center;">';
-        					   body += '<td>정보가 없습니다</td>';
-        					   body += '</tr>'
-        				   } else {
-        					   /* for(var i=0; i<data.length; i++) { */
-	        					   body += '<tr style="text-align: center;">';
-	        					   body += '<td>' + data[index].id + '</td>' ;
-	        					   body += '<td>' + data[index].name + '</td>' ;
-	        					   body += '<td>' + data[index].phone + '</td>' ;
-	        					   body += '<td>' + data[index].gender + '</td>' ;
-	        					   body += '<td>' + data[index].email + '@' +data[index].domain +'</td>' ;
-	        					   body += '</tr>';
-        					  /*  } */
-        				   }	//else문
-        				   $('#list_body').append(body);
-        			   });		//$.each문 닫기 
-        			},//success
-        			
-        			error : function(){
-        				alert("차단리스트 조회 실패")
-        			}//error
-        		});//ajax
-        	});
+ 		 $(document).on("click","button[name='blacklist']",function() {
+ 			$('.member_list_tableDiv').css('display','none');
+ 			$('.black_list_tableDiv').css('display','block');
+ 			 $('#black_list_page').DataTable({
+ 				destroy:true,
+			    	searching:false,
+			    	ordering: true,
+			    	serverSide:false,
+			    	paging:false,
+		    	ajax:{
+	        		   url:"blacklist",
+	        		   method:"post",
+	        		   /* dataType:"JSON", */
+	        		   dataSrc:''
+		    	},
+		    	columns:[
+		    		{data:"id"},
+		    		{data:"name"},
+		    		{data:"phone"},
+		    		{data:"gender"},
+		    		{data:"email"}
+		    		
+		    		/* {data:("email" + "domain")} */
+		    		]
+		    	
+ 		 	});
+ 		 });
         </script>
         
          
@@ -295,7 +247,7 @@
         		</span>
         		
         		<span>
-        			<button name="black">블랙 리스트 </button>
+        			<button name="blacklist">블랙 리스트 </button>
         		</span>
         		
         		<span>
@@ -307,9 +259,34 @@
         		
         </div>
         
-        <div class="member_list_tableDiv" align="center">
-        	<table id="member_list_page" class="tablesorter">
-        		<thead id="list_head"></thead>
+        <div class="member_list_tableDiv" align="center" style="display:none">
+        	<table id="member_list_page">
+        		<thead id="list_head">
+        			<tr style= "text-align : center; font-size:20px;">
+						<th>ID</th>
+						<th>이름</th>
+						<th>전화번호</th>
+						<th>성별</th>
+						<th>가입날짜</th>
+						<th>Black!!!!</th>
+						        			
+        			</tr>
+        		</thead>
+        		<tbody id="list_body"></tbody>
+        	</table>
+        </div>
+        
+        <div class="black_list_tableDiv" align="center" style="display:none">
+        	<table id="black_list_page">
+        		<thead id="list_head">
+        			<tr style= "text-align : center; font-size:20px;">
+						<th>ID</th>
+						<th>이름</th>
+						<th>전화번호</th>
+						<th>성별</th>
+						<th>이메일</th>       			
+        			</tr>
+        		</thead>
         		<tbody id="list_body"></tbody>
         	</table>
         </div>

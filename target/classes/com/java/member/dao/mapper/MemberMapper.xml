@@ -115,6 +115,7 @@
 		select id,name,phone,gender,register_date
 		from member
 		where member_level = 2
+		order by id
 	
 	</select>  
 
@@ -128,7 +129,7 @@
 	
 	<!-- 차단 리스트 조회 -->
 	<select id="blacklist_select" resultMap="blacklistselect">
-		select id, name, phone, gender, email, domain 
+		select id, name, phone, gender, concat(email,domain) as email
 		from member 
 		where member_level=3
 	</select>
