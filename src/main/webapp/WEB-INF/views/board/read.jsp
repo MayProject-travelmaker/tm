@@ -22,7 +22,7 @@
 <link href="${root}/resources/css/styles.css" rel="stylesheet" />
 
 <!-- Bootstrap core JS-->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
@@ -37,6 +37,7 @@ function updateFunc(root, boardNo){
 </script>
 </head>
 <body>
+	<jsp:include page="../report/report.jsp"></jsp:include>
 	<!-- Navigation-->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
@@ -79,7 +80,7 @@ function updateFunc(root, boardNo){
 					<c:if test="${boardDto.boardCode == 13}"><div class="panel-heading">🚩 추천 여행 경로</div></c:if>
 					<c:if test="${boardDto.boardCode == 14}"><div class="panel-heading">✈ 여행지 후기</div></c:if>
 					<div>
-						<button class="btn float-right" style="color: red">신고</button>
+						<button class="btn float-right report" id="board_report" style="color: red">신고</button>
 						<button class="btn float-right"	onclick="bookmarkFunc('${root}','${boardDto.boardNo}')">즐겨찾기</button>
 						<div class="table table-responsive">
 							<table class="table">

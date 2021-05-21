@@ -23,6 +23,7 @@
 			<list>
 				<value>classpath:com/java/member/dao/mapper/MemberMapper.xml</value>
 				<value>classpath:com/java/board/dao/mapper/BoardMapper.xml</value>
+				<value>classpath:com/java/report/dao/mapper/ReportMapper.xml</value>
 			</list>
 
 		</property>
