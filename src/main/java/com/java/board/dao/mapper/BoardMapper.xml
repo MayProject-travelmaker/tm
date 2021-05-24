@@ -344,11 +344,11 @@
 	</update>
 	<!-- 대댓글 max(group_no) 구하기 -->
 	<select id="maxGNo" resultType="int">
-		select max(group_no) from reply
+		select nvl(max(group_no),0) from reply
 	</select>
 	<!-- 대댓글 max(sequence_no) 구하기 -->
 	<select id="maxSeqNo" parameterType="int" resultType="int">
-		select max(sequence_no) from reply where group_no = #{groupNo}
+		select nvl(max(sequence_no),0) from reply where group_no = #{groupNo}
 	</select>
 	
 	
