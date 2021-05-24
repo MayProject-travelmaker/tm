@@ -39,9 +39,22 @@
 		<result column="write_date" property="writeDate"/>
 		<result column="update_date" property="updateDate"/>
 	</resultMap>
+	<resultMap type="com.java.board.dto.ReplyDto" id="replyDto">
+		<result column="reply_no" property="replyNo"/>
+		<result column="board_no" property="boardNo" />
+		<result column="board_code" property="boardCode" />
+		<result column="post_id" property="postId"/>
+		<result column="id" property="id"/>
+		<result column="content" property="content"/>
+		<result column="write_date" property="writeDate"/>
+		<result column="update_date" property="updateDate"/>
+		<result column="is_del" property="isDel"/>
+		<result column="group_no" property="groupNo"/>
+		<result column="sequence_no" property="sequenceNo"/>
+	</resultMap>
 
-	<!-- 일반글작성 -->
-	<insert id="board_insert" parameterType="java.util.Map">
+	<!-- 일반글작성_파일,지도 포함 -->
+	<insert id="board_file_map_insert" parameterType="java.util.Map">
 		insert all
 		into board (board_no, post_id, board_code, title, content, area, write_date)
 		values(
@@ -74,6 +87,69 @@
 				)
 		select * from dual
 	</insert>
+	<!-- 일반글_파일만 -->
+	<insert id="board_file_insert" parameterType="java.util.Map">
+		insert all
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
+		values(
+				file_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardFileDto.fileName}, 
+				#{boardFileDto.filePath}, 
+				#{boardFileDto.fileExtension}
+				)
+		select * from dual
+	</insert>
+	<!-- 일반글_지도만 -->
+	<insert id="board_map_insert" parameterType="java.util.Map">
+		insert all
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+		into map (map_no, board_no, post_id, board_code, x_axis, y_axis)
+		values(
+				map_no_seq.nextval,
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{mapDto.xAxis},
+				#{mapDto.yAxis}
+				)
+		select * from dual
+	</insert>
+	<!-- 일반글_글만 -->
+	<insert id="board_insert" parameterType="java.util.Map">
+		insert
+		into board (board_no, post_id, board_code, title, content, area, write_date)
+		values(
+				board_no_seq.nextval,
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				#{boardDto.title},
+				#{boardDto.content},
+				#{boardDto.area},
+				sysdate
+				)
+	</insert>
 	
 	<!-- 공지글작성 -->
 	<insert id="notice_insert" parameterType="java.util.Map">
@@ -103,56 +179,96 @@
 		select * from dual
 	</insert>
 	
+	<!-- 게시글검색조건 -->
+	<sql id="searchCondition">
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType == 'title'.toString()">
+				and title like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'postId'.toString()">
+				and post_id like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				and title like '%' || #{keyword} || '%'
+					or content like '%' || #{keyword} || '%'
+			</if>
+		</if>
+	</sql>
+	
 	<!-- 동행 게시판 리스트, 카운트 -->
-	<select id="accompanyboard_list" resultMap="boardDto">
-         <![CDATA[
-         select board_no, title, post_id, write_date, read_cnt, area from
-         (select rownum as rnum, a.* from
-         (select * from board order by BOARD_NO desc) a) b
-          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 11
-         ]]>
+	<select id="accompanyboard_list" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select a.*
+		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
+				from board
+				where board_code = 11 and is_del = 0
+		]]>
+		<include refid="searchCondition"></include>
+		<![CDATA[
+				order by board_no desc)a
+		where rnum between #{startRow} and #{endRow}
+		]]>
    </select>
-	<select id="accompanyboard_getCount" resultType="int">
-		select nvl(count(*),0) from board where board_code = 11
+	<select id="accompanyboard_getCount" parameterType="java.util.Map" resultType="int">
+		select nvl(count(*),0) from board where board_code = 11 and is_del = 0
+		<include refid="searchCondition"></include>
 	</select>
 	
 	<!-- 동행 후기 게시판 리스트, 카운트 -->
-	<select id="accompanyreview_list" resultMap="boardDto">
-         <![CDATA[
-         select board_no, title, post_id, write_date, read_cnt, area from
-         (select rownum as rnum, a.* from
-         (select * from board order by BOARD_NO desc) a) b
-          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 12
-         ]]>
+	<select id="accompanyreview_list" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select a.*
+		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
+				from board
+				where board_code = 12 and is_del = 0
+		]]>
+		<include refid="searchCondition"></include>
+		<![CDATA[
+				order by board_no desc)a
+		where rnum between #{startRow} and #{endRow}
+		]]>
    </select>
-	<select id="accompanyreview_getCount" resultType="int">
-		select nvl(count(*),0) from board where board_code = 12
+	<select id="accompanyreview_getCount" parameterType="java.util.Map" resultType="int">
+		select nvl(count(*),0) from board where board_code = 12 and is_del = 0
+		<include refid="searchCondition"></include>
 	</select>
 	
 	<!-- 추천 여행 경로 게시판 리스트, 카운트 -->
-	<select id="recommendpath_list" resultMap="boardDto">
-         <![CDATA[
-         select board_no, title, post_id, write_date, read_cnt, area from
-         (select rownum as rnum, a.* from
-         (select * from board order by BOARD_NO desc) a) b
-          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 13
-         ]]>
+	<select id="recommendpath_list" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select a.*
+		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
+				from board
+				where board_code = 13 and is_del = 0
+		]]>
+		<include refid="searchCondition"></include>
+		<![CDATA[
+				order by board_no desc)a
+		where rnum between #{startRow} and #{endRow}
+		]]>
    </select>
-	<select id="recommendpath_getCount" resultType="int">
-		select nvl(count(*),0) from board where board_code = 13
+	<select id="recommendpath_getCount" parameterType="java.util.Map" resultType="int">
+		select nvl(count(*),0) from board where board_code = 13 and is_del = 0
+		<include refid="searchCondition"></include>
 	</select>
 	
 	<!-- 여행지 후기 게시판 리스트, 카운트 -->
-	<select id="travelreview_list" resultMap="boardDto">
-         <![CDATA[
-         select board_no, title, post_id, write_date, read_cnt, area from
-         (select rownum as rnum, a.* from
-         (select * from board order by BOARD_NO desc) a) b
-          where b.rnum>=#{startRow} and b.rnum<=#{endRow} and board_code = 14
-         ]]>
+	<select id="travelreview_list" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select a.*
+		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
+				from board
+				where board_code = 14 and is_del = 0
+		]]>
+		<include refid="searchCondition"></include>
+		<![CDATA[
+				order by board_no desc)a
+		where rnum between #{startRow} and #{endRow}
+		]]>
    </select>
-	<select id="travelreview_getCount" resultType="int">
-		select nvl(count(*),0) from board where board_code = 14
+	<select id="travelreview_getCount" parameterType="java.util.Map" resultType="int">
+		select nvl(count(*),0) from board where board_code = 14 and is_del = 0
+		<include refid="searchCondition"></include>
 	</select>
 	
 	<!-- 카운트++ -->
@@ -175,5 +291,65 @@
 		from board 
 		where board_no=#{boardNo}
 	</select>
+	
+	<!-- 즐겨찾기 -->
+	<insert id="bookmark" parameterType="java.util.Map">
+		insert into bookmark (bookmark_no, id, board_no, post_id, board_code, bm_date)
+		values (
+				bookmark_no_seq.nextval,
+				#{id},
+				#{boardDto.boardNo},
+				#{boardDto.postId},
+				#{boardDto.boardCode},
+				sysdate
+				)
+	</insert>
+	<!-- 즐겨찾기 중복체크 -->
+	<select id="bmCheck" parameterType="java.util.Map" resultType="int">
+		select count(*) from bookmark where id=#{id} and board_no=#{boardNo}
+	</select>
+	
+	<!-- 댓글입력 -->
+	<insert id="replyWrite" parameterType="com.java.board.dto.ReplyDto">
+		insert into reply (reply_no, board_no, post_id, board_code, id, content, write_date, is_del, group_no, sequence_no)
+		values (reply_no_seq.nextval,
+				#{boardNo},
+				#{postId},
+				#{boardCode},
+				#{id},
+				#{content},
+				sysdate,
+				#{isDel},
+				#{groupNo},
+				#{sequenceNo}
+				)
+	</insert>
+	<!-- 댓글리스트 -->
+	<select id="replyList" parameterType="int" resultMap="replyDto">
+		select reply_no, id, write_date, content, group_no, sequence_no
+		from reply
+		where board_no = #{boardNo} and is_del = 0	<!-- [is_del] 0:삭제되지 않은 댓글, 1:삭제된 댓글 -->
+		order by group_no, sequence_no
+	</select>
+	<!-- 댓글삭제 -->
+	<update id="replyDel" parameterType="int">
+		update reply set is_del = 1 where reply_no = #{replyNo}
+	</update>
+	<!-- 댓글수정 -->
+	<update id="replyUpd" parameterType="com.java.board.dto.ReplyDto">
+		update reply
+		set content = #{content},
+			update_date = sysdate
+		where reply_no = #{replyNo}
+	</update>
+	<!-- 대댓글 max(group_no) 구하기 -->
+	<select id="maxGNo" resultType="int">
+		select max(group_no) from reply
+	</select>
+	<!-- 대댓글 max(sequence_no) 구하기 -->
+	<select id="maxSeqNo" parameterType="int" resultType="int">
+		select max(sequence_no) from reply where group_no = #{groupNo}
+	</select>
+	
 	
 </mapper>

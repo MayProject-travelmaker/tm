@@ -19,6 +19,7 @@ import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.NoticeDto;
+import com.java.board.dto.ReplyDto;
 
 @Component
 public class BoardServiceImp implements BoardService {
@@ -26,7 +27,7 @@ public class BoardServiceImp implements BoardService {
 	@Autowired
 	private BoardDao boardDao;
 
-	//ê¸€ì“°ê¸°
+	//±Û¾²±â
 	@Override
 	public void boardWriteOk(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -43,12 +44,12 @@ public class BoardServiceImp implements BoardService {
 		mapDto.setxAxis(xAxis);
 		mapDto.setyAxis(yAxis);
 		
-		//ì¼ë°˜ê¸€,ê³µì§€ê¸€ì— ë”°ë¥¸ isNotice ì²˜ë¦¬
+		//ÀÏ¹İ±Û,°øÁö±Û¿¡ µû¸¥ isNotice Ã³¸®
 		int isNotice;
 		String notice = request.getParameter("notice");
-		if (notice == null) {	//ì¼ë°˜ê¸€ì‘ì„±ì´ë©´ isNotice ê¸°ë³¸ê°’ ì§€ì • (-1:ì¼ë°˜ê¸€, 0:ê³µì§€ë‚´ë¦´ë•Œ, 1:ê³µì§€ì˜¬ë¦´ë•Œ)
+		if (notice == null) {	//ÀÏ¹İ±ÛÀÛ¼ºÀÌ¸é isNotice ±âº»°ª ÁöÁ¤ (-1:ÀÏ¹İ±Û, 0:°øÁö³»¸±¶§, 1:°øÁö¿Ã¸±¶§)
 			isNotice = -1;
-		} else {				//ê³µì§€ê¸€ì‘ì„±
+		} else {				//°øÁö±ÛÀÛ¼º
 			isNotice = Integer.parseInt(notice);
 			noticeDto.setIsNotice(isNotice);
 		}
@@ -57,7 +58,7 @@ public class BoardServiceImp implements BoardService {
 		if (upFile.getSize() != 0) {
 			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
 			String fileExtension = StringUtils.getFilenameExtension(fileName);
-			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // íŒŒì¼ ì—…ë¡œë“œ ìƒëŒ€ê²½ë¡œ
+			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // ÆÄÀÏ ¾÷·Îµå »ó´ë°æ·Î
 			path.mkdir();
 			if (path.exists() && path.isDirectory()) {
 				File file = new File(path, fileName);
@@ -88,12 +89,12 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/writeOk");
 	}
 
-	// ë™í–‰ ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
+	// µ¿Çà °Ô½ÃÆÇ ¸®½ºÆ®
 	@Override
 	public void accompanyboardList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
-
+		
 		String pageNumber = request.getParameter("pageNumber");
 
 		if (pageNumber == null) {
@@ -105,11 +106,15 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 
-		int count = boardDao.accompanyboardCount();
+		//°Ô½Ã±Û°Ë»ö
+		String searchType = (String) map.get("searchType");
+		String keyword = (String) map.get("keyword");
+		
+		int count = boardDao.accompanyboardCount(searchType, keyword);
 
 		List<BoardDto> accompanyboardList = null;
 		if (count > 0) {
-			accompanyboardList = boardDao.accompanyboardList(startRow, endRow);
+			accompanyboardList = boardDao.accompanyboardList(startRow, endRow, searchType, keyword);
 		}
 
 		mav.addObject("boardList", accompanyboardList);
@@ -120,7 +125,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/accompanylist");
 	}
 
-	// ì—¬í–‰í›„ê¸° ë¦¬ìŠ¤íŠ¸
+	// ¿©ÇàÈÄ±â ¸®½ºÆ®
 	@Override
 	public void accompanyreviewList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -137,11 +142,15 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 
-		int count = boardDao.accompanyreviewCount();
+		//°Ô½Ã±Û°Ë»ö
+		String searchType = (String) map.get("searchType");
+		String keyword = (String) map.get("keyword");
+		
+		int count = boardDao.accompanyreviewCount(searchType, keyword);
 
 		List<BoardDto> accompanyreviewList = null;
 		if (count > 0) {
-			accompanyreviewList = boardDao.accompanyreviewList(startRow, endRow);
+			accompanyreviewList = boardDao.accompanyreviewList(startRow, endRow, searchType, keyword);
 		}
 
 		mav.addObject("boardList", accompanyreviewList);
@@ -153,7 +162,7 @@ public class BoardServiceImp implements BoardService {
 
 	}
 
-	// ì¶”ì²œ ì—¬í–‰ê²½ë¡œ ë¦¬ìŠ¤íŠ¸
+	// ÃßÃµ ¿©Çà°æ·Î ¸®½ºÆ®
 	@Override
 	public void recommendpathList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -169,12 +178,16 @@ public class BoardServiceImp implements BoardService {
 		int boardSize = 10;
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
+		
+		//°Ô½Ã±Û°Ë»ö
+		String searchType = (String) map.get("searchType");
+		String keyword = (String) map.get("keyword");
 
-		int count = boardDao.recommendpathCount();
+		int count = boardDao.recommendpathCount(searchType, keyword);
 
 		List<BoardDto> recommendpathList = null;
 		if (count > 0) {
-			recommendpathList = boardDao.recommendpathList(startRow, endRow);
+			recommendpathList = boardDao.recommendpathList(startRow, endRow, searchType, keyword);
 		}
 
 		mav.addObject("boardList", recommendpathList);
@@ -185,7 +198,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/recommendpath");
 	}
 
-	// ì—¬í–‰ì§€ í›„ê¸° ë¦¬ìŠ¤íŠ¸
+	// ¿©ÇàÁö ÈÄ±â ¸®½ºÆ®
 	@Override
 	public void travelreviewList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -202,11 +215,15 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 
-		int count = boardDao.travelreviewCount();
+		//°Ô½Ã±Û°Ë»ö
+		String searchType = (String) map.get("searchType");
+		String keyword = (String) map.get("keyword");
+				
+		int count = boardDao.travelreviewCount(searchType, keyword);
 
 		List<BoardDto> travelreviewList = null;
 		if (count > 0) {
-			travelreviewList = boardDao.travelreviewList(startRow, endRow);
+			travelreviewList = boardDao.travelreviewList(startRow, endRow, searchType, keyword);
 		}
 
 		mav.addObject("boardList", travelreviewList);
@@ -218,7 +235,7 @@ public class BoardServiceImp implements BoardService {
 
 	}
 
-	//ê¸€ ìƒì„¸ë³´ê¸°
+	//±Û »ó¼¼º¸±â
 	@Override
 	public void boardRead(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -248,5 +265,71 @@ public class BoardServiceImp implements BoardService {
 		mav.addObject("boardNo", boardNo);
 		mav.setViewName("board/update");
 	}
+	
+	//=====================================================================Áñ°ÜÃ£±â
+	//Áñ°ÜÃ£±â
+	@Override
+	public int bookmark(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
 
+		String id = (String) map.get("id");
+		BoardDto boardDto = (BoardDto) map.get("boardDto");
+		
+		int check = boardDao.bookmark(id, boardDto);
+		
+		return check;
+	}
+	
+	//Áñ°ÜÃ£±â Áßº¹Ã¼Å©
+	@Override
+	public int bmCheck(String id, int boardNo) {
+		int check = boardDao.bmCheck(id, boardNo);
+		
+		return check;
+	}
+	
+	//=====================================================================´ñ±Û
+	//´ñ±ÛÀÔ·Â
+	@Override
+	public int replyWrite(ReplyDto replyDto) {
+		//´ñ±Û
+		int sequenceNo = 0;
+		
+		//½ÃÄö½º³Ñ¹ö°¡ 0ÀÌ¶ó¸é (=´ñ±ÛÀÏ¶§)
+		if (replyDto.getSequenceNo() == 0) {
+			int maxGNo = boardDao.maxGroupNo();
+			int groupNo = maxGNo + 1;
+			replyDto.setGroupNo(groupNo);
+			
+			sequenceNo += 1;
+			replyDto.setSequenceNo(sequenceNo);
+		} else {	//´ë´ñ±ÛÀÏ¶§
+			int groupNo = replyDto.getGroupNo();
+			int maxSeqNo = boardDao.maxSequenceNo(groupNo);
+			sequenceNo = maxSeqNo + 1;
+			replyDto.setSequenceNo(sequenceNo);
+		}
+		
+		return boardDao.replyWrite(replyDto);
+	}
+	
+	//´ñ±Û¸®½ºÆ®
+	@Override
+	public List<ReplyDto> replyList(int boardNo) {
+		return boardDao.replyList(boardNo);
+	}
+	
+	//´ñ±Û»èÁ¦
+	@Override
+	public int replyDel(int replyNo) {
+		return boardDao.replyDel(replyNo);
+	}
+	
+	//´ñ±Û¼öÁ¤
+	@Override
+	public int replyUpd(ReplyDto replyDto) {
+		return boardDao.replyUpd(replyDto);
+	}
+	
+	
 }

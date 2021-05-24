@@ -1,6 +1,10 @@
 package com.java.board.service;
 
+import java.util.List;
+
 import org.springframework.web.servlet.ModelAndView;
+
+import com.java.board.dto.ReplyDto;
 
 public interface BoardService {
 
@@ -18,5 +22,20 @@ public interface BoardService {
 
 	//수정
 	void boardUpdate(ModelAndView mav);
+	
+	//즐겨찾기
+	int bookmark(ModelAndView mav);
+	//즐겨찾기 중복체크
+	int bmCheck(String id, int boardNo);
+	
+	//댓글입력
+	int replyWrite(ReplyDto replyDto);
+	//댓글리스트
+	List<ReplyDto> replyList(int boardNo);
+	//댓글삭제
+	int replyDel(int replyNo);
+	//댓글수정
+	int replyUpd(ReplyDto replyDto);
+
 	
 }
