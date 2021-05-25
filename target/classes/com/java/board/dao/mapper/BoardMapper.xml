@@ -18,6 +18,7 @@
 		<result column="like_cnt" property="likeCnt" />
 		<result column="is_del" property="isDel" />
 		<result column="is_popular" property="isPopular" />
+		<result column="is_notice" property="isNotice" />
 	</resultMap>
 	<resultMap type="com.java.board.dto.BoardFileDto" id="boardFileDto">
 		<result column="file_no" property="fileNo"/>
@@ -153,8 +154,7 @@
 	
 	<!-- 공지글작성 -->
 	<insert id="notice_insert" parameterType="java.util.Map">
-		insert all
-		into board (board_no, post_id, board_code, title, content, area, write_date)
+		insert into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
 				#{boardDto.postId},
@@ -162,21 +162,9 @@
 				#{boardDto.title},
 				#{boardDto.content},
 				#{boardDto.area},
-				sysdate
+				sysdate,
+				1
 				)
-		into notice (notice_no, board_no, post_id, board_code, title, content, read_cnt, is_notice, write_date)
-		values(
-				notice_no_seq.nextval,
-				board_no_seq.nextval,
-				#{boardDto.postId},
-				#{boardDto.boardCode},
-				#{boardDto.title},
-				#{boardDto.content},
-				#{boardDto.readCnt},
-				#{noticeDto.isNotice},
-				sysdate
-				)
-		select * from dual
 	</insert>
 	
 	<!-- 게시글검색조건 -->
@@ -194,39 +182,86 @@
 			</if>
 		</if>
 	</sql>
-	
+	<!-- ============================================================================================================ -->
 	<!-- 동행 게시판 리스트, 카운트 -->
 	<select id="accompanyboard_list" parameterType="java.util.Map" resultMap="boardDto">
 		<![CDATA[
-		select a.*
-		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
-				from board
-				where board_code = 11 and is_del = 0
+		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		from (
+		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        from (
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from board
+                        where board_code = 11 and is_notice = 1 and is_del = 0
+		                
+		                union
+		                
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+                        from board
+                        where board_code = 11 and is_del = 0
+                        
+                        union
+                        
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from (
+                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                from board
+                                where board_code = 11 and is_del = 0
+                            )
+                        where rank <= 3
+					)a
+				where 1=1
 		]]>
-		<include refid="searchCondition"></include>
+				<include refid="searchCondition"></include>
 		<![CDATA[
-				order by board_no desc)a
-		where rnum between #{startRow} and #{endRow}
+			)b
+		where rn between #{startRow} and #{endRow}
 		]]>
+		
+		
+		
    </select>
 	<select id="accompanyboard_getCount" parameterType="java.util.Map" resultType="int">
 		select nvl(count(*),0) from board where board_code = 11 and is_del = 0
 		<include refid="searchCondition"></include>
 	</select>
-	
+	<!-- ============================================================================================================ -->
 	<!-- 동행 후기 게시판 리스트, 카운트 -->
 	<select id="accompanyreview_list" parameterType="java.util.Map" resultMap="boardDto">
+		
 		<![CDATA[
-		select a.*
-		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
-				from board
-				where board_code = 12 and is_del = 0
+		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		from (
+		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        from (
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from board
+                        where board_code = 12 and is_notice = 1 and is_del = 0
+		                
+		                union
+		                
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+                        from board
+                        where board_code = 12 and is_del = 0
+                        
+                        union
+                        
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from (
+                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                from board
+                                where board_code = 12 and is_del = 0
+                            )
+                        where rank <= 3
+					)a
+				where 1=1
 		]]>
-		<include refid="searchCondition"></include>
+				<include refid="searchCondition"></include>
 		<![CDATA[
-				order by board_no desc)a
-		where rnum between #{startRow} and #{endRow}
+			)b
+		where rn between #{startRow} and #{endRow}
 		]]>
+		
    </select>
 	<select id="accompanyreview_getCount" parameterType="java.util.Map" resultType="int">
 		select nvl(count(*),0) from board where board_code = 12 and is_del = 0
@@ -235,17 +270,40 @@
 	
 	<!-- 추천 여행 경로 게시판 리스트, 카운트 -->
 	<select id="recommendpath_list" parameterType="java.util.Map" resultMap="boardDto">
+		
 		<![CDATA[
-		select a.*
-		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
-				from board
-				where board_code = 13 and is_del = 0
+		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		from (
+		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        from (
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from board
+                        where board_code = 13 and is_notice = 1 and is_del = 0
+		                
+		                union
+		                
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+                        from board
+                        where board_code = 13 and is_del = 0
+                        
+                        union
+                        
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from (
+                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                from board
+                                where board_code = 13 and is_del = 0
+                            )
+                        where rank <= 3
+					)a
+				where 1=1
 		]]>
-		<include refid="searchCondition"></include>
+				<include refid="searchCondition"></include>
 		<![CDATA[
-				order by board_no desc)a
-		where rnum between #{startRow} and #{endRow}
+			)b
+		where rn between #{startRow} and #{endRow}
 		]]>
+		
    </select>
 	<select id="recommendpath_getCount" parameterType="java.util.Map" resultType="int">
 		select nvl(count(*),0) from board where board_code = 13 and is_del = 0
@@ -254,17 +312,40 @@
 	
 	<!-- 여행지 후기 게시판 리스트, 카운트 -->
 	<select id="travelreview_list" parameterType="java.util.Map" resultMap="boardDto">
+		
 		<![CDATA[
-		select a.*
-		from (	select rownum rnum, board_no, title, post_id, write_date, read_cnt, area
-				from board
-				where board_code = 14 and is_del = 0
+		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		from (
+		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        from (
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from board
+                        where board_code = 14 and is_notice = 1 and is_del = 0
+		                
+		                union
+		                
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+                        from board
+                        where board_code = 14 and is_del = 0
+                        
+                        union
+                        
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        from (
+                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                from board
+                                where board_code = 14 and is_del = 0
+                            )
+                        where rank <= 3
+					)a
+				where 1=1
 		]]>
-		<include refid="searchCondition"></include>
+				<include refid="searchCondition"></include>
 		<![CDATA[
-				order by board_no desc)a
-		where rnum between #{startRow} and #{endRow}
+			)b
+		where rn between #{startRow} and #{endRow}
 		]]>
+		
    </select>
 	<select id="travelreview_getCount" parameterType="java.util.Map" resultType="int">
 		select nvl(count(*),0) from board where board_code = 14 and is_del = 0

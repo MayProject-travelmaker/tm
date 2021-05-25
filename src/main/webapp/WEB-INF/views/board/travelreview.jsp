@@ -104,7 +104,15 @@
 								</c:if>
 								<c:forEach var="boardDto" items="${boardList}">
 									<tr>
-										<td class="text-center">${boardDto.boardNo}</td>
+										<c:if test="${boardDto.isNotice == 1}">
+											<td class="text-center">공지</td>
+										</c:if>
+										<c:if test="${boardDto.isNotice == 0 && boardDto.isPopular == 0}">
+											<td class="text-center">${boardDto.boardNo}</td>
+										</c:if>
+										<c:if test="${boardDto.isPopular == 1}">
+											<td class="text-center">인기글</td>
+										</c:if>
 										<td>
 											<c:if test="${boardDto.area == null}">	<!-- 공지글일경우 -->
 												<a href="${root}/board/read.do?boardNo=${boardDto.boardNo}">${boardDto.title}</a></c:if>

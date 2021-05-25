@@ -18,12 +18,15 @@ public class BoardDto {
 	
 	private long fileSize;
 	
+	//추가
+	private int isNotice;	//0:일반글, 1:공지글
+
 	public BoardDto() {
 		super();
 	}
 	
 	public BoardDto(int boardNo, String postId, int boardCode, String title, String content, String area,
-			Date writeDate, Date updateDate, int readCnt, int likeCnt, int isDel, int isPopular, long fileSize) {
+			Date writeDate, Date updateDate, int readCnt, int likeCnt, int isDel, int isPopular, long fileSize, int isNotice) {
 		super();
 		this.boardNo = boardNo;
 		this.postId = postId;
@@ -38,6 +41,7 @@ public class BoardDto {
 		this.isDel = isDel;
 		this.isPopular = isPopular;
 		this.fileSize = fileSize;
+		this.isNotice = isNotice;
 	}
 	
 	
@@ -46,7 +50,7 @@ public class BoardDto {
 		return "BoardDto [boardNo=" + boardNo + ", postId=" + postId + ", boardCode=" + boardCode + ", title=" + title
 				+ ", content=" + content + ", area=" + area + ", writeDate=" + writeDate + ", updateDate=" + updateDate
 				+ ", readCnt=" + readCnt + ", likeCnt=" + likeCnt + ", isDel=" + isDel + ", isPopular=" + isPopular
-				+ ", fileSize=" + fileSize + "]";
+				+ ", fileSize=" + fileSize + ", isNotice=" + isNotice + "]";
 	}
 
 	public int getBoardNo() {
@@ -151,6 +155,14 @@ public class BoardDto {
 
 	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
+	}
+
+	public int getIsNotice() {
+		return isNotice;
+	}
+
+	public void setIsNotice(int isNotice) {
+		this.isNotice = isNotice;
 	}
 
 	

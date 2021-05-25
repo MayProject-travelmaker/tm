@@ -18,7 +18,6 @@ import com.java.board.dao.BoardDao;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
-import com.java.board.dto.NoticeDto;
 import com.java.board.dto.ReplyDto;
 
 @Component
@@ -35,7 +34,6 @@ public class BoardServiceImp implements BoardService {
 		BoardDto boardDto = (BoardDto) map.get("boardDto");
 		BoardFileDto boardFileDto = new BoardFileDto();
 		MapDto mapDto = new MapDto();
-		NoticeDto noticeDto = new NoticeDto();
 		
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
 		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
@@ -51,7 +49,7 @@ public class BoardServiceImp implements BoardService {
 			isNotice = -1;
 		} else {				//공지글작성
 			isNotice = Integer.parseInt(notice);
-			noticeDto.setIsNotice(isNotice);
+			boardDto.setIsNotice(isNotice);
 		}
 		
 		MultipartFile upFile = request.getFile("file");
@@ -77,7 +75,6 @@ public class BoardServiceImp implements BoardService {
 		dtoMap.put("boardDto", boardDto);
 		dtoMap.put("boardFileDto", boardFileDto);
 		dtoMap.put("mapDto", mapDto);
-		dtoMap.put("noticeDto", noticeDto);
 		
 		HashMap<String, String> map2 = new HashMap<String, String>();
 		map2.put("file", String.valueOf(upFile.isEmpty()));
