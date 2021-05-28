@@ -1,6 +1,8 @@
 package com.java.board.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -204,5 +206,20 @@ public class BoardController {
 		replyDto.setContent(content);
 		int check = boardService.replyUpd(replyDto);
 		return check;
+	}
+	
+	// 좋아요 버튼
+	@ResponseBody
+	@RequestMapping(value = "/board/likeOk.do", method = RequestMethod.GET)
+	public HashMap<String, Object> boardLikeOk(@RequestParam Map<String, Object> param, HttpServletRequest request,
+			HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+
+		mav.addObject("request", request);
+		mav.addObject("boardNo", (String) param.get("boardNo")); // 게시글 번호
+		mav.addObject("boardCode", (String) param.get("boardCode")); // 게시판 코드
+		mav.addObject("postId", (String) param.get("postId")); // 작성자 아이디
+
+		return boardService.boardLikeOk(mav);
 	}
 }

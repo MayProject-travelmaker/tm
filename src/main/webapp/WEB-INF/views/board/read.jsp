@@ -182,7 +182,19 @@ function delFunc(root, boardNo) {
 						</div>
 					</div>
 					<br>
-					
+					<!-- 좋아요 -->
+					<div align="left">
+						<c:if test="${isLiked == 1}">
+							<button type="button" class="btn btn-light" id="like_btn"
+								onclick="like_btn_click('${boardDto.boardNo}','${boardDto.boardCode}', '${boardDto.postId}')">❤<span>${boardDto.likeCnt}</span>
+							</button>
+						</c:if>
+						<c:if test="${isLiked == 0 }">
+							<button type="button" class="btn btn-light" id="like_btn"
+								onclick="like_btn_click('${boardDto.boardNo}','${boardDto.boardCode}', '${boardDto.postId}')">🤍<span>${boardDto.likeCnt}</span>
+							</button>
+						</c:if>
+					</div>
 					<span id="sid" hidden="true">${sessionScope.id}</span>
 					<!-- 댓글 -->
 					<div class="container" style="background-color: #eff1f3; border-radius: 5px">

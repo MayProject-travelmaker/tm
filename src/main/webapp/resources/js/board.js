@@ -297,7 +297,35 @@ $(document).on('click', '#btnSearch', function(e){
 });
 
 
-
-
-
-
+/* 좋아요 버튼 */
+function like_btn_click(boardNo, boardCode, postId) {
+	// 게시글 번호, 게시판 코드, 작성자 아이디
+	if ($('input[name=id]').val() == "") {
+		alert("로그인이 필요한 항목입니다.");
+	} else {
+		$.ajax({
+			url: "likeOk.do",
+			type: "GET",
+			data: {
+				boardNo: boardNo,
+				boardCode: boardCode,
+				postId: postId
+			},
+			dataType: "JSON",
+			success: function(result) {
+				var like_cnt = $('#like_btn').children().text();
+				if (result['likeType'] == 'ok') {
+					/* 이미 좋아요 누른 회원이면 좋아요 취소 */
+					like_cnt = parseInt(like_cnt) + 1;
+					$('#like_btn').contents()[0].textContent = "❤";
+					$('#like_btn').contents()[1].textContent = like_cnt;
+				} else if (result['likeType'] == 'del') {
+					/* 좋아요 안 누른 회원이면 좋아요 */
+					like_cnt = parseInt(like_cnt) - 1;
+					$('#like_btn').contents()[0].textContent = "🤍";
+					$('#like_btn').contents()[1].textContent = like_cnt;
+				}
+			}
+		});	// ajax
+	} // if ~ else
+}

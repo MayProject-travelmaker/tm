@@ -42,19 +42,25 @@ public interface BoardDao {
 
 	//즐겨찾기
 	public int bookmark(String id, BoardDto boardDto);
+	
 	//즐겨찾기 중복체크
 	public int bmCheck(String id, int boardNo);
 
 	//댓글작성
 	public int replyWrite(ReplyDto replyDto);
+	
 	//댓글리스트
 	public List<ReplyDto> replyList(int boardNo);
+	
 	//댓글삭제
 	public int replyDel(int replyNo);
+	
 	//댓글수정
 	public int replyUpd(ReplyDto replyDto);
+	
 	//대댓글 max(group_no) 구하기
 	public int maxGroupNo();
+	
 	//대댓글 max(sequence_no) 구하기
 	public int maxSequenceNo(int groupNo);
 	
@@ -62,5 +68,16 @@ public interface BoardDao {
 
 	public BoardFileDto fileRead(int fileNo);
 	
+	// 좋아요 클릭 유무 확인
+	public int isBoardLike(HashMap<String, Object> likeMap);
+
+	// 좋아요 취소
+	public int boardLikeDel(HashMap<String, Object> likeMap);
+
+	// 좋아요
+	public int boardLikeOk(HashMap<String, Object> likeMap);
+
+	// 인기글 세팅
+	public int IsPopularUpdate(int boardCode);
 	
 }

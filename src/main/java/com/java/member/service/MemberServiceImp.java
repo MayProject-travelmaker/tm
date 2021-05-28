@@ -35,6 +35,7 @@ public class MemberServiceImp implements MemberService{
 	@Inject
 	JavaMailSender mailSender;
 	
+	// 회원가입
 	@Override
 	public void memberRegisterOk(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -54,7 +55,8 @@ public class MemberServiceImp implements MemberService{
 		mav.setViewName("member/registerOk");
 		
 	}	
-	// 회원가입 아이디 중복확인 서비스
+	
+	// 아이디 중복확인
 	@Override
 	public void memberidCheck(ModelAndView mav) {
 		Map<String,Object> map = mav.getModelMap();
@@ -63,11 +65,9 @@ public class MemberServiceImp implements MemberService{
 		int check = memberDao.memberidCheck(id);
 		
 		mav.addObject("check",check);
-		
-		
 	}
 
-	// 이메일인증 메일 전송 서비스
+	// 회원가입 이메일인증 메일 전송
 	@Override
 	public void sendEmail(ModelAndView mav) {
 		Random random = new Random();
@@ -77,11 +77,9 @@ public class MemberServiceImp implements MemberService{
 		String from = "projeun2@gmail.com";
 		String to = email;
 		String subject = "[TRAVLE MAKER] 회원가입 인증 이메일 입니다.";
-		String content = 
-				"인증번호는 " + randomNumber + "입니다."+
-				System.getProperty("line.seperator")+
+		String content = "<h4>[회원가입 인증]</h4><br>"+
+				"인증번호는 <strong>" + randomNumber + "</strong> 입니다.<br><br>"+
 				"인증번호를 홈페이지에 입력해 주세요.";
-		System.out.println("MemberServiceImple email: "+email);
 		
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper messageHelper;
@@ -90,7 +88,7 @@ public class MemberServiceImp implements MemberService{
 			messageHelper.setFrom(from); // 보내는 사람 이메일
 			messageHelper.setTo(to); // 받는 사람 이메일
 			messageHelper.setSubject(subject); // 메일 제목
-			messageHelper.setText(content); // 메일 내용
+			messageHelper.setText(content, true); // 메일 내용(true: html태그 인식)
 			
 			mailSender.send(message);
 		} catch (MessagingException e) {
@@ -100,12 +98,8 @@ public class MemberServiceImp implements MemberService{
 		mav.addObject("randomNumber", randomNumber);
 		
 	}
-	@Override
-	public void memberlogin(ModelAndView mav) {
-		// TODO Auto-generated method stub
-		
-	}
 
+	// 로그인
 	@Override
 	public void memberloginOk(ModelAndView mav) {
 		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
@@ -120,8 +114,6 @@ public class MemberServiceImp implements MemberService{
 			HttpSession session = request.getSession();
 			session.setAttribute("id", id); // 세션에 id 저장하기
 			session.setAttribute("memberLevel", result.get("MEMBER_LEVEL")); // 세션에 memberLevel 저장하기
-//			mav.addObject("memberLevel", result.get("MEMBER_LEVEL")); 	// param
-//			mav.addObject("id",id);	// param
 			
 			mav.setViewName("redirect:/");
 		} else {
@@ -133,19 +125,6 @@ public class MemberServiceImp implements MemberService{
 		
 	}
 
-	@Override
-	public void main(ModelAndView mav) {
-		
-		
-		
-	}
-
-	@Override
-	public void memberloginOut(ModelAndView mav) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	// 회원정보 확인
 	@Override
 	public void memberProfileOk(ModelAndView mav) {
@@ -167,6 +146,7 @@ public class MemberServiceImp implements MemberService{
 		}
 		
 	}
+	
 	// 회원정보 수정 화면
 	@Override
 	public void memberUpdate(ModelAndView mav) {
@@ -180,6 +160,7 @@ public class MemberServiceImp implements MemberService{
 		mav.setViewName("member/memberupdate");
 		
 	}
+	
 	// 회원정보 수정 완료
 	@Override
 	public void memberUpdateOk(ModelAndView mav) {
@@ -205,23 +186,17 @@ public class MemberServiceImp implements MemberService{
 		mav.setViewName("member/memberupdate");
 	}
 	
-	@Override
-	public void memberDelete(ModelAndView mav) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	// 회원탈퇴
 	@Override
 	public int memberDeleteOk(ModelAndView mav) {
 		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
 		Map<String,Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
-		HttpServletResponse response = (HttpServletResponse) map.get("response");
 		HttpSession session = request.getSession();
+		
 		String id = (String) session.getAttribute("id");
 		String password = request.getParameter("password");
-		System.out.println("session id: "+id);
+		
 		HashMap<String,Object> result = memberDao.loginOk(id, password);
 		int check = 0;
 		if(result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD"))) {
@@ -230,19 +205,6 @@ public class MemberServiceImp implements MemberService{
 			check = memberDao.memberDelete(id, password); // 회원등급(탈퇴회원) 변경
 			if(check > 0) {
 				mav.addObject("message", "회원탈퇴가 완료되었습니다.");
-//				mav.setViewName("member/memberdelete");
-////
-//				response.setContentType("text/html; charset=UTF-8");
-//				PrintWriter out = null;
-//				try {
-//					out = response.getWriter();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//				out.println("<script>alert('회원탈퇴가 완료되었습니다.'); </script>");
-//				out.flush();
-				 
-//				mav.setViewName("redirect:/");
 			} else {
 				System.out.println("실패");
 				mav.addObject("message", "회원탈퇴가 실패했습니다.");
@@ -297,7 +259,7 @@ public class MemberServiceImp implements MemberService{
 		String domain = request.getParameter("domain");
 		String from = "projeun2@gmail.com";
 		String to = email+domain;
-		System.out.println("MAIL: "+to);
+		//System.out.println("MAIL: "+to);
 		
 		// 임의의 인증키 생성 & DB에 인증키 업데이트하기
 		Random random = new Random();
@@ -311,7 +273,7 @@ public class MemberServiceImp implements MemberService{
 				"<a href='http://localhost/project/member/changePassword.do?id="+id+
 				"&authKey="+authKey+
 				"' target='_blank'>이메일 인증 확인</a>";
-		System.out.println("MemberServiceImple email: "+email);
+		//System.out.println("MemberServiceImple email: "+email);
 		
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper messageHelper;
@@ -320,7 +282,7 @@ public class MemberServiceImp implements MemberService{
 			messageHelper.setFrom(from); // 보내는 사람 이메일
 			messageHelper.setTo(to); // 받는 사람 이메일
 			messageHelper.setSubject(subject); // 메일 제목
-			messageHelper.setText(content,true);
+			messageHelper.setText(content,true); // 메일 내용(true: html태그 인식)
 			mailSender.send(message);
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -350,7 +312,4 @@ public class MemberServiceImp implements MemberService{
 			mav.setViewName("member/changePasswordOk");
 		}
 	}
-	
-
-	
 }

@@ -12,12 +12,20 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <style type="text/css">
 	.modal{
-		position: absolute;
+		/* 화면 가운데 */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		/* 널빙와 화면상 위치 */
 		width: 100%;
 		height: 150%;
-		top: 0;
-		left: 0;
+		/* 스크롤 고정 */
+		position: fixed;
+		/* 제일 앞으로 */
+		z-index: 1;
+		/* 투명도 조절 - 배경 불투명 */
 		background: rgba(0,0,0,0.8);
+		/* 처음엔 안 보이게 */
 		display: none;
 	}
 </style>

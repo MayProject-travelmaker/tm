@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -241,15 +242,30 @@ public class BoardServiceImp implements BoardService {
 	public void boardRead(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		HttpSession session = (HttpSession) request.getSession();
 	
 		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 		int mapNo = Integer.parseInt(request.getParameter("boardNo"));
 		int fileNo = Integer.parseInt(request.getParameter("boardNo"));
 
+		String likeId = (String) session.getAttribute("id");	// 세션 아이디
 		BoardDto boardDto = boardDao.boardRead(boardNo);
 		MapDto mapDto = boardDao.mapRead(mapNo);
 		BoardFileDto boardFileDto = boardDao.fileRead(fileNo);
 	 	
+		// 좋아요
+		int isLiked = 0;
+		if(likeId != null) {
+			// 로그인한 회원인 경우, 해당 게시글 좋아요 버튼을 눌렀는지 확인
+			HashMap<String, Object> likeMap = new HashMap<String, Object>();
+			likeMap.put("likeId", likeId);
+			likeMap.put("boardNo", boardNo);
+			isLiked = boardDao.isBoardLike(likeMap);
+		}
+		
+		mav.addObject("boardDto", boardDto);
+		mav.addObject("isLiked", isLiked);
+		
 		mav.addObject("boardDto", boardDto);
 		mav.addObject("mapDto", mapDto);
 		mav.addObject("boardFileDto", boardFileDto);
@@ -428,4 +444,45 @@ public class BoardServiceImp implements BoardService {
 	}
 	
 	
+	// 좋아요
+	@Override
+	public HashMap<String, Object> boardLikeOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		HttpSession session = (HttpSession) request.getSession();
+
+		String likeId = (String) session.getAttribute("id"); // 좋아요 누른 세션 아이디
+		int boardNo = Integer.parseInt((String) map.get("boardNo")); // 게시글 번호
+		int boardCode = Integer.parseInt((String) map.get("boardCode")); // 게시판 코드
+		String postId = (String) map.get("postId"); // 게시글 작성자 아이디
+
+		// 해시맵에 데이터 담기
+		HashMap<String, Object> likeMap = new HashMap<String, Object>();
+		likeMap.put("likeId", likeId);
+		likeMap.put("boardNo", boardNo);
+		likeMap.put("boardCode", boardCode);
+		likeMap.put("postId", postId);
+		// 세션아이디 해당 게시글 좋아요 클릭 유무 확인
+		int check = boardDao.isBoardLike(likeMap);
+		String likeType = null;
+		if (check > 0) {
+			// 좋아요 누른 적 있는 경우 -> 좋아요 취소
+			likeType = "del";
+			boardDao.boardLikeDel(likeMap);
+		} else {
+			// 좋아요 누른 적 없는 경우 -> 좋아요
+			likeType = "ok";
+			boardDao.boardLikeOk(likeMap);
+		}
+
+		// 인기글 update - isPopluar
+		int isPopluar_update_check = boardDao.IsPopularUpdate(boardCode);
+
+		// 반환값 결과, 좋아요 유형
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		// result.put("check", check);
+		result.put("likeType", likeType);
+
+		return result;
+	}
 }
