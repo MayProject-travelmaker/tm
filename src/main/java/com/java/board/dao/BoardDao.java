@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.java.board.dto.BoardDto;
+import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 
 public interface BoardDao {
@@ -32,6 +34,11 @@ public interface BoardDao {
 
 	//update
 	public BoardDto boardupdate(int boardNo);
+	public int boardUpdateOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
+
+	//delete
+	public BoardDto boardCodeCheck(int boardNo);
+	public int boardDeleteOk(HashMap<String, Object> dtoMap);
 
 	//¡Ò∞‹√£±‚
 	public int bookmark(String id, BoardDto boardDto);
@@ -50,4 +57,10 @@ public interface BoardDao {
 	public int maxGroupNo();
 	//¥Î¥Ò±€ max(sequence_no) ±∏«œ±‚
 	public int maxSequenceNo(int groupNo);
+	
+	public MapDto mapRead(int mapNo);
+
+	public BoardFileDto fileRead(int fileNo);
+	
+	
 }

@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="false"%>
+<%@ page session="true"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -12,6 +12,9 @@
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<!-- 썸네일 이미지 추가 -->
+<meta http-equiv="X-UA-Compatible" content="ie=edge" /> 
+
 <meta name="description" content="" />
 <meta name="author" content="" />
 <title>Travel Maker</title>
@@ -30,11 +33,25 @@
 <script type="text/javascript" src="${root}/resources/js/board.js"></script>
 
 <!-- 지도 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2102518f2de8a629420b644581e1b855&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d22f00b438fdc58950b8771f7c3989ef&libraries=services"></script>
 <link href="${root}/resources/css/styles_map.css" rel="stylesheet" />
 
 </head>
 <body>
+<!-- 세션 확인 -->
+<c:if test="${sessionScope.memberLevel == null}">
+	<script>
+		alert("로그인이 필요한 서비스입니다.");
+		location.href = "${root}/member/login.do";
+	</script>
+</c:if>
+<!-- 세션 확인 -->
+<c:if test="${sessionScope.id != boardDto.postId}">
+	<script>
+		alert("게시자와 작성자를 확인해주세요.");
+		location.href = "${root}";
+	</script>
+</c:if>
 	<!-- Navigation-->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
@@ -79,38 +96,44 @@
 					<c:if test="${boardDto.boardCode == 14}"><div class="panel-heading">✈ 여행지 후기</div></c:if>
 					
 					<form action="${root}/board/updateOk.do" method="post" enctype="multipart/form-data">
+						<input type="hidden" value="${boardDto.boardNo}" name="boardNo">
+						<input type="hidden" value="${boardDto.boardCode}" name="boardCode">
+					
 						<div class="table table-responsive">
 							<table class="table">
 								<c:if test="${memberLevel == 1}">
 									<tr>
 										<td class="border-right">공지유무</td>
-										<td><input type="checkbox" name="notice" value="1" checked> 공지글</input></td>
+										<td><input type="checkbox" name="notice" value="1" checked> 공지글</td>
 									</tr>
 								</c:if>
-								<tr>
-									<td class="border-right">지역</td>
-									<td><select class="form-control" name="area">
+								<c:if test="${memberLevel != 1}">
+									<tr>
+										<td class="border-right">지역</td>
+										<td><select class="form-control" name="area">
 											<option value="">선택</option>
-											<option value="kor">전국</option>
-											<option value="seoul">서울</option>
-											<option value="gyeonggi">경기</option>
-											<option value="incheon">인천</option>
-											<option value="busan">부산</option>
-											<option value="daejeon">대전</option>
-											<option value="sejong">세종</option>
-											<option value="chungnam">충남</option>
-											<option value="chungbuk">충북</option>
-											<option value="gwangju">광주</option>
-											<option value="jeju">제주</option>
-											<option value="gangwon">강원</option>
-											<option value="ulsan">울산</option>
-											<option value="gyeongnam">경남</option>
-											<option value="gyeongbuk">경북</option>
-											<option value="daegu">대구</option>
-											<option value="jeonnam">전남</option>
-											<option value="jeonbuk">전북</option>
-									</select></td>
-								</tr>
+											<option value="전국" <c:if test="${boardDto.area == '전국'}">selected</c:if>>전국</option>
+											<option value="서울" <c:if test="${boardDto.area == '서울'}">selected</c:if>>서울</option>
+											<option value="경기" <c:if test="${boardDto.area == '경기'}">selected</c:if>>경기</option>
+											<option value="인천" <c:if test="${boardDto.area == '인천'}">selected</c:if>>인천</option>
+											<option value="부산" <c:if test="${boardDto.area == '부산'}">selected</c:if>>부산</option>
+											<option value="대전" <c:if test="${boardDto.area == '대전'}">selected</c:if>>대전</option>
+											<option value="세종" <c:if test="${boardDto.area == '세종'}">selected</c:if>>세종</option>
+											<option value="충남" <c:if test="${boardDto.area == '충남'}">selected</c:if>>충남</option>
+											<option value="충북" <c:if test="${boardDto.area == '충북'}">selected</c:if>>충북</option>
+											<option value="광주" <c:if test="${boardDto.area == '광주'}">selected</c:if>>광주</option>
+											<option value="제주" <c:if test="${boardDto.area == '제주'}">selected</c:if>>제주</option>
+											<option value="강원" <c:if test="${boardDto.area == '강원'}">selected</c:if>>강원</option>
+											<option value="울산" <c:if test="${boardDto.area == '울산'}">selected</c:if>>울산</option>
+											<option value="경남" <c:if test="${boardDto.area == '경남'}">selected</c:if>>경남</option>
+											<option value="경북" <c:if test="${boardDto.area == '경븍'}">selected</c:if>>경북</option>
+											<option value="대구" <c:if test="${boardDto.area == '대구'}">selected</c:if>>대구</option>
+											<option value="전남" <c:if test="${boardDto.area == '전남'}">selected</c:if>>전남</option>
+											<option value="전북" <c:if test="${boardDto.area == '전북'}">selected</c:if>>전북</option>
+											</select>
+										</td>
+									</tr>
+								</c:if>
 								<tr>
 									<td class="border-right" width="100px">작성자</td>
 									<td><input type="text" class="form-control" name="postId"
@@ -127,11 +150,26 @@
 								</tr>
 								<tr>
 									<td class="border-right" height="200px">글내용</td>
-									<td colspan="2"><textarea rows="10" cols="30" name="content" class="form-control" value="${boardDto.content}"></textarea></td>
+									<td colspan="2"><textarea rows="10" cols="30" name="content" class="form-control">${boardDto.content}</textarea></td>
 								</tr>
 								<tr>
 									<td class="border-right">첨부파일</td>
-									<td><input type="file" name="file" accept="image/*"></td>
+									<c:if test="${boardFileDto.fileNo!=null}"><td>현재 등록되어 있는 파일은 ${boardFileDto.fileName} 입니다.<br></c:if>
+									<td><input type="file" id="image" name="file" accept="image/*" onchange="setThumbnail(event);" style="width:100%;height:100%;"/>
+										<div id="image_container"></div> 
+										<script> function setThumbnail(event) { 
+											for (var image of event.target.files) { 
+												var reader = new FileReader(); reader.onload = function(event) { 
+													var img = document.createElement("img"); 
+													img.setAttribute("src", event.target.result); 
+													document.querySelector("div#image_container").appendChild(img); 
+												}; 
+												console.log(image); 
+												reader.readAsDataURL(image); 
+											} 
+										} 
+										</script>
+									</td>
 								</tr>
 								<tr>
 									<td class="border-right">지도</td>
@@ -157,7 +195,6 @@
 										<input type="hidden" id="latitude" name="xAxis" value="">
 										<input type="hidden" id="longitude" name="yAxis" value="">
 										<div id="result"></div> 
-<!-- 									<input type="submit" value="저장"> -->
 									</td>
 								</tr>
 								<tr>

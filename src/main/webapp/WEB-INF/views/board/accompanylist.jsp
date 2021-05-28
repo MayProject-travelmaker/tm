@@ -106,6 +106,12 @@
 								<input type="hidden" name="boardCode" value="${boardDto.boardCode}">
 									<tr>
 										<c:if test="${boardDto.isNotice == 1}">
+											<tr style="background-color: #f1f1f1">
+										</c:if>
+										<c:if test="${boardDto.isPopular == 1}">
+											<tr>
+										</c:if>
+										<c:if test="${boardDto.isNotice == 1}">
 											<td class="text-center">공지</td>
 										</c:if>
 										<c:if test="${boardDto.isNotice == 0 && boardDto.isPopular == 0}">
@@ -116,7 +122,7 @@
 										</c:if>
 										<td>
 											<c:if test="${boardDto.area == null}">	<!-- 공지글일경우 -->
-												<a href="${root}/board/read.do?boardNo=${boardDto.boardNo}">${boardDto.title}</a></c:if>
+												<a href="${root}/board/read.do?boardNo=${boardDto.boardNo}">📢 ${boardDto.title}</a></c:if>
 											<c:if test="${boardDto.area != null}">	<!-- 공지글아닐경우 -->
 												<a href="${root}/board/read.do?boardNo=${boardDto.boardNo}">[${boardDto.area}] ${boardDto.title}</a></c:if>
 										</td>

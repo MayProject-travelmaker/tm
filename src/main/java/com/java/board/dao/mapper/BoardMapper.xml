@@ -363,15 +363,100 @@
 	<select id="board_read" parameterType="int" resultMap="boardDto">
 		select board_no, post_id, write_date, area, title, content, read_cnt, board_code  
 		from board 
+		where board_no=#{boardNo} and is_del = 0
+	</select>
+	<!-- 지도 좌표 읽어오기 -->
+	<select id="map_read" parameterType="int" resultMap="mapDto">
+		select *
+		from map natural join board
+		where board_no=#{boardNo}
+	</select>
+	<!-- 파일 정보 읽어오기 file_read -->
+	<select id="file_read" parameterType="int" resultMap="boardFileDto">
+		select *
+		from board_file natural join board
 		where board_no=#{boardNo}
 	</select>
 	
 	<!-- update -->
 	<select id="board_update" parameterType="int" resultMap="boardDto">
-		select board_no, post_id, write_date, title, content, board_code
+		select *
 		from board 
 		where board_no=#{boardNo}
 	</select>
+	
+	<!-- update content -->
+	<update id="board_updateOk" parameterType="java.util.Map">
+		update board 
+		set area=#{boardDto.area}, title=#{boardDto.title}, content=#{boardDto.content}, update_date=sysdate
+		where board_no=#{boardDto.boardNo}
+	</update>
+	
+	<!-- update file -->
+	<update id="board_file_updateOk" parameterType="java.util.Map">    
+	MERGE INTO board_file bf 
+	    USING (select * from board b where b.board_no=#{boardDto.boardNo}) 
+	    ON (bf.board_no = #{boardDto.boardNo}) 
+	    WHEN MATCHED THEN 
+	    UPDATE SET 
+	        bf.file_name=#{boardFileDto.fileName}, 
+	        bf.file_path=#{boardFileDto.filePath}, 
+	        bf.file_extension=#{boardFileDto.fileExtension} 
+	    WHEN NOT MATCHED THEN 
+	    INSERT ( 
+	        bf.file_no, 
+	        bf.board_no, 
+	        bf.post_id, 
+	        bf.board_code, 
+	        bf.file_name, 
+	        bf.file_path, 
+	        bf.file_extension
+	    )
+	    VALUES (
+	        FILE_NO_SEQ.nextval, 
+			#{boardDto.boardNo}, 
+			#{boardDto.postId}, 
+			#{boardDto.boardCode}, 
+			#{boardFileDto.fileName}, 
+			#{boardFileDto.filePath}, 
+			#{boardFileDto.fileExtension}
+	     )
+	</update>
+	
+	<!-- update map -->
+	<update id="board_map_updateOk" parameterType="java.util.Map"> 
+	MERGE INTO map m
+	    USING (select * from board b where b.board_no=#{boardDto.boardNo}) 
+	    ON (m.board_no = #{boardDto.boardNo}) 
+	    WHEN MATCHED THEN 
+	    UPDATE SET 
+	        m.x_Axis=#{mapDto.xAxis}, 
+	        m.y_Axis=#{mapDto.yAxis} 
+	    WHEN NOT MATCHED THEN 
+	    INSERT (
+			m.map_no, 
+			m.board_no, 
+			m.post_id, 
+			m.board_code, 
+			m.x_Axis, 
+			m.y_Axis 
+	    )
+	    VALUES (
+	        map_no_seq.nextval, 
+			#{boardDto.boardNo}, 
+			#{boardDto.postId}, 
+			#{boardDto.boardCode}, 
+			#{mapDto.xAxis},  
+			#{mapDto.yAxis} 
+	     )
+	</update>
+	
+	<!-- delete -->
+	<update id="board_deleteOk" parameterType="java.util.Map">
+		update board 
+		set is_del=1
+		where board_no=#{boardDto.boardNo}
+	</update>
 	
 	<!-- 즐겨찾기 -->
 	<insert id="bookmark" parameterType="java.util.Map">

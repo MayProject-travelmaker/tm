@@ -12,12 +12,7 @@
 	<c:if test="${check > 0}">
 		<script type="text/javascript">
 			alert("수정되었습니다.");
-
-			<c:if test="${boardDto.boardCode == 11}">location.href = "${root}/board/accompanylist.do"</c:if>
-			<c:if test="${boardDto.boardCode == 12}">location.href = "${root}/board/accompanyreview.do"</c:if>
-			<c:if test="${boardDto.boardCode == 13}">location.href = "${root}/board/recommendpath.do"</c:if>
-			<c:if test="${boardDto.boardCode == 14}">location.href = "${root}/board/travelreview.do"</c:if>
-			
+			location.href = "${root}/board/read.do?boardNo=${boardDto.boardNo}"
 		</script>
 	</c:if>
 	

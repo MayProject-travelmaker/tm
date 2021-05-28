@@ -10,6 +10,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR"> 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="description" content="" />
 <meta name="author" content="" />
@@ -30,9 +31,27 @@ function updateFunc(root, boardNo){
 	location.href=url;
 	
 }
+function delFunc(root, boardNo) {
+	var value = confirm("삭제하시겠습니까?");
+
+	if (value == true) {
+		var url = root + "/board/deleteOk.do?boardNo=" + boardNo;
+		location.href = url;
+		
+	} else {
+		alert("취소되었습니다.");
+	}
+}
 </script>
 </head>
 <body>
+<!-- 세션 확인 -->
+<c:if test="${sessionScope.memberLevel == null}">
+	<script>
+		alert("로그인이 필요한 서비스입니다.");
+		location.href = "${root}/member/login.do";
+	</script>
+</c:if>
 	<jsp:include page="../report/report.jsp"></jsp:include>
 	<!-- Navigation-->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -78,6 +97,8 @@ function updateFunc(root, boardNo){
 						<c:if test="${boardDto.boardCode == 14}"><div class="panel-heading" id="14">✈ 여행지 후기</div></c:if>
 					</div>
 					<div>
+						<input type="hidden" value="${boardDto.boardNo}" name="boardNo">
+						<input type="hidden" value="${boardDto.boardCode}" name="boardCode">
 						<button class="btn float-right report" id="board_report" style="color: red">신고</button>
 						<button class="btn float-right"	id="bm">즐겨찾기</button>
 						<div class="table table-responsive">
@@ -97,14 +118,75 @@ function updateFunc(root, boardNo){
 									<td class="border-right" height="200px">글내용</td>
 									<td colspan="2">${boardDto.content}</td>
 								</tr>
+								
+								
+								
 								<tr>
 									<td class="border-right">첨부파일</td>
-									<td colspan="2"></td>
+									<td colspan="2">
+										<c:if test="${boardFileDto.fileNo == null}"> 업로드된 이미지가 없습니다.</c:if>
+									 	<!-- <img src="./캡처2.PNG" style="width:100%; height:100%;"> -->
+										<c:if test="${boardFileDto.fileNo != null}">
+											<input type="hidden" id="filePath" name="filePath">
+											<input type="hidden" id="fileName" name="fileName">
+											<a href="#">${boardFileDto.fileName}</a>
+											<div>application.getRealPath("/resources/img") :: <%= application.getRealPath("/resources/img")%> ::</div>
+										</c:if>
+<!-- 									</td> --> 
+<!-- 									<td class="file"> -->
+<!-- 									 <td colspan="2"> -->
+<%-- 									 <%= application.getRealPath("/img")%>  --%>
+<!-- 									<td> -->
+<%--  								<td><%= application.getRealPath("/img")%> </td> --%>
+<%-- 									<img src="file:\\\<%=request.getSession().getServletContext().getRealPath("/resources/img/") %>${boardFileDto.fileName}">${boardFileDto.filePath} --%>
+<%-- 									<img src="file:///<%=request.getSession().getServletContext().getRealPath("/resources/img/") %>${boardFileDto.fileName}" style="width:100%;"> --%>
+<!-- 									<script type="text/javascript"> -->
+<%-- // 									 webview.loadUrl("${boardFileDto.filePath}"); --%>
+<!-- 									</script> -->
+<%-- 									<%= application.getContextPath() %> <br> --%>
+<%-- 									<%= request.getSession().getServletContext().getRealPath("/resources/img/") %><br> --%>
+<%-- 									<%= application.getRealPath("/resources/img/") %> --%>
+<%-- 									<img src="<%= request.getSession().getServletContext().getRealPath("/resources/img/") %>${boardFileDto.fileName}"> --%>
+<%-- 									<img src="/resources/img/캡처2.PNG"/> ${boardFileDto.fileName} --%>
+<!-- 									<img src="file:\\\${boardFileDto.filePath}">                                                       -->
+									</td>
 								</tr>
+								 
+								
 								<tr>
 									<td class="border-right">지도</td>
-									<td colspan="2"></td>
+									<td colspan="2">
+									<c:if test="${mapDto.mapNo == null}"> 선택된 좌표가 없습니다.</c:if>
+									<c:if test="${mapDto.mapNo != null}">
+										<div id="staticMap" style="width:600px;height:350px;"></div>    
+										
+										<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d22f00b438fdc58950b8771f7c3989ef"></script>
+										<script>
+										// 이미지 지도에서 마커가 표시될 위치입니다 
+										var markerPosition  = new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}); 
+										
+										// 이미지 지도에 표시할 마커입니다
+										// 이미지 지도에 표시할 마커는 Object 형태입니다
+										var marker = {
+										    position: markerPosition
+										};
+										
+										var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+										    staticMapOption = { 
+										        center: new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}), // 이미지 지도의 중심좌표
+										        level: 3, // 이미지 지도의 확대 레벨
+										        marker: marker // 이미지 지도에 표시할 마커 
+										    };    
+										
+										// 이미지 지도를 생성합니다
+										var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+										</script>
+									</c:if>
+									</td>
 								</tr>
+								
+								
+								
 								<tr>
 									<td colspan="3" class="text-center">
 										<div style="text-align:right;"><!-- 버튼부분 -->
@@ -112,7 +194,7 @@ function updateFunc(root, boardNo){
 												<input class="btn btn-primary" type="button" value="글수정" onclick="updateFunc('${root}', '${boardDto.boardNo}')"/>
 											</c:if>
 											<c:if test="${sessionScope.id == boardDto.postId || sessionScope.memberLevel == 1}">
-												<input class="btn btn-primary" type="button" value="글삭제" onclick="delFun('${root}', '${boardDto.boardNo}')"/>
+												<input class="btn btn-primary" type="button" value="글삭제" onclick="delFunc('${root}', '${boardDto.boardNo}')"/>
 											</c:if>
 										</div>
 									</td>

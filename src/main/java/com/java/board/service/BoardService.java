@@ -22,6 +22,10 @@ public interface BoardService {
 
 	//수정
 	void boardUpdate(ModelAndView mav);
+	void boardUpdateOk(ModelAndView mav);
+	
+	//delete
+	void boardDeleteOk(ModelAndView mav);
 	
 	//즐겨찾기
 	int bookmark(ModelAndView mav);

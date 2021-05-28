@@ -121,14 +121,26 @@ public class BoardController {
 		return mav;
 	}
 	//글수정완료
-	@RequestMapping(value="/board/updateOk.do")
-	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/updateOk");	
+	@RequestMapping(value="/board/updateOk.do", method= RequestMethod.POST)
+	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		mav.addObject("boardDto", boardDto);
+		
+		boardService.boardUpdateOk(mav);
+		return mav;
 	}
 	//글삭제완료
-	@RequestMapping(value="/board/deleteOk.do")
-	public ModelAndView boardDeleteOk(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/deleteOk");	
+	@RequestMapping(value="/board/deleteOk.do", method= RequestMethod.GET)
+	public ModelAndView boardDeleteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request", request);
+		mav.addObject("boardDto", boardDto);
+	
+		boardService.boardDeleteOk(mav);
+		return mav;
 	}
 	
 	//=====================================================================즐겨찾기

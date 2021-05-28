@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.java.board.dto.BoardDto;
+import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 
 @Component
@@ -17,27 +19,27 @@ public class BoardDaoImp implements BoardDao {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 
-	//±Û¾²±â
+	//ê¸€ì“°ê¸°
 	@Override
 	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2) {
 		
 		if (isNotice == 1) {
-			return sqlSessionTemplate.insert("notice_insert", dtoMap);	//°øÁö±Û
+			return sqlSessionTemplate.insert("notice_insert", dtoMap);	//ê³µì§€ê¸€
 			
 		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
-			return sqlSessionTemplate.insert("board_file_map_insert", dtoMap);	//ÀÏ¹İ±Û_ÆÄÀÏ,Áöµµ Æ÷ÇÔ
+			return sqlSessionTemplate.insert("board_file_map_insert", dtoMap);	//ì¼ë°˜ê¸€_íŒŒì¼,ì§€ë„ í¬í•¨
 			
 		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() == true) {
-			return sqlSessionTemplate.insert("board_file_insert", dtoMap);	//ÀÏ¹İ±Û_ÆÄÀÏ¸¸
+			return sqlSessionTemplate.insert("board_file_insert", dtoMap);	//ì¼ë°˜ê¸€_íŒŒì¼ë§Œ
 			
 		} else if (map2.get("file") == "true" && map2.get("map").isEmpty() != true) {
-			return sqlSessionTemplate.insert("board_map_insert", dtoMap);	//ÀÏ¹İ±Û_Áöµµ¸¸
+			return sqlSessionTemplate.insert("board_map_insert", dtoMap);	//ì¼ë°˜ê¸€_ì§€ë„ë§Œ
 			
 		} 
-		return sqlSessionTemplate.insert("board_insert", dtoMap);	//ÀÏ¹İ±Û_±Û¸¸
+		return sqlSessionTemplate.insert("board_insert", dtoMap);	//ì¼ë°˜ê¸€_ê¸€ë§Œ
 	}
 
-	//µ¿Çà °Ô½ÃÆÇ ¸®½ºÆ®
+	//ë™í–‰ ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> accompanyboardList(int startRow, int endRow, String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -49,7 +51,7 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectList("accompanyboard_list", Map);
 	}
 
-	//µ¿Çà °Ô½ÃÆÇ read Ä«¿îÆ®
+	//ë™í–‰ ê²Œì‹œíŒ read ì¹´ìš´íŠ¸
 	@Override
 	public int accompanyboardCount(String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -59,7 +61,7 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("accompanyboard_getCount", Map);
 	}
 
-	//µ¿Çà ÈÄ±â °Ô½ÃÆÇ ¸®½ºÆ®
+	//ë™í–‰ í›„ê¸° ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> accompanyreviewList(int startRow, int endRow, String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -71,7 +73,7 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectList("accompanyreview_list", Map);
 	}
 
-	//µ¿Çà ÈÄ±â °Ô½ÃÆÇ read Ä«¿îÆ®
+	//ë™í–‰ í›„ê¸° ê²Œì‹œíŒ read ì¹´ìš´íŠ¸
 	@Override
 	public int accompanyreviewCount(String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -81,7 +83,7 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("accompanyreview_getCount", Map);
 	}
 
-	//ÃßÃµ ¿©Çà °æ·Î °Ô½ÃÆÇ ¸®½ºÆ®
+	//ì¶”ì²œ ì—¬í–‰ ê²½ë¡œ ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> recommendpathList(int startRow, int endRow, String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -94,7 +96,7 @@ public class BoardDaoImp implements BoardDao {
 	}
 
 	
-	//ÃßÃµ ¿©Çà °æ·Î read Ä«¿îÆ®
+	//ì¶”ì²œ ì—¬í–‰ ê²½ë¡œ read ì¹´ìš´íŠ¸
 	@Override
 	public int recommendpathCount(String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -105,7 +107,7 @@ public class BoardDaoImp implements BoardDao {
 	}
 
 
-	//¿©ÇàÁö ÈÄ±â °Ô½ÃÆÇ ¸®½ºÆ®
+	//ì—¬í–‰ì§€ í›„ê¸° ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<BoardDto> travelreviewList(int startRow, int endRow, String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -117,7 +119,7 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectList("travelreview_list", Map);
 	}
 	
-	//¿©ÇàÁö ÈÄ±â read Ä«¿îÆ®
+	//ì—¬í–‰ì§€ í›„ê¸° read ì¹´ìš´íŠ¸
 	@Override
 	public int travelreviewCount(String searchType, String keyword) {
 		Map<String, Object> Map = new HashMap<String, Object>();
@@ -127,11 +129,25 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("travelreview_getCount", Map);
 	}
 
-	//±Û »ó¼¼º¸±â
+	//boardRead
 	@Override
 	public BoardDto boardRead(int boardNo) {
 		sqlSessionTemplate.update("board_view", boardNo);
 		return sqlSessionTemplate.selectOne("board_read", boardNo);
+	}
+	
+	//mapRead
+	@Override
+	public MapDto mapRead(int mapNo) {
+		
+		return sqlSessionTemplate.selectOne("map_read", mapNo);
+	}
+
+	//file read
+	@Override
+	public BoardFileDto fileRead(int fileNo) {
+		
+		return sqlSessionTemplate.selectOne("file_read", fileNo);
 	}
 
 	//update
@@ -141,8 +157,65 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("board_update", boardNo);
 	}
 	
-	//=====================================================================Áñ°ÜÃ£±â
-	//Áñ°ÜÃ£±â
+	@Override
+	public int boardUpdateOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2) {
+		if (isNotice == 1) {
+			return sqlSessionTemplate.update("notice_update", dtoMap);	//æ€¨ë“­ï¿½æ¹²ï¿½
+			
+		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
+			if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
+				if(sqlSessionTemplate.update("board_file_updateOk", dtoMap) == 1 ) { 
+					if (sqlSessionTemplate.update("board_map_updateOk", dtoMap) == 1 ) {
+						return 1;
+					}
+			} else {
+				return 0;
+			}
+			//return sqlSessionTemplate.update("board_file_map_update", dtoMap);	//ï¿½ì‡°ï¿½æ¹²ï¿½_ï¿½ï¿½ï¿½ï¿½,ï§ï¿½ï¿½ï¿½ ï¿½Ñ‹ï¿½ï¿½
+		}
+			
+			
+			
+		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() == true) {
+			if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
+				if(sqlSessionTemplate.update("board_file_updateOk", dtoMap) == 1 ) { 
+					return 1;
+				}
+			} else {
+				return 0;
+			}
+			//return sqlSessionTemplate.update("board_file_update", dtoMap);	//ï¿½ì‡°ï¿½æ¹²ï¿½_ï¿½ï¿½ï¿½ì‡°ï¿½
+			
+		} else if (map2.get("file") == "true" && map2.get("map").isEmpty() != true) {
+			if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
+				if (sqlSessionTemplate.update("board_map_updateOk", dtoMap) == 1 ) {
+					return 1;
+				}
+			} else {
+				return 0;
+			}
+			//return sqlSessionTemplate.update("board_map_update", dtoMap);	//ï¿½ì‡°ï¿½æ¹²ï¿½_ï§ï¿½ï¿½ï¿½ï§ï¿½
+		} System.out.println(dtoMap);
+		return sqlSessionTemplate.update("board_updateOk", dtoMap);	//ï¿½ì‡°ï¿½æ¹²ï¿½_æ¹²ï¿½ï§ï¿½
+	}
+
+
+	//delete boardCodeCheck
+	@Override
+	public BoardDto boardCodeCheck(int boardNo) {
+		
+		return sqlSessionTemplate.selectOne("board_read", boardNo);
+	}
+	
+	//deleteOk
+	@Override
+	public int boardDeleteOk(HashMap<String, Object> dtoMap) {
+		
+		return sqlSessionTemplate.update("board_deleteOk", dtoMap);	
+	}
+	
+	//=====================================================================ì¦ê²¨ì°¾ê¸°
+	//ì¦ê²¨ì°¾ê¸°
 	@Override
 	public int bookmark(String id, BoardDto boardDto) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -152,7 +225,7 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.insert("bookmark", map);
 	}
 	
-	//Áñ°ÜÃ£±â Áßº¹Ã¼Å©
+	//ì¦ê²¨ì°¾ê¸° ì¤‘ë³µì²´í¬
 	@Override
 	public int bmCheck(String id, int boardNo) {
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -162,38 +235,38 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("bmCheck", map);
 	}
 	
-	//=====================================================================´ñ±Û
-	//´ñ±ÛÀÔ·Â
+	//=====================================================================ëŒ“ê¸€
+	//ëŒ“ê¸€ì…ë ¥
 	@Override
 	public int replyWrite(ReplyDto replyDto) {
 		return sqlSessionTemplate.insert("replyWrite", replyDto);
 	}
 	
-	//´ñ±Û¸®½ºÆ®
+	//ëŒ“ê¸€ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<ReplyDto> replyList(int boardNo) {
 		return sqlSessionTemplate.selectList("replyList", boardNo);
 	}
 	
-	//´ñ±Û»èÁ¦
+	//ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public int replyDel(int replyNo) {
 		return sqlSessionTemplate.update("replyDel", replyNo);
 	}
 	
-	//´ñ±Û¼öÁ¤
+	//ëŒ“ê¸€ìˆ˜ì •
 	@Override
 	public int replyUpd(ReplyDto replyDto) {
 		return sqlSessionTemplate.update("replyUpd", replyDto);
 	}
 
-	//´ë´ñ±Û max(group_no) ±¸ÇÏ±â
+	//ëŒ€ëŒ“ê¸€ max(group_no) êµ¬í•˜ê¸°
 	@Override
 	public int maxGroupNo() {
 		return sqlSessionTemplate.selectOne("maxGNo");
 	}
 
-	//´ë´ñ±Û max(sequence_no) ±¸ÇÏ±â
+	//ëŒ€ëŒ“ê¸€ max(sequence_no) êµ¬í•˜ê¸°
 	@Override
 	public int maxSequenceNo(int groupNo) {
 		return sqlSessionTemplate.selectOne("maxSeqNo", groupNo);

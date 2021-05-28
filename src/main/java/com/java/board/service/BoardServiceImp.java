@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.java.board.dao.BoardDao;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
+import com.java.board.dto.NoticeDto;
 import com.java.board.dto.ReplyDto;
 
 @Component
@@ -25,8 +27,11 @@ public class BoardServiceImp implements BoardService {
 
 	@Autowired
 	private BoardDao boardDao;
+	
+	@Resource(name="uploadPath")
+	private String uploadPath;
 
-	//±Û¾²±â
+	//ê¸€ì“°ê¸°
 	@Override
 	public void boardWriteOk(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -42,12 +47,12 @@ public class BoardServiceImp implements BoardService {
 		mapDto.setxAxis(xAxis);
 		mapDto.setyAxis(yAxis);
 		
-		//ÀÏ¹İ±Û,°øÁö±Û¿¡ µû¸¥ isNotice Ã³¸®
+		//ì¼ë°˜ê¸€,ê³µì§€ê¸€ì— ë”°ë¥¸ isNotice ì²˜ë¦¬
 		int isNotice;
 		String notice = request.getParameter("notice");
-		if (notice == null) {	//ÀÏ¹İ±ÛÀÛ¼ºÀÌ¸é isNotice ±âº»°ª ÁöÁ¤ (-1:ÀÏ¹İ±Û, 0:°øÁö³»¸±¶§, 1:°øÁö¿Ã¸±¶§)
+		if (notice == null) {	//ì¼ë°˜ê¸€ì‘ì„±ì´ë©´ isNotice ê¸°ë³¸ê°’ ì§€ì • (-1:ì¼ë°˜ê¸€, 0:ê³µì§€ë‚´ë¦´ë•Œ, 1:ê³µì§€ì˜¬ë¦´ë•Œ)
 			isNotice = -1;
-		} else {				//°øÁö±ÛÀÛ¼º
+		} else {				//ê³µì§€ê¸€ì‘ì„±
 			isNotice = Integer.parseInt(notice);
 			boardDto.setIsNotice(isNotice);
 		}
@@ -56,7 +61,7 @@ public class BoardServiceImp implements BoardService {
 		if (upFile.getSize() != 0) {
 			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
 			String fileExtension = StringUtils.getFilenameExtension(fileName);
-			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // ÆÄÀÏ ¾÷·Îµå »ó´ë°æ·Î
+			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // íŒŒì¼ ì—…ë¡œë“œ ìƒëŒ€ê²½ë¡œ
 			path.mkdir();
 			if (path.exists() && path.isDirectory()) {
 				File file = new File(path, fileName);
@@ -86,7 +91,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/writeOk");
 	}
 
-	// µ¿Çà °Ô½ÃÆÇ ¸®½ºÆ®
+	// ë™í–‰ ê²Œì‹œíŒ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public void accompanyboardList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -103,7 +108,7 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 
-		//°Ô½Ã±Û°Ë»ö
+		//ê²Œì‹œê¸€ê²€ìƒ‰
 		String searchType = (String) map.get("searchType");
 		String keyword = (String) map.get("keyword");
 		
@@ -122,7 +127,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/accompanylist");
 	}
 
-	// ¿©ÇàÈÄ±â ¸®½ºÆ®
+	// ì—¬í–‰í›„ê¸° ë¦¬ìŠ¤íŠ¸
 	@Override
 	public void accompanyreviewList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -139,7 +144,7 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 
-		//°Ô½Ã±Û°Ë»ö
+		//ê²Œì‹œê¸€ê²€ìƒ‰
 		String searchType = (String) map.get("searchType");
 		String keyword = (String) map.get("keyword");
 		
@@ -159,7 +164,7 @@ public class BoardServiceImp implements BoardService {
 
 	}
 
-	// ÃßÃµ ¿©Çà°æ·Î ¸®½ºÆ®
+	// ì¶”ì²œ ì—¬í–‰ê²½ë¡œ ë¦¬ìŠ¤íŠ¸
 	@Override
 	public void recommendpathList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -176,7 +181,7 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 		
-		//°Ô½Ã±Û°Ë»ö
+		//ê²Œì‹œê¸€ê²€ìƒ‰
 		String searchType = (String) map.get("searchType");
 		String keyword = (String) map.get("keyword");
 
@@ -195,7 +200,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/recommendpath");
 	}
 
-	// ¿©ÇàÁö ÈÄ±â ¸®½ºÆ®
+	// ì—¬í–‰ì§€ í›„ê¸° ë¦¬ìŠ¤íŠ¸
 	@Override
 	public void travelreviewList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -212,7 +217,7 @@ public class BoardServiceImp implements BoardService {
 		int startRow = (currentPage - 1) * boardSize + 1;
 		int endRow = currentPage * boardSize;
 
-		//°Ô½Ã±Û°Ë»ö
+		//ê²Œì‹œê¸€ê²€ìƒ‰
 		String searchType = (String) map.get("searchType");
 		String keyword = (String) map.get("keyword");
 				
@@ -232,20 +237,25 @@ public class BoardServiceImp implements BoardService {
 
 	}
 
-	//±Û »ó¼¼º¸±â
+	//ê¸€ ìƒì„¸ë³´ê¸°
 	@Override
 	public void boardRead(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
-
+	
 		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+		int mapNo = Integer.parseInt(request.getParameter("boardNo"));
+		int fileNo = Integer.parseInt(request.getParameter("boardNo"));
 
 		BoardDto boardDto = boardDao.boardRead(boardNo);
-	 
+		MapDto mapDto = boardDao.mapRead(mapNo);
+		BoardFileDto boardFileDto = boardDao.fileRead(fileNo);
+	 	
 		mav.addObject("boardDto", boardDto);
+		mav.addObject("mapDto", mapDto);
+		mav.addObject("boardFileDto", boardFileDto);
 		
 		mav.setViewName("board/read");
-
 	}
 	
 	//update
@@ -254,17 +264,107 @@ public class BoardServiceImp implements BoardService {
 		Map<String, Object> map=mav.getModelMap();
 		HttpServletRequest request=(HttpServletRequest)map.get("request");
 		
-		int boardNo=Integer.parseInt(request.getParameter("boardNo"));
+		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+		int mapNo = Integer.parseInt(request.getParameter("boardNo"));
+		int fileNo = Integer.parseInt(request.getParameter("boardNo"));
 	
 		BoardDto boardDto=boardDao.boardupdate(boardNo);
+		MapDto mapDto = boardDao.mapRead(mapNo);
+		BoardFileDto boardFileDto = boardDao.fileRead(fileNo);
 		
 		mav.addObject("boardDto", boardDto);
 		mav.addObject("boardNo", boardNo);
+		mav.addObject("mapDto", mapDto);
+		mav.addObject("boardFileDto", boardFileDto);
+		
 		mav.setViewName("board/update");
 	}
+
+	//updateOk
+	@Override
+	public void boardUpdateOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		
+		BoardDto boardDto = (BoardDto) map.get("boardDto");
+		BoardFileDto boardFileDto = new BoardFileDto();
+		MapDto mapDto = new MapDto();
+		NoticeDto noticeDto = new NoticeDto();
+		
+		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
+		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
+		String xAxis = request.getParameter("xAxis");
+		String yAxis = request.getParameter("yAxis");
+		mapDto.setxAxis(xAxis);
+		mapDto.setyAxis(yAxis);
+		
+		//å ì‹¹ë°˜ê¹ì˜™,å ì™ì˜™å ì™ì˜™å ìŒœìš¸ì˜™ å ì™ì˜™å ì™ì˜™ isNotice ì²˜å ì™ì˜™
+		int isNotice;
+		String notice = request.getParameter("notice");
+		if (notice == null) {	//å ì‹¹ë°˜ê¹ì˜™å ìŒœì‡½ì˜™å ì‹±ëªŒì˜™ isNotice å ì©ë³¸å ì™ì˜™ å ì™ì˜™å ì™ì˜™ (-1:å ì‹¹ë°˜ê¹ì˜™, 0:å ì™ì˜™å ì™ì˜™å ì™ì˜™å ì™ì˜™å ì™ì˜™, 1:å ì™ì˜™å ì™ì˜™å ì‹œëªŒì˜™å ì™ì˜™)
+			isNotice = -1;
+		} else {				//å ì™ì˜™å ì™ì˜™å ì™ì˜™å ìŒœì‡½ì˜™
+			isNotice = Integer.parseInt(notice);
+			noticeDto.setIsNotice(isNotice);
+		}
+		
+		MultipartFile upFile = request.getFile("file");
+		if (upFile.getSize() != 0) {
+			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
+			String fileExtension = StringUtils.getFilenameExtension(fileName);
+			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì‹¸ë“¸ì˜™ å ì™ì˜™å ì™ì˜™å ï¿½
+			path.mkdir();
+			if (path.exists() && path.isDirectory()) {
+				File file = new File(path, fileName);
+				try {
+					upFile.transferTo(file);
+					boardFileDto.setFileName(fileName);
+					boardFileDto.setFilePath(file.getAbsolutePath());
+					boardFileDto.setFileExtension(fileExtension);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		HashMap<String, Object> dtoMap = new HashMap<String, Object>();
+		dtoMap.put("boardDto", boardDto);
+		dtoMap.put("boardFileDto", boardFileDto);
+		dtoMap.put("mapDto", mapDto);
+		dtoMap.put("noticeDto", noticeDto);
+		
+		HashMap<String, String> map2 = new HashMap<String, String>();
+		map2.put("file", String.valueOf(upFile.isEmpty()));
+		map2.put("map", request.getParameter("placeName"));
+		
+		int check = boardDao.boardUpdateOk(dtoMap, isNotice, map2);
+
+		mav.addObject("check", check);
+		mav.setViewName("board/updateOk");
+	}
 	
-	//=====================================================================Áñ°ÜÃ£±â
-	//Áñ°ÜÃ£±â
+	//deleteOk
+	@Override
+	public void boardDeleteOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+	
+		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+
+		BoardDto boardDto = boardDao.boardCodeCheck(boardNo);
+	 
+		HashMap<String, Object> dtoMap = new HashMap<String, Object>();
+		dtoMap.put("boardDto", boardDto);
+		
+		int check = boardDao.boardDeleteOk(dtoMap);
+		
+		mav.addObject("boardDto", boardDto);
+		mav.addObject("check", check);
+		
+		mav.setViewName("board/deleteOk");
+	}
+	
+	//=====================================================================ì¦ê²¨ì°¾ê¸°
+	//ì¦ê²¨ì°¾ê¸°
 	@Override
 	public int bookmark(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -277,7 +377,7 @@ public class BoardServiceImp implements BoardService {
 		return check;
 	}
 	
-	//Áñ°ÜÃ£±â Áßº¹Ã¼Å©
+	//ì¦ê²¨ì°¾ê¸° ì¤‘ë³µì²´í¬
 	@Override
 	public int bmCheck(String id, int boardNo) {
 		int check = boardDao.bmCheck(id, boardNo);
@@ -285,14 +385,14 @@ public class BoardServiceImp implements BoardService {
 		return check;
 	}
 	
-	//=====================================================================´ñ±Û
-	//´ñ±ÛÀÔ·Â
+	//=====================================================================ëŒ“ê¸€
+	//ëŒ“ê¸€ì…ë ¥
 	@Override
 	public int replyWrite(ReplyDto replyDto) {
-		//´ñ±Û
+		//ëŒ“ê¸€
 		int sequenceNo = 0;
 		
-		//½ÃÄö½º³Ñ¹ö°¡ 0ÀÌ¶ó¸é (=´ñ±ÛÀÏ¶§)
+		//ì‹œí€€ìŠ¤ë„˜ë²„ê°€ 0ì´ë¼ë©´ (=ëŒ“ê¸€ì¼ë•Œ)
 		if (replyDto.getSequenceNo() == 0) {
 			int maxGNo = boardDao.maxGroupNo();
 			int groupNo = maxGNo + 1;
@@ -300,7 +400,7 @@ public class BoardServiceImp implements BoardService {
 			
 			sequenceNo += 1;
 			replyDto.setSequenceNo(sequenceNo);
-		} else {	//´ë´ñ±ÛÀÏ¶§
+		} else {	//ëŒ€ëŒ“ê¸€ì¼ë•Œ
 			int groupNo = replyDto.getGroupNo();
 			int maxSeqNo = boardDao.maxSequenceNo(groupNo);
 			sequenceNo = maxSeqNo + 1;
@@ -310,19 +410,19 @@ public class BoardServiceImp implements BoardService {
 		return boardDao.replyWrite(replyDto);
 	}
 	
-	//´ñ±Û¸®½ºÆ®
+	//ëŒ“ê¸€ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<ReplyDto> replyList(int boardNo) {
 		return boardDao.replyList(boardNo);
 	}
 	
-	//´ñ±Û»èÁ¦
+	//ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public int replyDel(int replyNo) {
 		return boardDao.replyDel(replyNo);
 	}
 	
-	//´ñ±Û¼öÁ¤
+	//ëŒ“ê¸€ìˆ˜ì •
 	@Override
 	public int replyUpd(ReplyDto replyDto) {
 		return boardDao.replyUpd(replyDto);
