@@ -1,5 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="false"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -78,13 +77,14 @@
 					<c:if test="${boardDto.boardCode == 13}"><div class="panel-heading">🚩 추천 여행 경로</div></c:if>
 					<c:if test="${boardDto.boardCode == 14}"><div class="panel-heading">✈ 여행지 후기</div></c:if>
 					
-					<form action="${root}/board/updateOk.do" method="post" enctype="multipart/form-data">
+					<form action="${root}/board/updateOk.do" method="POST" enctype="multipart/form-data">
 						<div class="table table-responsive">
+							<input type="hidden" value="${boardDto.boardNo}" name="boardNo">
 							<table class="table">
 								<c:if test="${memberLevel == 1}">
 									<tr>
 										<td class="border-right">공지유무</td>
-										<td><input type="checkbox" name="notice" value="1" checked> 공지글</input></td>
+										<td><input type="checkbox" name="notice" value="1" checked> 공지글</td>
 									</tr>
 								</c:if>
 								<tr>
@@ -119,7 +119,8 @@
 								<tr>
 									<td class="border-right" width="100px">작성일</td>
 									<td><input type="text" class="form-control" name="writeDate"
-										value="${boardDto.writeDate}" readonly></td>
+										value="${boardDto.writeDate}" disabled="disabled"></td>
+									
 								</tr>
 								<tr>
 									<td class="border-right">제목</td>
@@ -127,7 +128,7 @@
 								</tr>
 								<tr>
 									<td class="border-right" height="200px">글내용</td>
-									<td colspan="2"><textarea rows="10" cols="30" name="content" class="form-control" value="${boardDto.content}"></textarea></td>
+									<td colspan="2"><textarea rows="10" cols="30" name="content" class="form-control">${boardDto.content}</textarea></td>
 								</tr>
 								<tr>
 									<td class="border-right">첨부파일</td>

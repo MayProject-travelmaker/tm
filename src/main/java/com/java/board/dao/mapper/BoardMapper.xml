@@ -227,7 +227,7 @@
 	
 	<!-- 상세보기 -->
 	<select id="board_read" parameterType="int" resultMap="boardDto">
-		select board_no, post_id, write_date, area, title, content, read_cnt, board_code  
+		select *
 		from board 
 		where board_no=#{boardNo}
 	</select>
@@ -239,4 +239,55 @@
 		where board_no=#{boardNo}
 	</select>
 	
+	<update id="board_updateOk" parameterType="java.util.Map">
+		update board
+		set area=#{boardDto.area}, title=#{boardDto.title}, content=#{boardDto.content}
+		where board_no=#{boardDto.boardNo}
+	</update>
+	
+	<!-- 좋아요 -->
+	<!-- 좋아요 유무 확인 -->
+	<select id="like_isLiked" parameterType="java.util.HashMap" resultType="int">
+		select count(*) from board_like where like_id=#{likeId} and board_no=#{boardNo}
+	</select>
+	<!-- 좋아요 체크 -->
+	<insert id="like_ok" parameterType="java.util.HashMap">
+		insert into board_like values(
+			like_no_seq.nextval,
+			#{boardNo},
+			#{boardCode},
+			#{postId},
+			#{likeId},
+			sysdate
+		)
+	</insert>
+	<!-- 좋아요 취소 -->
+	<delete id="like_del" parameterType="java.util.HashMap">
+		delete from board_like where like_id=#{likeId} and board_no=#{boardNo}
+	</delete>
+	<!-- 게시판 좋아요 카운트 + 1 -->
+	<update id="board_likeOk_cnt_update" parameterType="java.util.HashMap">
+		update board set like_cnt=like_cnt+1 where board_no=#{boardNo}
+	</update>
+	<!-- 게시판 좋아요 카운트 - 1 -->
+	<update id="board_likeDel_cnt_update" parameterType="java.util.HashMap">
+		update board set like_cnt=like_cnt-1 where board_no=#{boardNo}
+	</update>
+	
+	<!-- 게시판 인기글 업데이트 - 인기글 top3 초기화 -->
+	<update id="isPopluar_reset" parameterType="int">
+		update board set is_popular = 0 where is_popular = 1 and board_code=#{boardCode}
+	</update>
+	
+	<!-- 게시판 인기글 업데이트2 - 인기글 top3 세팅 -->
+	<update id="isPopular_update" parameterType="int">
+		update board set is_popular = 1
+		where board_no in (select board_no 
+							from 
+									(select board_no, like_cnt 
+									from board 
+									where board_code=#{boardCode} and is_del = 0 and like_cnt != 0 
+									order by like_cnt desc)
+							where rownum between 1 and 3 )
+	</update>
 </mapper>

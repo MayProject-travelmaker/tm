@@ -1,22 +1,31 @@
 package com.java.board.service;
 
+import java.util.HashMap;
+
 import org.springframework.web.servlet.ModelAndView;
 
 public interface BoardService {
 
-	//±Û¾²±â
+	//ï¿½Û¾ï¿½ï¿½ï¿½
 	void boardWriteOk(ModelAndView mav);
 
-	//°Ô½ÃÆÇ ¸®½ºÆ®(µ¿Çà, µ¿ÇàÈÄ±â, ÃßÃµ¿©Çà°æ·Î, ¿©ÇàÁöÈÄ±â
+	//ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®(ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½, ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½
 	void accompanyboardList(ModelAndView mav);
 	void accompanyreviewList(ModelAndView mav);
 	void recommendpathList(ModelAndView mav);
 	void travelreviewList(ModelAndView mav);
 
-	//ÀÐ±â
+	//ï¿½Ð±ï¿½
 	void boardRead(ModelAndView mav);
 
-	//¼öÁ¤
+	//ï¿½ï¿½ï¿½ï¿½
 	void boardUpdate(ModelAndView mav);
+
+	
+	// ì¶”ê°€í•œ í•­ëª©
+	void boardUpdateOk(ModelAndView mav);
+
+	// ì¢‹ì•„ìš”
+	HashMap<String, Object> boardLikeOk(ModelAndView mav);
 	
 }

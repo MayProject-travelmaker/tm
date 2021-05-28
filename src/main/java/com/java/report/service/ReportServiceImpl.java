@@ -22,10 +22,11 @@ public class ReportServiceImpl implements ReportService{
 	public int reportOk(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
 		ReportDto reportDto = (ReportDto)map.get("reportDto");
-//		if(reportDto.getRp_type() == 1) {
-//			// 게시글 신고인 경우, 댓글번호 0 으로 고정
-//			reportDto.setReply_no(0);
-//		}
+		
+		if(reportDto.getRp_type() == 1) {
+			// 게시글 신고인 경우, 댓글번호 0(null) 으로 고정
+			reportDto.setReply_no(0);
+		}
 		return reportDao.reportOk(reportDto);
 	}
 

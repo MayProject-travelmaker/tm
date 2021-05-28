@@ -1,5 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="false"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -49,7 +48,7 @@ function updateFunc(root, boardNo){
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-					<c:if test="${memberLevel!=null}">
+					<c:if test="${sessionScope.memberLevel != null}">
 						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span>
 						</a></li>
@@ -120,12 +119,19 @@ function updateFunc(root, boardNo){
 							</table>
 						</div>
 					</div>
-					<div style="text-align:right;"><!-- 버튼부분 -->
-					<input class="btn btn-primary" type="button" value="글수정" onclick="updateFunc('${root}', '${boardDto.boardNo}')"/>
-					<input class="btn btn-primary" type="button" value="글삭제" onclick="delFun('${root}', '${boardDto.boardNo}')"/>
 				</div>
-				<br>
-					
+					<div align="left">
+						<c:if test="${isLiked == 1}">
+							<button type="button" class="btn btn-light" id="like_btn"
+								onclick="like_btn_click('${boardDto.boardNo}','${boardDto.boardCode}', '${boardDto.postId}')">❤<span>${boardDto.likeCnt}</span>
+							</button>
+						</c:if>
+						<c:if test="${isLiked == 0 }">
+							<button type="button" class="btn btn-light" id="like_btn"
+								onclick="like_btn_click('${boardDto.boardNo}','${boardDto.boardCode}', '${boardDto.postId}')">🤍<span>${boardDto.likeCnt}</span>
+							</button>
+						</c:if>
+					</div>
 					<div class="container" style="background-color: #dee2e6; border-radius: 5px">
 						<div class="panel-heading" style="padding-top: 10px">댓글</div><br>
 						<div><textarea rows="2" cols="30" name="comment" class="form-control"></textarea></div>

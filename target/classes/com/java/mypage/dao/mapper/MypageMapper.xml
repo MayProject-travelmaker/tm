@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="myPage">
+
+	<resultMap type="com.java.board.dto.BoardDto" id="boardDto">
+		<result column="board_no" property="boardNo" />
+		<result column="post_id" property="postId" />
+		<result column="board_code" property="boardCode" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="area" property="area" />
+		<result column="write_date" property="writeDate" />
+		<result column="update_date" property="updateDate" />
+		<result column="read_cnt" property="readCnt" />
+		<result column="like_cnt" property="likeCnt" />
+		<result column="is_del" property="isDel" />
+		<result column="is_popular" property="isPopular" />
+	</resultMap>
+	
+	<resultMap type="com.java.board.dto.ReplyDto" id="replyDto">
+		<result column="reply_no" property="replyNo"/>
+		<result column="board_no" property="boardNo" />
+		<result column="board_code" property="boardCode" />
+		<result column="post_id" property="postId"/>
+		<result column="id" property="id"/>
+		<result column="content" property="content"/>
+		<result column="write_date" property="writeDate"/>
+		<result column="update_date" property="updateDate"/>
+		<result column="is_del" property="isDel"/>
+	</resultMap>
+	
+	<!-- 게시글 검색조건 -->
+	<sql id="searchCondition">
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType == 'title'.toString()">
+				and title like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'postId'.toString()">
+				and post_id like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				and title like '%' || #{keyword} || '%'
+					or content like '%' || #{keyword} || '%'
+			</if>
+		</if>
+	</sql>	
+	
+	<!-- 댓글 검색조건 -->
+	<sql id="searchConditionAboutReply">
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType == 'title'.toString()">
+				and content like '%' || #{keyword} || '%'
+			</if>
+			<if test="searchType == 'postId'.toString()">
+				and post_id like '%' || #{keyword} || '%'
+			</if>
+		</if>
+	</sql>	
+	
+	<!-- 내가 쓴 글 -->
+	<select id="myBoardList" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select * from(
+			select row_number() over (order by write_date desc) as rnum, board.* from board where post_id=#{id}
+		]]>
+		<include refid="searchCondition"></include>
+		<![CDATA[
+			 order by write_date desc
+		) where rnum between #{startRow} and #{endRow}
+		]]>
+	</select>
+	
+	<!-- 내가 쓴 댓글 -->
+	<select id="myReplyList" parameterType="java.util.Map" resultMap="replyDto">
+		<![CDATA[
+		select * from(
+			select row_number() over (order by write_date desc) as rnum, reply.* from reply where id=#{id}
+		]]>
+		<include refid="searchConditionAboutReply"></include>
+		<![CDATA[
+		 order by write_date desc
+		) where rnum between #{startRow} and #{endRow}
+		]]>
+	</select>
+
+	<!-- 내가 좋아요 누른 글 -->
+	<select id="myLikeList" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select * from(
+			select row_number() over (order by write_date desc) as rnum, board.* from board
+			where board_no in (select board_no from board_like where like_id=#{id}) 
+		]]>
+		<include refid="searchCondition"></include>	
+		<![CDATA[	
+			order by write_date desc
+		) where rnum between #{startRow} and #{endRow}
+		]]>
+	</select>
+	
+	<!-- 즐겨찾기 추가한 글 -->
+	<select id="myBookmarkList" parameterType="java.util.Map" resultMap="boardDto">
+		<![CDATA[
+		select * from board
+		where board_no in (select board_no from bookmark where id=#{id}
+		]]>
+		<include refid="searchCondition"></include>
+		<![CDATA[
+		)
+		order by write_date desc
+		]]>
+	</select>
+	
+	<!-- 내가 쓴 글 개수 -->
+	<select id="myBoardListCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from board where post_id=#{id}
+		<include refid="searchCondition"></include>
+	</select>
+	
+	<!-- 내가 쓴 댓글 개수 -->
+	<select id="myReplyListCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from reply where id=#{id}
+		<include refid="searchConditionAboutReply"></include>
+	</select>
+	
+	<!-- 내가 좋아요 누른 글  개수 -->
+	<select id="myLikeListCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from board
+		where board_no in (select board_no from board_like where like_id=#{id})
+		<include refid="searchCondition"></include>
+	</select>
+	
+	<!-- 내가 즐겨찾기 추가한 글 개수 -->
+	<select id="myBookmarkListCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from board
+		where board_no in (select board_no from bookmark where id=#{id})
+		<include refid="searchCondition"></include>
+	</select>
+</mapper>

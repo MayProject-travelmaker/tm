@@ -1,11 +1,18 @@
 package com.java.board.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dto.BoardDto;
 import com.java.board.service.BoardService;
@@ -16,7 +23,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	//µ¿Çà°Ô½ÃÆÇ ³Ñ¾î°¡±â
+	//ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/accompanylist.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyList(HttpServletRequest request, HttpServletResponse response) {
 
@@ -28,7 +35,7 @@ public class BoardController {
 			
 	}
 		
-	//µ¿ÇàÈÄ±â°Ô½ÃÆÇ ³Ñ¾î°¡±â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/accompanyreview.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyReview(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -39,7 +46,7 @@ public class BoardController {
 			
 	}
 	
-	//ÃßÃµ°æ·Î°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
+	//ï¿½ï¿½Ãµï¿½ï¿½Î°Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/recommendpath.do", method= RequestMethod.GET)
 	public ModelAndView boardRecommendPath(HttpServletRequest request, HttpServletResponse response) {
 
@@ -51,7 +58,7 @@ public class BoardController {
 			
 	}
 	
-	//¿©ÇàÁöÈÄ±â°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/travelreview.do", method= RequestMethod.GET)
 	public ModelAndView boardTravelReview(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -61,14 +68,14 @@ public class BoardController {
 		return mav;	
 	}
 	
-	//±Û¾²±â
+	//ï¿½Û¾ï¿½ï¿½ï¿½
 	@RequestMapping(value="/board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("board/write");
 	}
 	
 	
-	//±Û¾²±â¿Ï·á
+	//ï¿½Û¾ï¿½ï¿½ï¿½Ï·ï¿½
 	@RequestMapping(value="/board/writeOk.do", method= RequestMethod.POST)
 	public ModelAndView boardWriteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		ModelAndView mav = new ModelAndView();
@@ -79,7 +86,7 @@ public class BoardController {
 		return mav;
 	}
 
-	//±ÛÀĞ±â
+	//ï¿½ï¿½ï¿½Ğ±ï¿½
 	@RequestMapping(value="/board/read.do")
 	public ModelAndView boardRead(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
@@ -88,7 +95,7 @@ public class BoardController {
 		boardService.boardRead(mav);
 		return mav;
 	}
-	//±Û¼öÁ¤
+	//ï¿½Û¼ï¿½ï¿½ï¿½
 	@RequestMapping(value="/board/update.do")
 	public ModelAndView boardUpdate(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
@@ -97,14 +104,36 @@ public class BoardController {
 		boardService.boardUpdate(mav);
 		return mav;
 	}
-	//±Û¼öÁ¤¿Ï·á
-	@RequestMapping(value="/board/updateOk.do")
-	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("board/updateOk");	
+	//ï¿½Û¼ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
+	@RequestMapping(value="/board/updateOk.do", method= RequestMethod.POST)
+	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("request",request);
+		mav.addObject("boardDto", boardDto);
+		
+		boardService.boardUpdateOk(mav);
+		
+		return mav;	
 	}
-	//±Û»èÁ¦¿Ï·á
+	//ï¿½Û»ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
 	@RequestMapping(value="/board/deleteOk.do")
 	public ModelAndView boardDeleteOk(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("board/deleteOk");	
+	}
+	
+	
+	// ì¢‹ì•„ìš” ë²„íŠ¼
+	@ResponseBody
+	@RequestMapping(value="/board/likeOk.do", method=RequestMethod.GET)
+	public HashMap<String, Object> boardLikeOk(@RequestParam Map<String, Object> param, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		
+		mav.addObject("request", request);
+		mav.addObject("boardNo", (String) param.get("boardNo"));		// ê²Œì‹œê¸€ ë²ˆí˜¸
+		mav.addObject("boardCode", (String) param.get("boardCode"));	// ê²Œì‹œíŒ ì½”ë“œ
+		mav.addObject("postId", (String) param.get("postId"));			// ì‘ì„±ì ì•„ì´ë””
+		
+		
+		return boardService.boardLikeOk(mav);
 	}
 }

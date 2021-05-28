@@ -33,7 +33,7 @@
         			</button>	
 				</div>
 				<div class="modal-body">
-					<form method="POST" action="${root}/report/reportOk.do">
+					<form id="report_form" method="POST">
 						<div class="form-group">
 							<div class="form-check">
 								<input class="form-check-input" type="radio" name="rp_ct_no" id="rp_ct_no1" value="21">
@@ -74,10 +74,11 @@
 						<input type="hidden" name="rp_mem_id" value="${boardDto.postId}">	<!-- 신고된 회원 아이디 -->
 						<input type="hidden" name="rp_type">								<!-- 신고유형 1: 게시글 2: 댓글-->
 						<input type="hidden" name="post_no" value="${boardDto.boardNo}"> 	<!-- 게시판 번호  -->
+						<input type="hidden" name="reply_no"> 								<!-- 댓글 번호 -->
 						
 						<div class="modal-footer">
 							<button class="btn btn-secondary" data-dismiss="modal" id="report_close_btn" type="button">취소</button>
-							<button class="btn btn-primary" type="submit">신고</button>
+							<button class="btn btn-primary" type="button" id="report_submit_btn">신고</button>
 						</div>
 					</form>
 				</div>

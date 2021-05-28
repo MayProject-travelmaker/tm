@@ -6,29 +6,45 @@ import com.java.board.dto.BoardDto;
 
 public interface BoardDao {
 
-	//±Û¾²±â
+	//ï¿½Û¾ï¿½ï¿½ï¿½
 	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
 
-	//µ¿Çà °Ô½ÃÆÇ ¸®½ºÆ®, Ä«¿îÆ®
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®, Ä«ï¿½ï¿½Æ®
 	public List<BoardDto> accompanyboardList(int startRow, int endRow);
 	public int accompanyboardCount();
 
-	//µ¿Çà ÈÄ±â ¸®½ºÆ®, Ä«¿îÆ®
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®, Ä«ï¿½ï¿½Æ®
 	public List<BoardDto> accompanyreviewList(int startRow, int endRow);
 	public int accompanyreviewCount();
 
-	//ÃßÃµ ¿©Çà°æ·Î ¸®½ºÆ®, Ä«¿îÆ®
+	//ï¿½ï¿½Ãµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®, Ä«ï¿½ï¿½Æ®
 	public List<BoardDto> recommendpathList(int startRow, int endRow);
 	public int recommendpathCount();
 
-	//¿©ÇàÁö ÈÄ±â ¸®½ºÆ®, Ä«¿îÆ®
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®, Ä«ï¿½ï¿½Æ®
 	public List<BoardDto> travelreviewList(int startRow, int endRow);
 	public int travelreviewCount();
 
-	//»ó¼¼±ÛÀĞ±â
+	//ï¿½ó¼¼±ï¿½ï¿½Ğ±ï¿½
 	public BoardDto boardRead(int boardNo);
 
 	//update
 	public BoardDto boardupdate(int boardNo);
+
+	// ì¶”ê°€í•œ í•­ëª©
+	// ê¸€ ìˆ˜ì •
+	public int boardupdateOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
+
+	// ì¢‹ì•„ìš” í´ë¦­ ìœ ë¬´ í™•ì¸
+	public int isBoardLike(HashMap<String, Object> likeMap);
+
+	// ì¢‹ì•„ìš” ì·¨ì†Œ
+	public int boardLikeDel(HashMap<String, Object> likeMap);
+
+	// ì¢‹ì•„ìš”
+	public int boardLikeOk(HashMap<String, Object> likeMap);
+
+	// ì¸ê¸°ê¸€ ì„¸íŒ…
+	public int IsPopularUpdate(int boardCode);
 
 }

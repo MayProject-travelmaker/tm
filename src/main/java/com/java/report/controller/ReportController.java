@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.java.report.dto.ReportDto;
@@ -19,14 +20,15 @@ public class ReportController {
 	private ReportService reportService;
 	
 	// 신고 완료
+	@ResponseBody
 	@RequestMapping(value="/report/reportOk.do", method=RequestMethod.POST)
-	public ModelAndView reportOk(HttpServletRequest request, HttpServletResponse response, ReportDto reportDto) {
+	public String reportOk(HttpServletRequest request, HttpServletResponse response, ReportDto reportDto) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request", request);
 		mav.addObject("reportDto", reportDto);
 		
-		int check = reportService.reportOk(mav);
-		
-		return mav;
+		String check = Integer.toString(reportService.reportOk(mav));
+
+		return check;
 	}
 }
