@@ -134,6 +134,9 @@
 										</td>
 									</tr>
 								</c:if>
+								<c:if test="${memberLevel == 1}">
+									<input type="hidden" value="" name="area">
+								</c:if>
 								<tr>
 									<td class="border-right" width="100px">작성자</td>
 									<td><input type="text" class="form-control" name="postId"
@@ -142,20 +145,21 @@
 								<tr>
 									<td class="border-right" width="100px">작성일</td>
 									<td><input type="text" class="form-control" name="writeDate"
-										value="${boardDto.writeDate}" readonly></td>
+										value="${boardDto.writeDate}" disabled="disabled"></td>
 								</tr>
 								<tr>
 									<td class="border-right">제목</td>
-									<td colspan="2"><input type="text" name="title"  class="form-control" value="${boardDto.title}"/></td>
+									<td><input type="text" name="title"  class="form-control" value="${boardDto.title}"/></td>
 								</tr>
 								<tr>
 									<td class="border-right" height="200px">글내용</td>
-									<td colspan="2"><textarea rows="10" cols="30" name="content" class="form-control">${boardDto.content}</textarea></td>
+									<td><textarea rows="10" cols="30" name="content" class="form-control">${boardDto.content}</textarea></td>
 								</tr>
 								<tr>
 									<td class="border-right">첨부파일</td>
-									<c:if test="${boardFileDto.fileNo!=null}"><td>현재 등록되어 있는 파일은 ${boardFileDto.fileName} 입니다.<br></c:if>
-									<td><input type="file" id="image" name="file" accept="image/*" onchange="setThumbnail(event);" style="width:100%;height:100%;"/>
+									<td>
+										<c:if test="${boardFileDto.fileNo!=null}">현재 등록되어 있는 파일은 ${boardFileDto.fileName} 입니다.<br><br></c:if>
+										<input type="file" id="image" name="file" accept="image/*" onchange="setThumbnail(event);" style="width:100%;height:100%;"/>
 										<div id="image_container"></div> 
 										<script> function setThumbnail(event) { 
 											for (var image of event.target.files) { 

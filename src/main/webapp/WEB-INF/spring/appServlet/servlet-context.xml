@@ -41,7 +41,7 @@
 	
 	<!-- 여기까지가 servlet-context에서 추가한 내역들 -->
 	
-	
+	<resources mapping="/img/**" location="/resources/img/"></resources>
 	
 	
 	

@@ -19,7 +19,6 @@ import com.java.board.dao.BoardDao;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
-import com.java.board.dto.NoticeDto;
 import com.java.board.dto.ReplyDto;
 
 @Component
@@ -281,66 +280,66 @@ public class BoardServiceImp implements BoardService {
 	}
 
 	//updateOk
-	@Override
-	public void boardUpdateOk(ModelAndView mav) {
-		Map<String, Object> map = mav.getModelMap();
-		
-		BoardDto boardDto = (BoardDto) map.get("boardDto");
-		BoardFileDto boardFileDto = new BoardFileDto();
-		MapDto mapDto = new MapDto();
-		NoticeDto noticeDto = new NoticeDto();
-		
-		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
-		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
-		String xAxis = request.getParameter("xAxis");
-		String yAxis = request.getParameter("yAxis");
-		mapDto.setxAxis(xAxis);
-		mapDto.setyAxis(yAxis);
-		
-		//占싹반깍옙,占쏙옙占쏙옙占쌜울옙 占쏙옙占쏙옙 isNotice 처占쏙옙
-		int isNotice;
-		String notice = request.getParameter("notice");
-		if (notice == null) {	//占싹반깍옙占쌜쇽옙占싱몌옙 isNotice 占썩본占쏙옙 占쏙옙占쏙옙 (-1:占싹반깍옙, 0:占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙, 1:占쏙옙占쏙옙占시몌옙占쏙옙)
-			isNotice = -1;
-		} else {				//占쏙옙占쏙옙占쏙옙占쌜쇽옙
-			isNotice = Integer.parseInt(notice);
-			noticeDto.setIsNotice(isNotice);
-		}
-		
-		MultipartFile upFile = request.getFile("file");
-		if (upFile.getSize() != 0) {
-			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
-			String fileExtension = StringUtils.getFilenameExtension(fileName);
-			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // 占쏙옙占쏙옙 占쏙옙占싸듸옙 占쏙옙占쏙옙占�
-			path.mkdir();
-			if (path.exists() && path.isDirectory()) {
-				File file = new File(path, fileName);
-				try {
-					upFile.transferTo(file);
-					boardFileDto.setFileName(fileName);
-					boardFileDto.setFilePath(file.getAbsolutePath());
-					boardFileDto.setFileExtension(fileExtension);
-				} catch (Exception e) {
-					e.printStackTrace();
+		@Override
+		public void boardUpdateOk(ModelAndView mav) {
+			Map<String, Object> map = mav.getModelMap();
+			
+			BoardDto boardDto = (BoardDto) map.get("boardDto");
+			BoardFileDto boardFileDto = new BoardFileDto();
+			MapDto mapDto = new MapDto();
+//			NoticeDto noticeDto = new NoticeDto();
+			
+			MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
+			HttpServletRequest request2 = (HttpServletRequest) map.get("request");
+			String xAxis = request.getParameter("xAxis");
+			String yAxis = request.getParameter("yAxis");
+			mapDto.setxAxis(xAxis);
+			mapDto.setyAxis(yAxis);
+			
+			//isNotice
+			int isNotice;
+			String notice = request.getParameter("notice");
+			if (notice == null) {
+				isNotice = -1;
+			} else {				
+				isNotice = Integer.parseInt(notice);
+				boardDto.setIsNotice(isNotice);
+			}
+			
+			MultipartFile upFile = request.getFile("file");
+			if (upFile.getSize() != 0) {
+				String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
+				String fileExtension = StringUtils.getFilenameExtension(fileName);
+				File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); 
+				path.mkdir();
+				if (path.exists() && path.isDirectory()) {
+					File file = new File(path, fileName);
+					try {
+						upFile.transferTo(file);
+						boardFileDto.setFileName(fileName);
+						boardFileDto.setFilePath(file.getAbsolutePath());
+						boardFileDto.setFileExtension(fileExtension);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		}
-		
-		HashMap<String, Object> dtoMap = new HashMap<String, Object>();
-		dtoMap.put("boardDto", boardDto);
-		dtoMap.put("boardFileDto", boardFileDto);
-		dtoMap.put("mapDto", mapDto);
-		dtoMap.put("noticeDto", noticeDto);
-		
-		HashMap<String, String> map2 = new HashMap<String, String>();
-		map2.put("file", String.valueOf(upFile.isEmpty()));
-		map2.put("map", request.getParameter("placeName"));
-		
-		int check = boardDao.boardUpdateOk(dtoMap, isNotice, map2);
+			
+			HashMap<String, Object> dtoMap = new HashMap<String, Object>();
+			dtoMap.put("boardDto", boardDto);
+			dtoMap.put("boardFileDto", boardFileDto);
+			dtoMap.put("mapDto", mapDto);
+//			dtoMap.put("noticeDto", noticeDto);
+			
+			HashMap<String, String> map2 = new HashMap<String, String>();
+			map2.put("file", String.valueOf(upFile.isEmpty()));
+			map2.put("map", request.getParameter("placeName"));
+			
+			int check = boardDao.boardUpdateOk(dtoMap, map2);
 
-		mav.addObject("check", check);
-		mav.setViewName("board/updateOk");
-	}
+			mav.addObject("check", check);
+			mav.setViewName("board/updateOk");
+		}
 	
 	//deleteOk
 	@Override

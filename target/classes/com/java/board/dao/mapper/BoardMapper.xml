@@ -57,7 +57,7 @@
 	<!-- 일반글작성_파일,지도 포함 -->
 	<insert id="board_file_map_insert" parameterType="java.util.Map">
 		insert all
-		into board (board_no, post_id, board_code, title, content, area, write_date)
+		into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
 				#{boardDto.postId},
@@ -65,7 +65,8 @@
 				#{boardDto.title},
 				#{boardDto.content},
 				#{boardDto.area},
-				sysdate
+				sysdate,
+				0
 				)
 		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
 		values(
@@ -91,7 +92,7 @@
 	<!-- 일반글_파일만 -->
 	<insert id="board_file_insert" parameterType="java.util.Map">
 		insert all
-		into board (board_no, post_id, board_code, title, content, area, write_date)
+		into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
 				#{boardDto.postId},
@@ -99,7 +100,8 @@
 				#{boardDto.title},
 				#{boardDto.content},
 				#{boardDto.area},
-				sysdate
+				sysdate,
+				0
 				)
 		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
 		values(
@@ -116,7 +118,7 @@
 	<!-- 일반글_지도만 -->
 	<insert id="board_map_insert" parameterType="java.util.Map">
 		insert all
-		into board (board_no, post_id, board_code, title, content, area, write_date)
+		into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
 				#{boardDto.postId},
@@ -124,7 +126,8 @@
 				#{boardDto.title},
 				#{boardDto.content},
 				#{boardDto.area},
-				sysdate
+				sysdate,
+				0
 				)
 		into map (map_no, board_no, post_id, board_code, x_axis, y_axis)
 		values(
@@ -140,7 +143,7 @@
 	<!-- 일반글_글만 -->
 	<insert id="board_insert" parameterType="java.util.Map">
 		insert
-		into board (board_no, post_id, board_code, title, content, area, write_date)
+		into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
 				#{boardDto.postId},
@@ -148,7 +151,8 @@
 				#{boardDto.title},
 				#{boardDto.content},
 				#{boardDto.area},
-				sysdate
+				sysdate,
+				0
 				)
 	</insert>
 	

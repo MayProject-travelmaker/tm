@@ -157,47 +157,45 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("board_update", boardNo);
 	}
 	
+	//updateOk
 	@Override
-	public int boardUpdateOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2) {
-		if (isNotice == 1) {
-			return sqlSessionTemplate.update("notice_update", dtoMap);	//怨듭�湲�
-			
-		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
-			if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
-				if(sqlSessionTemplate.update("board_file_updateOk", dtoMap) == 1 ) { 
+		public int boardUpdateOk(HashMap<String, Object> dtoMap, HashMap<String, String> map2) {
+			if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
+				if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
+					if(sqlSessionTemplate.update("board_file_updateOk", dtoMap) == 1 ) { 
+						if (sqlSessionTemplate.update("board_map_updateOk", dtoMap) == 1 ) {
+							return 1;
+						}
+				} else {
+					return 0;
+				}
+				//return sqlSessionTemplate.update("board_file_map_update", dtoMap);	//일반글_파일,지도 포함
+			}
+				
+				
+				
+			} else if (map2.get("file") != "true" && map2.get("map").isEmpty() == true) {
+				if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
+					if(sqlSessionTemplate.update("board_file_updateOk", dtoMap) == 1 ) { 
+						return 1;
+					}
+				} else {
+					return 0;
+				}
+				//return sqlSessionTemplate.update("board_file_update", dtoMap);	//일반글_파일만
+				
+			} else if (map2.get("file") == "true" && map2.get("map").isEmpty() != true) {
+				if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
 					if (sqlSessionTemplate.update("board_map_updateOk", dtoMap) == 1 ) {
 						return 1;
 					}
-			} else {
-				return 0;
-			}
-			//return sqlSessionTemplate.update("board_file_map_update", dtoMap);	//�쇰�湲�_����,吏��� �ы��
+				} else {
+					return 0;
+				}
+				//return sqlSessionTemplate.update("board_map_update", dtoMap);	//일반글_지도만
+			} System.out.println(dtoMap);
+			return sqlSessionTemplate.update("board_updateOk", dtoMap);	//일반글_글만
 		}
-			
-			
-			
-		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() == true) {
-			if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
-				if(sqlSessionTemplate.update("board_file_updateOk", dtoMap) == 1 ) { 
-					return 1;
-				}
-			} else {
-				return 0;
-			}
-			//return sqlSessionTemplate.update("board_file_update", dtoMap);	//�쇰�湲�_���쇰�
-			
-		} else if (map2.get("file") == "true" && map2.get("map").isEmpty() != true) {
-			if(sqlSessionTemplate.update("board_updateOk", dtoMap) == 1 ) { 
-				if (sqlSessionTemplate.update("board_map_updateOk", dtoMap) == 1 ) {
-					return 1;
-				}
-			} else {
-				return 0;
-			}
-			//return sqlSessionTemplate.update("board_map_update", dtoMap);	//�쇰�湲�_吏���留�
-		} System.out.println(dtoMap);
-		return sqlSessionTemplate.update("board_updateOk", dtoMap);	//�쇰�湲�_湲�留�
-	}
 
 
 	//delete boardCodeCheck

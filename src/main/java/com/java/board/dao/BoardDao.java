@@ -34,7 +34,7 @@ public interface BoardDao {
 
 	//update
 	public BoardDto boardupdate(int boardNo);
-	public int boardUpdateOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
+	public int boardUpdateOk(HashMap<String, Object> dtoMap, HashMap<String, String> map2);
 
 	//delete
 	public BoardDto boardCodeCheck(int boardNo);

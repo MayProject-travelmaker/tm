@@ -102,28 +102,30 @@
 									<tr>
 										<td class="border-right">지역</td>
 										<td><select class="form-control" name="area">
-											<option value="">선택</option>
-											<option value="전국">전국</option>
-											<option value="서울">서울</option>
-											<option value="경기">경기</option>
-											<option value="인천">인천</option>
-											<option value="부산">부산</option>
-											<option value="대전">대전</option>
-											<option value="세종">세종</option>
-											<option value="충남">충남</option>
-											<option value="충북">충북</option>
-											<option value="광주">광주</option>
-											<option value="제주">제주</option>
-											<option value="강원">강원</option>
-											<option value="울산">울산</option>
-											<option value="경남">경남</option>
-											<option value="경북">경북</option>
-											<option value="대구">대구</option>
-											<option value="전남">전남</option>
-											<option value="전북">전북</option>
+											<option value="전국" <c:if test="${boardDto.area == '전국'}">selected</c:if>>전국</option>
+											<option value="서울" <c:if test="${boardDto.area == '서울'}">selected</c:if>>서울</option>
+											<option value="경기" <c:if test="${boardDto.area == '경기'}">selected</c:if>>경기</option>
+											<option value="인천" <c:if test="${boardDto.area == '인천'}">selected</c:if>>인천</option>
+											<option value="부산" <c:if test="${boardDto.area == '부산'}">selected</c:if>>부산</option>
+											<option value="대전" <c:if test="${boardDto.area == '대전'}">selected</c:if>>대전</option>
+											<option value="세종" <c:if test="${boardDto.area == '세종'}">selected</c:if>>세종</option>
+											<option value="충남" <c:if test="${boardDto.area == '충남'}">selected</c:if>>충남</option>
+											<option value="충북" <c:if test="${boardDto.area == '충북'}">selected</c:if>>충북</option>
+											<option value="광주" <c:if test="${boardDto.area == '광주'}">selected</c:if>>광주</option>
+											<option value="제주" <c:if test="${boardDto.area == '제주'}">selected</c:if>>제주</option>
+											<option value="강원" <c:if test="${boardDto.area == '강원'}">selected</c:if>>강원</option>
+											<option value="울산" <c:if test="${boardDto.area == '울산'}">selected</c:if>>울산</option>
+											<option value="경남" <c:if test="${boardDto.area == '경남'}">selected</c:if>>경남</option>
+											<option value="경북" <c:if test="${boardDto.area == '경븍'}">selected</c:if>>경북</option>
+											<option value="대구" <c:if test="${boardDto.area == '대구'}">selected</c:if>>대구</option>
+											<option value="전남" <c:if test="${boardDto.area == '전남'}">selected</c:if>>전남</option>
+											<option value="전북" <c:if test="${boardDto.area == '전북'}">selected</c:if>>전북</option>
 											</select>
 										</td>
 									</tr>
+								</c:if>
+								<c:if test="${memberLevel == 1}">
+									<input type="hidden" value="" name="area">
 								</c:if>
 								<tr>
 									<td class="border-right">작성자</td>
@@ -153,7 +155,6 @@
 										 		} 
 										 	} 
 										</script>
-										<%=request.getRealPath("/") %> 
 									</td>
 								</tr>
 								<tr>

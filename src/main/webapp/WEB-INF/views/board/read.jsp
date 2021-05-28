@@ -118,37 +118,16 @@ function delFunc(root, boardNo) {
 									<td class="border-right" height="200px">글내용</td>
 									<td colspan="2">${boardDto.content}</td>
 								</tr>
-								
-								
-								
 								<tr>
 									<td class="border-right">첨부파일</td>
 									<td colspan="2">
 										<c:if test="${boardFileDto.fileNo == null}"> 업로드된 이미지가 없습니다.</c:if>
-									 	<!-- <img src="./캡처2.PNG" style="width:100%; height:100%;"> -->
 										<c:if test="${boardFileDto.fileNo != null}">
 											<input type="hidden" id="filePath" name="filePath">
 											<input type="hidden" id="fileName" name="fileName">
 											<a href="#">${boardFileDto.fileName}</a>
-											<div>application.getRealPath("/resources/img") :: <%= application.getRealPath("/resources/img")%> ::</div>
+											<img src="<c:url value='/img/${boardFileDto.fileName}'/>">
 										</c:if>
-<!-- 									</td> --> 
-<!-- 									<td class="file"> -->
-<!-- 									 <td colspan="2"> -->
-<%-- 									 <%= application.getRealPath("/img")%>  --%>
-<!-- 									<td> -->
-<%--  								<td><%= application.getRealPath("/img")%> </td> --%>
-<%-- 									<img src="file:\\\<%=request.getSession().getServletContext().getRealPath("/resources/img/") %>${boardFileDto.fileName}">${boardFileDto.filePath} --%>
-<%-- 									<img src="file:///<%=request.getSession().getServletContext().getRealPath("/resources/img/") %>${boardFileDto.fileName}" style="width:100%;"> --%>
-<!-- 									<script type="text/javascript"> -->
-<%-- // 									 webview.loadUrl("${boardFileDto.filePath}"); --%>
-<!-- 									</script> -->
-<%-- 									<%= application.getContextPath() %> <br> --%>
-<%-- 									<%= request.getSession().getServletContext().getRealPath("/resources/img/") %><br> --%>
-<%-- 									<%= application.getRealPath("/resources/img/") %> --%>
-<%-- 									<img src="<%= request.getSession().getServletContext().getRealPath("/resources/img/") %>${boardFileDto.fileName}"> --%>
-<%-- 									<img src="/resources/img/캡처2.PNG"/> ${boardFileDto.fileName} --%>
-<!-- 									<img src="file:\\\${boardFileDto.filePath}">                                                       -->
 									</td>
 								</tr>
 								 
