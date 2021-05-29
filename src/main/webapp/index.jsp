@@ -167,7 +167,7 @@
                     </div>
                 
                 </div>
-                 <c:if test = " ${sessionScope.memberLevel!=null}">
+                 <c:if test = "${sessionScope.memberLevel!=null}">
 	                <div class="row">
 	                	<div class="right">
 	                		<div class="list-group">
