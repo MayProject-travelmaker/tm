@@ -49,9 +49,9 @@
 		                   		</a>
 		                   	</li>
 		                        
-	                        <%-- <li class="nav-item"><a class="nav-link" href="${root}/member/register.do">회원가입</a></li>
+	                       <%--  <li class="nav-item"><a class="nav-link" href="${root}/member/register.do">회원가입</a></li> --%>
 	                        <li class="nav-item"><a class="nav-link" href="${root}/member/management.do">회원관리</a></li>
-	                        <li class="nav-item"><a class="nav-link" href="${root}/member/mypage.do">마이페이지</a></li> --%>
+	                        <li class="nav-item"><a class="nav-link" href="${root}/member/mypage.do">마이페이지</a></li> 
 	                    </c:if> 
 	                    <c:if test = "${sessionScope.memberLevel!=null}">
 	                    	<li class="nav-item active"><span>${sessionScope.id }님 반갑습니다.</span></li>

@@ -1,45 +1,53 @@
 package com.java.member.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import com.java.member.dto.MemberDto;
+
 public interface MemberService {
 	
-	// ¾ÆÀÌµğ Áßº¹È®ÀÎ
+	// ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½È®ï¿½ï¿½
 	public void memberidCheck(ModelAndView mav);
 	
-	// È¸¿ø°¡ÀÔ ÀÌ¸ŞÀÏÀÎÁõ ¸ŞÀÏ Àü¼Û
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public void sendEmail(ModelAndView mav);
 
-	// È¸¿ø°¡ÀÔ
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public void memberRegisterOk(ModelAndView mav);
 
-	// ·Î±×ÀÎ
+	// ï¿½Î±ï¿½ï¿½ï¿½
 	public void memberloginOk(ModelAndView mav);
 	
-	// È¸¿øÁ¤º¸ È®ÀÎ
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	public void memberProfileOk(ModelAndView mav);
 		
-	// È¸¿øÁ¤º¸ ¼öÁ¤
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public void memberUpdate(ModelAndView mav);
 	
-	// È¸¿øÁ¤º¸ ¼öÁ¤ ¿Ï·á
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½
 	public void memberUpdateOk(ModelAndView mav);
 
-	// È¸¿øÅ»Åğ
+	//íšŒì›ì°¨ë‹¨
+	public void addBlack(String id);
+	
+
+	// È¸ï¿½ï¿½Å»ï¿½ï¿½
 	public int memberDeleteOk(ModelAndView mav);
 	
-	// ¾ÆÀÌµğ Ã£±â
+	// ï¿½ï¿½ï¿½Ìµï¿½ Ã£ï¿½ï¿½
 	public void memberFindId(ModelAndView mav);
 
-	// ºñ¹Ğ¹øÈ£ Ã£±â - ¾ÆÀÌµğ, ÀÌ¸ŞÀÏ Á¸Àç È®ÀÎ
+	// ï¿½ï¿½Ğ¹ï¿½È£ Ã£ï¿½ï¿½ - ï¿½ï¿½ï¿½Ìµï¿½, ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	public int checkIdAndEmail(ModelAndView mav);
 
-	// ºñ¹Ğ¹øÈ£ Ã£±â - ÀÎÁõ ÀÌ¸ŞÀÏ Àü¼ÛÇÏ±â
+	// ï¿½ï¿½Ğ¹ï¿½È£ Ã£ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 	public void sendEmailToFindPwd(ModelAndView mav);
 
-	// ºñ¹Ğ¹øÈ£ Ã£±â - ºñ¹Ğ¹øÈ£ º¯°æÇÏ±â
+	// ï¿½ï¿½Ğ¹ï¿½È£ Ã£ï¿½ï¿½ - ï¿½ï¿½Ğ¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 	public void changePassword(ModelAndView mav);
 
 }

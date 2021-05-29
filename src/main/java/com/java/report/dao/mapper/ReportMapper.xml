@@ -5,7 +5,24 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="dto.reportDto">
-<insert id="report_insert" parameterType="com.java.report.dto.ReportDto">
+
+<!-- 신고 리스트 조회 -->
+<resultMap type="java.util.HashMap" id="reportListSelect">
+	<result column = "post_no" property = "postNo"/>
+	<result column = "a.reply_no" property = "replyNo"/>
+	<result column = "a.id" property = "id"/>
+	<result column = "rp_mem_id" property = "reportMemberId"/>
+	<result column = "rp_type" property = "reportType"/>
+	<result column = "report_no" property = "reportNo"/>
+	<result column = "rp_date" property = "reportDate"/>
+	<result column = "rp_ct_no" property = "reportCTNo"/>
+	<result column = "rp_ct_name" property = "reportCTName"/>
+	<result column = "title" property = "title"/>
+	<result column = "d.content" property = "content"/>
+	
+</resultMap>
+
+	<insert id="report_insert" parameterType="com.java.report.dto.ReportDto">
 		insert into report(report_no, id, rp_ct_no, rp_mem_id, rp_type, post_no, reply_no, rp_date)
 		values(
 				report_no_seq.nextval,
@@ -18,5 +35,17 @@
 				sysdate
 				)
 	</insert>
+	
+	
+	<select id="report_list" resultMap="reportListSelect">
+		select post_no,a.reply_no, a.id, rp_mem_id, rp_type, rp_ct_name, rp_date, title , d.content 
+		from report A join report_category B 
+		using(rp_ct_no) 
+        right outer join board C
+        on a.post_no = c.board_no
+        right outer join reply D
+        on c.board_no = d.board_no
+		
+	</select>
 	
 </mapper>

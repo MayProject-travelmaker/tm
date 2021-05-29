@@ -329,3 +329,5 @@ function like_btn_click(boardNo, boardCode, postId) {
 		});	// ajax
 	} // if ~ else
 }
+
+

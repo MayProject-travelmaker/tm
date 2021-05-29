@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
 <%@ taglib prefix="c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -26,6 +27,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
+
         <script src="${root}/resources/js/member/findId.js"></script>
         
         <!-- 아이디 찾기 실패 시, 메시지 출력 -->
@@ -46,6 +48,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
+
 	                    <c:if test = "${sessionScope.memberLevel==null}">
 	                        <li class="nav-item active">
 		                    	<a class="nav-link" href="${root}/member/register.do">
@@ -65,6 +68,7 @@
 		<div class="col-lg-5"></div>
 		<div class="col-lg-5">
 			<div class="jumbotron" style="padding-top: 20px;">
+
 				<form method="post" action="findIdOk.do" onsubmit="return findId();">
 					<h3 style="text-align: center;">아이디 찾기</h3>
 						<div class="form-group">

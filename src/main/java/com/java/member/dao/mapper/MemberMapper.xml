@@ -8,6 +8,7 @@
 
 <resultMap type="com.java.member.dto.MemberDto" id="member_dto">
 	<result column = "id" property = "id"/>
+	<result column = "name" property = "name"/>
 	<result column = "password" property = "password"/>
 	<result column = "gender" property = "gender"/>
 	<result column = "jumin1" property = "jumin1"/>
@@ -25,6 +26,31 @@
 	<result column = "user_key" property = "userKey"/>
 	
 </resultMap>
+
+
+
+<!-- 회원 조회 -->
+<resultMap type="java.util.HashMap" id="listselect">
+	<result column = "id" property = "id"/>
+	<result column = "gender" property = "gender"/>
+	<result column = "phone" property = "phone"/>
+	<result column = "name" property = "name"/>
+	<result column = "register_date" property = "registerDate"/>
+	
+</resultMap>
+
+<!-- 차단 리스트 조회 -->
+<resultMap type="java.util.HashMap" id="blacklistselect">
+	<result column = "id" property = "id"/>
+	<result column = "gender" property = "gender"/>
+	<result column = "phone" property = "phone"/>
+	<result column = "name" property = "name"/>
+	<result column = "email" property = "email"/>
+	<result column = "domain" property = "domain"/>
+	
+</resultMap>
+
+
 	<insert id="member_insert" parameterType="com.java.member.dto.MemberDto">
 		insert into member(id,password,name,gender,jumin1,jumin2,phone,email,domain,member_level,report_count,register_date)
 		values(
@@ -71,8 +97,19 @@
 		set 
 			password = #{password},
 			phone = #{phone}
-		where id = #{id}
+			where id = #{id}
 	</update>
+
+
+	<!-- 회원 조회 -->
+ 	<select id="member_list" resultMap="listselect">
+		select id,name,phone,gender,register_date
+		from member
+		where member_level = 2
+		order by id
+	
+	</select>  
+			
 	
 	<!-- 아이디 찾기 -->
 	<select id="member_findId" parameterType="java.util.Map" resultType="String">
@@ -99,8 +136,20 @@
 		update member set member_level = 4 where id=#{id}
 	</update>
 
-
-
+	<!-- 회원 차단 -->
+	<update id="addblack" parameterType="String" >
+		update member
+		set
+			member_level=3 
+		where id=#{id}
+	</update>
+	
+	<!-- 차단 리스트 조회 -->
+	<select id="blacklist_select" resultMap="blacklistselect">
+		select id, name, phone, gender, concat(email,domain) as email
+		from member 
+		where member_level=3
+	</select>
 
 
 </mapper>

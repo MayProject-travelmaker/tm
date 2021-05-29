@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <%@ taglib prefix="c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -49,7 +50,6 @@
         </nav>
         <br><br><br><br><br><br>
         <div align="center">
-		
 		<div class="container">
 		<div class="col-lg-6"></div>
 		<div class="col-lg-6">
@@ -86,6 +86,7 @@
 		
 		</div>
 		</div>
+		
         <br><br><br><br><br><br>
         
         

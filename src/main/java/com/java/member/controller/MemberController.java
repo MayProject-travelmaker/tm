@@ -1,27 +1,48 @@
 package com.java.member.controller;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.java.calendar.service.CalendarService;
+import com.java.member.dao.MemberDao;
 import com.java.member.dto.MemberDto;
 import com.java.member.service.MemberService;
 
 @Controller
 public class MemberController {
-
+	
+	
+	//mypage 달력 테스트===========
+//	@Autowired
+//	private CalendarService service;
+	//==========================
+	
+	
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private MemberDao memberDao;
+	@Autowired
+	
+	private SqlSessionTemplate sqlSessionTemplate;
 	
 	// 아이디 찾기
 	@RequestMapping(value="/member/findId.do", method= RequestMethod.GET)
@@ -80,6 +101,7 @@ public class MemberController {
 		
 	}
 	
+
 	// 회원 가입 완료
 	@RequestMapping(value="/member/registerOk.do", method=RequestMethod.POST) 
 	public ModelAndView memberRegisterOk(HttpServletRequest request, HttpServletResponse response , MemberDto memberDto) {
@@ -137,6 +159,13 @@ public class MemberController {
 	@RequestMapping(value="/member/memberupdate.do", method=RequestMethod.GET)
 	public ModelAndView memberUpdate(HttpServletRequest request, HttpServletResponse response) {
 		
+		/*
+		 * ModelAndView mav = new ModelAndView(); mav.addObject("request", request);
+		 * memberService.memberUpdate(mav);
+		 * 
+		 * return mav;
+		 */
+		//업데이트 화면 확인
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request", request);
 		memberService.memberUpdate(mav);
@@ -207,19 +236,25 @@ public class MemberController {
 	}
 	
 	//-----------------------------------------------------------------추가--------------------------------------
-	//마이페이지
-	@RequestMapping(value="/member/mypage.do")
-	public ModelAndView memberMypage(HttpServletRequest request, HttpServletResponse response) {
-		return new ModelAndView("member/mypage");
-		
-	}
+//	마이페이지
+//	@RequestMapping(value="/member/mypage.do")
+//		public String schedule(Model model) throws Exception {
+//		model.addAttribute("showSchedule", service.showSchedule());
+//		return "/member/mypage";
+//	}
+	
+	
+	
 	
 	//회원관리
 	@RequestMapping(value="/member/management.do")
-	public ModelAndView memberManagement(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView memberManagement(HttpServletRequest request, HttpServletResponse response, MemberDto memberDto) {
+		
+		
 		return new ModelAndView("member/management");
 		
 	}
+
 //	//회원정보수정
 //	@RequestMapping(value="/member/memberupdate.do")
 //	public ModelAndView memberMemberUpdate(HttpServletRequest request, HttpServletResponse response) {
@@ -233,5 +268,37 @@ public class MemberController {
 		
 	}
 	
+
+	//회원 조회
+	@ResponseBody
+	@RequestMapping(value="/member/memberlist")
+	public ArrayList<MemberDto> memberList(Model model) {
+		
+		ArrayList<MemberDto> list = (ArrayList<MemberDto>) memberDao.memberList();
+
+		System.out.println(list);
+		return list;
+	}
+	
+	//회원 차단하기 
+	@ResponseBody
+	@RequestMapping(value="/member/addblack")
+	public String record(HttpServletRequest request) {
+		String id = request.getParameter("id");
+		memberService.addBlack(id);
+		return null;
+	}
+	
+	//차단리스트 조회
+	@ResponseBody
+	@RequestMapping(value="/member/blacklist")
+	public ArrayList<MemberDto> blackList(Model model) {
+		
+		ArrayList<MemberDto> blacklist = (ArrayList<MemberDto>) memberDao.blackList();
+		return blacklist;
+	}
+	
 	
 }
+	
+	

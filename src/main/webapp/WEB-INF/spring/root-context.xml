@@ -11,7 +11,9 @@
 	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="driverManagerDataSource">
 		<property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" />
 		<property value="jdbc:oracle:thin:@localhost:1521:xe" name="url" />
-		<property value="travelmaker" name="username" />
+
+		<property value="hmj" name="username" />
+
 		<property value="1234" name="password" />
 
 	</bean>
@@ -25,6 +27,7 @@
 				<value>classpath:com/java/board/dao/mapper/BoardMapper.xml</value>
 				<value>classpath:com/java/report/dao/mapper/ReportMapper.xml</value>
 				<value>classpath:com/java/mypage/dao/mapper/MypageMapper.xml</value>
+				<value>classpath:com/java/calendar/dao/mapper/CalendarMapper.xml</value>
 			</list>
 
 		</property>
@@ -74,6 +77,19 @@
 	</tx:advice>
 
 	<!--propagation="REQUIRED" 이미 하나의 트랜잭션이 존재하면 지원하고 없다면 새로 지원 -->
+
+
+
+
+<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+
+		<property name="suffix" value=".jsp" />
+
+</bean>
+
+
 
 	<!-- email 인증 관련-->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
