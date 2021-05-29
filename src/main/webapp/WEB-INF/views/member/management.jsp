@@ -39,15 +39,65 @@
       	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
         
      
+     	<script>
+     		window.onload = function() {
+     			$('.member_list_tableDiv').css('display','block');
+     			$('#member_list_page').DataTable({
+      				destroy:true,
+   			    	searching:true,
+   			    	ordering: true,
+   			    	serverSide:false,
+   			    	paging:false,
+   			    	scrollY:"500px",
+   			        scrollCollapse: true,
+			    	ajax:{
+		        		   url:"memberlist",
+		        		   method:"post",
+		        		   /* dataType:"JSON", */
+		        		   dataSrc:''
+			    	},
+			    	columns:[
+			    		{data:"id"},
+			    		{data:"name"},
+			    		{data:"phone"},
+			    		{data:"gender"},
+			    		{data:"registerDate"}
+			    		
+			    	],
+			    	columnDefs: [ 
+			    		{	targets: [4],
+			    	      	render: function (data,type,row){
+			    	    	  return moment(row.updatedDate).format('YYYY년 MM월 DD일');
+			    	      }
+			    		},
+			    	 {	targets:[5],
+			    		 data:null,
+			    		 render:function(data,type,row){
+			    			 return '<input type="button" class="blockBtn" value="차단"/>'
+			    		 },
+			    		 orderable:false
+			    	 }]
+      		 	});
+      		 
+     		}
+     	
+     	</script>
+     
+     
+     
+     
+     
+     
       	<!-- 회원조회 -->
       	<script type="text/javascript">
       	
       		 $(document).on("click","button[name='list']",function() {
       			$('.black_list_tableDiv').css('display','none');
+      			$('report_list_tableDiv').css('display','none');
       			$('.member_list_tableDiv').css('display','block');
       			$('#member_list_page').DataTable({
       				destroy:true,
-   			    	searching:false,
+   			    	searching:true,
    			    	ordering: true,
    			    	serverSide:false,
    			    	paging:false,
@@ -89,31 +139,38 @@
         
         
         <!-- 신고 리스트  -->
-        <!-- <script type="text/javascript">
+        <script type="text/javascript">
       	
-      		 $(document).on("click","button[name='list']",function() {
-      			$('.member_list_tableDiv').css('display','block');
-      			 $('#member_list_page').DataTable({
+      		 $(document).on("click","button[name='reported']",function() {
+      			$('.black_list_tableDiv').css('display','none');
+      			$('.member_list_tableDiv').css('display','none');
+      			$('report_list_tableDiv').css('display','block');
+      			
+      			 $('#repot_list_page').DataTable({
       				destroy:true,
-   			    	searching:false,
+   			    	searching:true,
    			    	ordering: true,
    			    	serverSide:false,
    			    	paging:false,
+   			    	scrollY:"500px",
+   			        scrollCollapse: true,
 			    	ajax:{
-		        		   url:"memberlist",
+		        		   url:"reportlist",
 		        		   method:"post",
 		        		   /* dataType:"JSON", */
 		        		   dataSrc:''
 			    	},
+			    	
 			    	columns:[
+			    		{data:"postNo"},
+			    		{data:"reportMemberId"},
 			    		{data:"id"},
-			    		{data:"name"},
-			    		{data:"phone"},
-			    		{data:"gender"},
-			    		{data:"registerDate"}
+			    		{data:"reportType"},
+			    		{data:"reportNo"},
+			    		{data:"reportDate"}
 			    	],
 			    	columnDefs: [ {
-			    	      targets: [4],
+			    	      targets: [5],
 			    	      render: function (data,type,row){
 			    	    	  return moment(row.updatedDate).format('YYYY년 MM월 DD일');
 			    	      }
@@ -121,7 +178,7 @@
       		 	});
       		 });
 		        		   
-		</script> -->
+		</script> 
         
         
         
@@ -130,13 +187,16 @@
         <script>
  		 $(document).on("click","button[name='blacklist']",function() {
  			$('.member_list_tableDiv').css('display','none');
+ 			$('report_list_tableDiv').css('display','none');
  			$('.black_list_tableDiv').css('display','block');
  			 $('#black_list_page').DataTable({
  				destroy:true,
-			    	searching:false,
+			    	searching:true,
 			    	ordering: true,
 			    	serverSide:false,
 			    	paging:false,
+			    	scrollY:"500px",
+			        scrollCollapse: true,
 		    	ajax:{
 	        		   url:"blacklist",
 	        		   method:"post",
@@ -239,28 +299,28 @@
         <br><br><br><br><br><br>
         <div class="mldiv">
         		<span>
-        			<button name="list">회원 정보 조회 </button>
+        			<button name="list" class="btn btn-primary" style="margin-right : 5px; margin-left:5px;" >회원 정보 조회 </button>
         		</span>
         		
         		<span>
-        			<button name="reported">신고 리스트</button>
+        			<button name="reported" class="btn btn-primary" style="margin-right : 5px;">신고 리스트</button>
         		</span>
         		
         		<span>
-        			<button name="blacklist">블랙 리스트 </button>
+        			<button name="blacklist" class="btn btn-primary" style="margin-right : 5px;">블랙 리스트 </button>
         		</span>
         		
-        		<span>
+        		<!-- <span>
         			<input type="text" id="keyword" onkeyup="searchFunction();" 
         			class="searchText" size="20" placeholder="검색...">
         			<button class="searchBtn" onclick="searchFunction();" type="button"> 검색 </button>
-        		</span>
+        		</span> -->
         		
         		
         </div>
         
         <div class="member_list_tableDiv" align="center" style="display:none">
-        	<table id="member_list_page">
+        	<table id="member_list_page" style="text-align: center;">
         		<thead id="list_head">
         			<tr style= "text-align : center; font-size:20px;">
 						<th>ID</th>
@@ -268,7 +328,7 @@
 						<th>전화번호</th>
 						<th>성별</th>
 						<th>가입날짜</th>
-						<th>Black!!!!</th>
+						<th>BLACK!!!</th>
 						        			
         			</tr>
         		</thead>
@@ -276,8 +336,24 @@
         	</table>
         </div>
         
+        <div class="report_list_tableDiv" align="center" style="display:none">
+        	<table id="repot_list_page" style="text-align: center;">
+        		<thead id="list_head">
+        			<tr style= "text-align : center; font-size:20px;">
+						<th>게시글 번호</th>
+						<th>신고된 ID</th>
+						<th>신고한 ID</th>
+						<th>신고 유형</th>
+						<th>신고 사유</th>
+						<th>신고 날짜</th>        			
+        			</tr>
+        		</thead>
+        		<tbody id="list_body"></tbody>
+        	</table>
+        </div>
+        
         <div class="black_list_tableDiv" align="center" style="display:none">
-        	<table id="black_list_page">
+        	<table id="black_list_page" style="text-align: center;">
         		<thead id="list_head">
         			<tr style= "text-align : center; font-size:20px;">
 						<th>ID</th>
@@ -290,6 +366,8 @@
         		<tbody id="list_body"></tbody>
         	</table>
         </div>
+        
+        
         <br><br><br><br><br><br>
         </div>
         

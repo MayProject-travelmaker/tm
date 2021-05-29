@@ -11,7 +11,9 @@
 	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="driverManagerDataSource">
 		<property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" />
 		<property value="jdbc:oracle:thin:@localhost:1521:xe" name="url" />
+
 		<property value="hmj" name="username" />
+
 		<property value="1234" name="password" />
 
 	</bean>
@@ -23,6 +25,8 @@
 			<list>
 				<value>classpath:com/java/member/dao/mapper/MemberMapper.xml</value>
 				<value>classpath:com/java/board/dao/mapper/BoardMapper.xml</value>
+				<value>classpath:com/java/report/dao/mapper/ReportMapper.xml</value>
+				<value>classpath:com/java/calendar/dao/mapper/CalendarMapper.xml</value>
 			</list>
 
 		</property>
@@ -75,6 +79,7 @@
 
 
 
+
 <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
@@ -85,6 +90,23 @@
 
 
 
+	<!-- email 인증 관련-->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="username" value="projeun2@gmail.com"/>
+        <property name="password" value="qwe123^^" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+	
 	
 	
 </beans>

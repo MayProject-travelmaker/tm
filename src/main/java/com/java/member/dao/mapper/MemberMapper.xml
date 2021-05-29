@@ -52,9 +52,8 @@
 
 
 	<insert id="member_insert" parameterType="com.java.member.dto.MemberDto">
-		insert into member
+		insert into member(id,password,name,gender,jumin1,jumin2,phone,email,domain,member_level,report_count,register_date)
 		values(
-				
 				#{id},
 				#{password},
 				#{name},
@@ -66,37 +65,30 @@
 				#{domain},
 				#{memberLevel},
 				#{reportCount},
-				sysdate,
-				#{blockDate},
-				#{delDate},
-				#{userKey}
-				
+				sysdate
 				)
 	</insert>
 	
 	
 	<!-- 회원정보수정 버튼 누를때 정보 불러오기 -->
 	<select id="member_select" parameterType="String" resultMap="member_dto">
-		select id,password,name,jumin1,jumin2,gender,phone,email
+		select *
 		from member
 		where id=#{id}
 	
 	</select>
 	
-	<!--	AJAX처리 
+	<!-- ID중복확인 -->
 	<select id="id_doublecheck" parameterType="String" resultType="int">
-		select count(*)
-		from member
-		where id=#{id}
-	</select> -->
+		select count(*) from member where id=#{id}
+	</select>
 	
 	
 	<!-- 로그인  -->
-	<select id="member_login" parameterType="java.util.Map" resultType="int">
-		select member_level
+	<select id="member_login" parameterType="java.util.Map" resultType="java.util.HashMap">
+		select id, password, member_level
 		from member
-		where id=#{id} and
-		password=#{password}
+		where id=#{id} and member_level between 1 and 3
 	</select>
 	
 	<!-- 수정완료 버튼 변경되기로 한 항목들 추가로 적어주기-->
@@ -104,9 +96,8 @@
 		update member
 		set 
 			password = #{password},
-			email = #{email}
-			
-		where id = #{id}
+			phone = #{phone}
+			where id = #{id}
 	</update>
 
 
@@ -118,6 +109,32 @@
 		order by id
 	
 	</select>  
+			
+	
+	<!-- 아이디 찾기 -->
+	<select id="member_findId" parameterType="java.util.Map" resultType="String">
+		select id from member where name=#{name} and phone=#{phone}
+	</select>
+	
+	<!-- 비밀번호찾기 - 아이디,이메일 찾기 -->
+	<select id="checkIdandEmail" parameterType="java.util.Map" resultType="int">
+		select count(*) from member where id=#{id} and email=#{email}
+	</select>
+	
+	<!-- 비밀번호 찾기 - 인증키 업데이트 -->
+	<update id="updateAuthkey" parameterType="java.util.Map">
+		update member set user_key = #{authKey} where id=#{id}
+	</update>
+	
+	<!-- 비밀번호 찾기 - 비밀번호 변경 -->
+	<update id="changePassword" parameterType="java.util.Map">
+		update member set password=#{password} where id=#{id} and user_key=#{authKey}
+	</update>
+	
+	<!-- 회원탈퇴 -->
+	<update id="member_delete" parameterType="String">
+		update member set member_level = 4 where id=#{id}
+	</update>
 
 	<!-- 회원 차단 -->
 	<update id="addblack" parameterType="String" >

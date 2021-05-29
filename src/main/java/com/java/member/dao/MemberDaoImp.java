@@ -30,30 +30,67 @@ public class MemberDaoImp implements MemberDao{
 	}
 
 	@Override
-	public String loginOk(String id, String password) {
+	public HashMap<String,Object> loginOk(String id, String password) {
 		Map<String, String> map = new HashMap<String,String>();
 		map.put("id", id);
 		map.put("password", password);
-
-		return sqlSessionTemplate.selectOne("member_login", map);
+		HashMap<String,Object> result = sqlSessionTemplate.selectOne("member_login", map);
+		return result;
 	}
 
+	// È¸¿øÁ¤º¸ ¼öÁ¤ È­¸é
 	@Override
 	public MemberDto memberUpdate(String id) {
-		
 		return sqlSessionTemplate.selectOne("member_select",id);
 	}
 	
+	// È¸¿øÁ¤º¸ ¼öÁ¤ ¿Ï·á
 	@Override
 	public int memberUpdateOk(MemberDto memberDto) {
 		return sqlSessionTemplate.update("member_update",memberDto);
 	}
 	
-	
+	// È¸¿øÅ»Åğ
 	@Override
 	public int memberDelete(String id, String password) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSessionTemplate.update("member_delete", id);
+	}
+
+	// ¾ÆÀÌµğ Ã£±â
+	@Override
+	public String memberFindId(String name, String phone) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("name", name);
+		map.put("phone", phone);
+		return sqlSessionTemplate.selectOne("member_findId", map);
+	}
+	// ºñ¹Ğ¹øÈ£ Ã£±â - ¾ÆÀÌµğ, ÀÌ¸ŞÀÏ Ã£±â
+	@Override
+	public int checkIdAndEmail(String id, String email) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("id", id);
+		map.put("email", email);
+		return sqlSessionTemplate.selectOne("checkIdandEmail", map);
+	}
+
+	// ºñ¹Ğ¹øÈ£ Ã£±â - ÀÎÁõÅ° ÀúÀå
+	@Override
+	public int updateAuthKey(String id, String email, String authKey) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("id", id);
+		map.put("email", email);
+		map.put("authKey", authKey);
+		return sqlSessionTemplate.update("updateAuthkey", map);
+	}
+	// ºñ¹Ğ¹øÈ£ Ã£±â - ºñ¹Ğ¹øÈ£ º¯°æ
+	@Override
+	public int changePassword(String id, String password, String authKey) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("id", id);
+		map.put("password", password);
+		map.put("authKey", authKey);
+		
+		return sqlSessionTemplate.update("changePassword", map);
 	}
 
 //	íšŒì›ì¡°íšŒ

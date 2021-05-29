@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="dto.reportDto">
+
+<!-- 신고 리스트 조회 -->
+<resultMap type="java.util.HashMap" id="reportListSelect">
+	<result column = "post_no" property = "postNo"/>
+	<result column = "reply_no" property = "replyNo"/>
+	<result column = "id" property = "id"/>
+	<result column = "rp_mem_id" property = "reportMemberId"/>
+	<result column = "rp_type" property = "reportType"/>
+	<result column = "report_no" property = "reportNo"/>
+	<result column = "rp_date" property = "reportDate"/>
+	<result column = "rp_ct_no" property = "reportCountNo"/>
+	
+</resultMap>
+
+	<insert id="report_insert" parameterType="com.java.report.dto.ReportDto">
+		insert into report(report_no, id, rp_ct_no, rp_mem_id, rp_type, post_no, reply_no, rp_date)
+		values(
+				report_no_seq.nextval,
+				#{id},
+				#{rp_ct_no},
+				#{rp_mem_id},
+				#{rp_type},
+				#{post_no},
+				#{reply_no},
+				sysdate
+				)
+	</insert>
+	
+	
+	<select id="report_list" resultMap="reportListSelect">
+		select *
+		from report
+	</select>
+	
+</mapper>

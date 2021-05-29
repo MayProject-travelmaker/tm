@@ -27,7 +27,14 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
-        
+        <script type="text/javascript">
+        	$(function(){
+        		var loginMessage = "<c:out value="${message}"/>";
+        		if(loginMessage != ""){
+        			alert(loginMessage)
+        		}
+        	})
+        </script>
     </head>
     <body>
         <!-- Navigation-->
@@ -58,7 +65,7 @@
 		<div class="col-lg-4"></div>
 		<div class="col-lg-4">
 			<div class="jumbotron" style="padding-top: 20px;">
-				<form method="post" action="loginOk.jsp">
+				<form method="post" action="loginOk.do">
 					<h3 style="text-align: center;">로그인</h3>
 					<div class="form-group">
 					<div align ="left">아이디</div>

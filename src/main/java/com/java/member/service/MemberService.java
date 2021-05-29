@@ -2,6 +2,7 @@ package com.java.member.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,9 +27,22 @@ public void memberRegisterOk(ModelAndView mav);
 	
 	public void memberDelete(ModelAndView mav);
 	
-	public void memberDeleteOk(ModelAndView mav);
 
 	//회원차단
 	public void addBlack(String id);
 	
+	public int memberDeleteOk(ModelAndView mav);
+
+	// ���� �߰��� 
+	public void sendEmail(ModelAndView mav);
+
+	public void memberFindId(ModelAndView mav);
+
+	public int checkIdAndEmail(ModelAndView mav);
+
+	public void sendEmailToFindPwd(ModelAndView mav);
+
+	public void changePassword(ModelAndView mav);
+
+	public void memberProfileOk(ModelAndView mav);
 }

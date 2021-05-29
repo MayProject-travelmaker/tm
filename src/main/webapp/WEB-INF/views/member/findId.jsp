@@ -27,7 +27,18 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
+
+        <script src="${root}/resources/js/member/findId.js"></script>
         
+        <!-- 아이디 찾기 실패 시, 메시지 출력 -->
+        <script type="text/javascript">
+	        	$(function(){
+	        		var loginMessage = "<c:out value="${message}"/>";
+	        		if(loginMessage != ""){
+	        			alert(loginMessage)
+	        		}
+	        	})
+        </script>
     </head>
     <body>
         <!-- Navigation-->
@@ -37,7 +48,8 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-	                    <c:if test = "${memberLevel==null}">
+
+	                    <c:if test = "${sessionScope.memberLevel==null}">
 	                        <li class="nav-item active">
 		                    	<a class="nav-link" href="${root}/member/register.do">
 		                                회원가입
@@ -56,17 +68,20 @@
 		<div class="col-lg-5"></div>
 		<div class="col-lg-5">
 			<div class="jumbotron" style="padding-top: 20px;">
-				<form method="post" action="findIdOk.jsp">
-				<h3 style="text-align: center;">아이디 찾기</h3>
-					<div class="form-group">
-					<div align ="left">이름</div>
-						<input type="text" class="form-control" placeholder="이름" name="name" maxlength="20">
-					</div>
-					<div class="form-group">
-					<div align ="left">전화번호</div>
-						<input type="text" class="form-control" placeholder="010-1234-5678" name="phone" maxlength="20">
-					</div>
-					<input type="submit" class="btn btn-primary form-control" value="확인">
+
+				<form method="post" action="findIdOk.do" onsubmit="return findId();">
+					<h3 style="text-align: center;">아이디 찾기</h3>
+						<div class="form-group">
+						<div align ="left">이름</div>
+							<input type="text" class="form-control" placeholder="이름" id="name" name="name" maxlength="20">
+							<span id="name_check"></span>
+						</div>
+						<div class="form-group">
+						<div align ="left">전화번호</div>
+							<input type="text" class="form-control" placeholder="010-1234-5678" id="phone" name="phone" maxlength="20">
+							<span id="phone_check"></span>
+						</div>
+						<input type="submit" class="btn btn-primary form-control" value="확인">
 				</form>
 			</div>
 		</div>
