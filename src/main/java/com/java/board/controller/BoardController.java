@@ -16,7 +16,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	//µ¿Çà°Ô½ÃÆÇ ³Ñ¾î°¡±â
+	//ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/accompanylist.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyList(HttpServletRequest request, HttpServletResponse response) {
 
@@ -28,7 +28,7 @@ public class BoardController {
 			
 	}
 		
-	//µ¿ÇàÈÄ±â°Ô½ÃÆÇ ³Ñ¾î°¡±â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/accompanyreview.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyReview(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -39,7 +39,7 @@ public class BoardController {
 			
 	}
 	
-	//ÃßÃµ°æ·Î°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
+	//ï¿½ï¿½Ãµï¿½ï¿½Î°Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/recommendpath.do", method= RequestMethod.GET)
 	public ModelAndView boardRecommendPath(HttpServletRequest request, HttpServletResponse response) {
 
@@ -51,7 +51,7 @@ public class BoardController {
 			
 	}
 	
-	//¿©ÇàÁöÈÄ±â°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
 	@RequestMapping(value="/board/travelreview.do", method= RequestMethod.GET)
 	public ModelAndView boardTravelReview(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -61,14 +61,14 @@ public class BoardController {
 		return mav;	
 	}
 	
-	//±Û¾²±â
+	//ï¿½Û¾ï¿½ï¿½ï¿½
 	@RequestMapping(value="/board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("board/write");
 	}
 	
 	
-	//±Û¾²±â¿Ï·á
+	//ï¿½Û¾ï¿½ï¿½ï¿½Ï·ï¿½
 	@RequestMapping(value="/board/writeOk.do", method= RequestMethod.POST)
 	public ModelAndView boardWriteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		ModelAndView mav = new ModelAndView();
@@ -79,7 +79,7 @@ public class BoardController {
 		return mav;
 	}
 
-	//±ÛÀĞ±â
+	//ï¿½ï¿½ï¿½Ğ±ï¿½
 	@RequestMapping(value="/board/read.do")
 	public ModelAndView boardRead(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
@@ -88,7 +88,7 @@ public class BoardController {
 		boardService.boardRead(mav);
 		return mav;
 	}
-	//±Û¼öÁ¤
+	//ï¿½Û¼ï¿½ï¿½ï¿½
 	@RequestMapping(value="/board/update.do")
 	public ModelAndView boardUpdate(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
@@ -97,14 +97,32 @@ public class BoardController {
 		boardService.boardUpdate(mav);
 		return mav;
 	}
-	//±Û¼öÁ¤¿Ï·á
+	//ï¿½Û¼ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
 	@RequestMapping(value="/board/updateOk.do")
 	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("board/updateOk");	
 	}
-	//±Û»èÁ¦¿Ï·á
+	//ï¿½Û»ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
 	@RequestMapping(value="/board/deleteOk.do")
 	public ModelAndView boardDeleteOk(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("board/deleteOk");	
+	}
+	
+	//ë‚˜ì˜ì—¬í–‰ì¼ê¸°ê²Œì‹œíŒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
+		@RequestMapping(value="/board/mydiary.do")
+		public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response) {
+			return new ModelAndView("board/mydiary");
+			
+		}
+	//ë‚˜ì˜ì—¬í–‰ì¼ê¸° ì—…ë¡œë“œ
+	@RequestMapping(value="/board/mydiaryUpload.do")
+	public ModelAndView MydiaryUpload(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.dairyUpload(mav);
+		
+		return new ModelAndView("board/mydiaryUpload");
+		
 	}
 }

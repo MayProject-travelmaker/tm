@@ -44,7 +44,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-	                    <c:if test = "${memberLevel==null}">
+	                    <c:if test = "${sessionScope.memberLevel==null}">
 	                        <li class="nav-item active">
 		                    	<a class="nav-link" href="${root}/member/register.do">
 		                                회원가입

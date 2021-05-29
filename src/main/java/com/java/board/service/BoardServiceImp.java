@@ -111,12 +111,13 @@ public class BoardServiceImp implements BoardService {
 		if (count > 0) {
 			accompanyboardList = boardDao.accompanyboardList(startRow, endRow);
 		}
+	
 
 		mav.addObject("boardList", accompanyboardList);
 		mav.addObject("boardSize", boardSize);
 		mav.addObject("currentPage", currentPage);
 		mav.addObject("count", count);
-
+		
 		mav.setViewName("board/accompanylist");
 	}
 
@@ -247,6 +248,20 @@ public class BoardServiceImp implements BoardService {
 		mav.addObject("boardDto", boardDto);
 		mav.addObject("boardNo", boardNo);
 		mav.setViewName("board/update");
+	}
+
+	//여행일지 업로드
+	@Override
+	public void dairyUpload(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		HttpServletRequest request = (HttpServletRequest)map.get("request");
+		
+		
+		
+		
+		
+		
+		
 	}
 
 }

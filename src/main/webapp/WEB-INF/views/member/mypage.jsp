@@ -115,8 +115,8 @@
         
         
        <!-- 마이페이지 -->
-        <div>
-        	<div style="float:left; margin-top:200px; margin-left:300px;">
+        <div class="container2">
+        	<div style="float:left; margin-top:200px; margin-left:381px;">
 	        	<a href="${root}/member/myboard.do">내가 쓴 글</a>
 	        	<br><br>
 	        	<a href="${root}/member/myreply.do">내가 쓴 댓글</a>
@@ -125,10 +125,10 @@
 	        	<br><br>
 	        	<a href="${root}/member/mypick.do">즐겨찾기</a>
 	        	<br><br>
-	        	<a href="${root}/member/">나의 여행기록</a> 
+	        	<a href="${root}/board/mydiary.do">나의 여행기록</a> 
 	        	
         	</div>
-        	<div style="float:right; width: 800px; margin:50px;" id='calendar'>
+        	<div style="float:right; width: 800px; margin-top:24px; margin-right: 160px" id='calendar'>
         	</div>
         </div>
         

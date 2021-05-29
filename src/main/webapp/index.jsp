@@ -54,7 +54,7 @@
 	                        <li class="nav-item"><a class="nav-link" href="${root}/member/mypage.do">마이페이지</a></li> --%>
 	                    </c:if> 
 	                    <c:if test = "${sessionScope.memberLevel!=null}">
-	                    	<li class="nav-item active"><span>${sessionScope.id }님 반갑습니다.</span></li>
+	                    	<li class="nav-item active"><span class="nav-link">${sessionScope.id }님 반갑습니다.</span></li>
 	                        <li class="nav-item active">
 		                    	<a class="nav-link" href="${root}/member/logout.do">
 		                                로그아웃
@@ -167,6 +167,18 @@
                     </div>
                 
                 </div>
+                 <c:if test = "${sessionScope.memberLevel!=null}">
+	                <div class="row">
+	                	<div class="right">
+	                		<div class="list-group">
+	                			
+		                		<div class="list-group">
+			                        <a class="list-group-item" href="${root}/board/mydiary.do">📒 나의 여행기록</a>
+		                    	</div>
+	                		</div>
+	                	</div>
+	                </div> 
+                </c:if>     
             </div>
         </div>
         <!-- Footer-->
