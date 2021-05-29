@@ -25,7 +25,7 @@
 	</insert>
 	
 	<select id="showOneSchedule" parameterType="java.util.HashMap" resultType="com.java.calendar.dto.CalendarDto">
-		select subject,(SELECT TO_CHAR(startDate,'YYYY-MM-DD hh:mi') FROM DUAL) as startDate,(SELECT TO_CHAR(endDate,'YYYY-MM-DD') FROM DUAL) as endDate,memo,num
+		select subject,(SELECT TO_CHAR(startDate,'YYYY-MM-DD hh:mi') FROM DUAL) as startDate,(SELECT TO_CHAR(endDate,'YYYY-MM-DD hh:mi') FROM DUAL) as endDate,memo,num
 		from schedule
 		where id=#{id}
 		and num=#{num}

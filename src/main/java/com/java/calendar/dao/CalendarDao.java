@@ -21,6 +21,7 @@ public class CalendarDao{
 	}
 	
 	public void addSchedule(CalendarDto calendarDto) throws Exception {
+		System.out.println("일정추가 :"+calendarDto);
 		sqlSessionTemplate.insert("addSchedule", calendarDto);
 	}
 
@@ -33,7 +34,7 @@ public class CalendarDao{
 	}
 
 	public void updateSchedule(CalendarDto calendarDto) {
-		
+		System.out.println("일정수정 :"+calendarDto);
 		sqlSessionTemplate.update("updateSchedule", calendarDto);
 		
 	}

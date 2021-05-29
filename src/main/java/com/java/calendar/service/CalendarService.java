@@ -37,6 +37,7 @@ public class CalendarService {
 		String id=(String) session.getAttribute("id");
 		CalendarDto calendarDto = calendarDao.readSchedule(id,num);
 		mav.addObject("calendarDto",calendarDto);
+		System.out.println("개별 일정 불러오기 : " + calendarDto);
 		mav.setViewName("member/readSchedule");
 	}
 
