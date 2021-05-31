@@ -13,7 +13,7 @@
 		<script type="text/javascript">
 			alert("글쓰기에 성공하셨습니다.")
 			
-			location.href = "${root}/board/mydiaryUpload.do";
+			location.href = "${root}/board/mydiary.do";
 			
 		</script>
 	</c:if>
@@ -21,7 +21,7 @@
 	<c:if test="${check==0}">
 		<script type="text/javascript">
 			alert("글쓰기를 실패하셨습니다.")
-			location.href = "${root}/board/write.do";
+			location.href = "${root}/board/mydiaryUpload.do";
 		</script>
 	</c:if>
 </body>

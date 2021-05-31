@@ -59,42 +59,17 @@
         <hr style="width: 1200px;">
         <div class="diaryrow">
              <div class="col-lg-4 col-md-6 mb-4">
-                 <div class="card h-100">
-                     <a href="#!"><img class="card-img-top" src="https://via.placeholder.com/700x700" alt="..." /></a>
-                     
-                 </div>
+             	<c:if test="${diaryDto.diaryNo == null}">업로드된 이미지가 없습니다.</c:if>
+             	<c:if test="${diaryDto.diaryNo != null}">
+             		
+					<input type="hidden" id="imgName" name="imgName">
+					<a href="#">${diaryDto.imgName}</a>
+             		<img src="<c:url value='/img/${diaryDto.imgName}'/>">
+	                 <%-- <div class="card h-100">
+	                     <a href="#!"><img class="card-img-top" src="<c:url value='/img/2021/05/31/${diaryDto.imgName}'/> alt="..." /></a>
+	                 </div> --%>
+                 </c:if>
              </div>
-             <div class="col-lg-4 col-md-6 mb-4">
-                 <div class="card h-100">
-                     <a href="#!"><img class="card-img-top" src="https://via.placeholder.com/700x700" alt="..." /></a>
-                    
-                 </div>
-             </div>
-             <div class="col-lg-4 col-md-6 mb-4">
-                 <div class="card h-100">
-                     <a href="#!"><img class="card-img-top" src="https://via.placeholder.com/700x700" alt="..." /></a>
-                     
-                 </div>
-             </div> 
-             <div class="col-lg-4 col-md-6 mb-4">
-                 <div class="card h-100">
-                     <a href="#!"><img class="card-img-top" src="https://via.placeholder.com/700x700" alt="..." /></a>
-                     
-                 </div>
-             </div> 
-             <div class="col-lg-4 col-md-6 mb-4">
-                 <div class="card h-100">
-                     <a href="#!"><img class="card-img-top" src="https://via.placeholder.com/700x700" alt="..." /></a>
-                     
-                 </div>
-             </div> 
-             <div class="col-lg-4 col-md-6 mb-4">
-                 <div class="card h-100">
-                     <a href="#!"><img class="card-img-top" src="https://via.placeholder.com/700x700" alt="..." /></a>
-                     
-                 </div>
-             </div> 
-                           
          </div>
 	
         
@@ -102,9 +77,9 @@
         
         
         <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">김지은 김동인 이송하 윤희영 황민재</p></div>
-        </footer>
+        <footer class="py-5 bg-dark" style="position: fixed; width: 100%; bottom: 0;">
+	      <div class="container"><p class="m-0 text-center text-white">김지은 김동인 이송하 윤희영 황민재</p></div>
+	  </footer>
         
     </body>
 </html>

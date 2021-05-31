@@ -255,19 +255,46 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/update");
 	}
 
-	//�ы���쇱� ��濡���
+	//여행일지 리스트
+	
 	@Override
-	public void diaryUpload(ModelAndView mav) {
+	public void diaryList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
-		HttpServletRequest request = (HttpServletRequest)map.get("request");
+		HttpServletRequest request=(HttpServletRequest)map.get("request");
+		
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("id");
+		//int diaryNo = Integer.parseInt(request.getParameter("diaryNo"));
 		
 		
+		try {
+			int diaryNo = Integer.parseInt(request.getParameter("diaryNo"));
+			DiaryDto diaryDto = boardDao.diaryList(diaryNo);
+			diaryDto.setDiId(id);
+			diaryDto.setDiaryNo(diaryNo);
+			
+			mav.addObject("diaryDto",diaryDto);
+			
+			mav.setViewName("board/mydiary");
+		} catch (NumberFormatException e) {
+			// TODO: handle exception
+		}
 		
 		
+		//DiaryDto diaryDto = boardDao.diaryList(diaryNo);
+	
 		
 		
+		//DiaryDto diaryDto = new DiaryDto();
+		//diaryDto.setDiId(id);
+		//diaryDto.setDiaryNo(diaryNo);
+		
+		//mav.addObject("diaryDto",diaryDto);
+		
+		//mav.setViewName("board/mydiary");
 		
 	}
+
 	//내 여행일지 업로드Ok
 	@Override
 	public void diaryUploadOk(ModelAndView mav) {
@@ -285,6 +312,9 @@ public class BoardServiceImp implements BoardService {
 		
 		String baseDir = request2.getSession().getServletContext().getRealPath("/resources/img/");
 		String formattedDate = baseDir + new SimpleDateFormat("yyyy" + File.separator + "MM" + File.separator + "dd").format(new Date());
+		System.out.println("==========================");
+		System.out.println(formattedDate);
+		System.out.println("==========================");
 		
 		for (MultipartFile mf : fileList) {
 			DiaryDto diaryDto = new DiaryDto();
@@ -301,6 +331,7 @@ public class BoardServiceImp implements BoardService {
 				try {
 					mf.transferTo(new File(path, fileName));
 					diaryDto.setImgName(fileName);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -313,5 +344,27 @@ public class BoardServiceImp implements BoardService {
 		mav.addObject("check", check);
 		mav.setViewName("board/writeOk2");
 	}
+
+	@Override
+	public void diaryUpload(ModelAndView mav) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

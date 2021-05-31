@@ -258,4 +258,14 @@
 			from dual
 		</foreach>)a
 	</insert>
+	
+	<!-- 나의여행일지 list -->
+	<select id="diary_list"  parameterType="int" resultMap="diaryDto" >
+		select #{item.diaryNo} as diary_no,
+		 	   #{item.diId} as di_id,
+		 	   #{item.diContent} as di_content,
+		       sysdate,
+		       #{item.imgName} as img_name 
+       from diary where di_id = #{diId} 
+	</select>
 </mapper>

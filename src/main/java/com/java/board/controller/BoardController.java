@@ -111,8 +111,14 @@ public class BoardController {
 	
 	//나의여행일기게시판으로 넘어가기
 	@RequestMapping(value="/board/mydiary.do")
-	public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response, DiaryDto diaryDto) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		//mav.addObject("diaryDto", diaryDto);
+		boardService.diaryList(mav);
+		
 		return new ModelAndView("board/mydiary");
+		
 		
 	}
 	//나의여행일기 업로드

@@ -125,5 +125,15 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.insert("diary_insert", newFileList);
 	}
 
+	//나의여행일지 list select
+	@Override
+	public DiaryDto diaryList(int diaryNo) {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.selectOne("diary_list", diaryNo);
+	}
+	
+	
+	
+
 	
 }
