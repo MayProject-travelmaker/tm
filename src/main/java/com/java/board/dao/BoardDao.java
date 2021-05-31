@@ -34,7 +34,7 @@ public interface BoardDao {
 
 	public int diaryUploadOk(List<DiaryDto> newFileList);
 	
-	public DiaryDto diaryList(int diaryNo);
+	public DiaryDto diaryList(String diId);
 	
 	
 

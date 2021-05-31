@@ -126,10 +126,15 @@ public class BoardDaoImp implements BoardDao {
 	}
 
 	//나의여행일지 list select
+	/*
+	 * @Override public DiaryDto diaryList(String diId) { // TODO Auto-generated
+	 * method stub return sqlSessionTemplate.selectOne("diary_list", diId); }
+	 */
+	//나의여행일지 list select
 	@Override
-	public DiaryDto diaryList(int diaryNo) {
+	public DiaryDto diaryList(String diId) {
 		// TODO Auto-generated method stub
-		return sqlSessionTemplate.selectOne("diary_list", diaryNo);
+		return sqlSessionTemplate.selectOne("diary_list", diId);
 	}
 	
 	

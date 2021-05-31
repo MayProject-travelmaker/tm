@@ -263,35 +263,17 @@ public class BoardServiceImp implements BoardService {
 		HttpServletRequest request=(HttpServletRequest)map.get("request");
 		
 		HttpSession session = request.getSession();
-		String id = (String) session.getAttribute("id");
-		//int diaryNo = Integer.parseInt(request.getParameter("diaryNo"));
+		String diId = (String) session.getAttribute("id");
 		
+		DiaryDto diaryDto = boardDao.diaryList(diId);
 		
-		try {
-			int diaryNo = Integer.parseInt(request.getParameter("diaryNo"));
-			DiaryDto diaryDto = boardDao.diaryList(diaryNo);
-			diaryDto.setDiId(id);
-			diaryDto.setDiaryNo(diaryNo);
-			
-			mav.addObject("diaryDto",diaryDto);
-			
-			mav.setViewName("board/mydiary");
-		} catch (NumberFormatException e) {
-			// TODO: handle exception
-		}
+		diaryDto.setDiId(diId);
+		System.out.println("============11111");
+		System.out.println(diaryDto);
+		System.out.println("============111111");
+		mav.addObject("diaryDto",diaryDto);
 		
-		
-		//DiaryDto diaryDto = boardDao.diaryList(diaryNo);
-	
-		
-		
-		//DiaryDto diaryDto = new DiaryDto();
-		//diaryDto.setDiId(id);
-		//diaryDto.setDiaryNo(diaryNo);
-		
-		//mav.addObject("diaryDto",diaryDto);
-		
-		//mav.setViewName("board/mydiary");
+		mav.setViewName("board/mydiary");
 		
 	}
 
@@ -311,9 +293,10 @@ public class BoardServiceImp implements BoardService {
 		List<DiaryDto> newFileList = new ArrayList<DiaryDto>();
 		
 		String baseDir = request2.getSession().getServletContext().getRealPath("/resources/img/");
-		String formattedDate = baseDir + new SimpleDateFormat("yyyy" + File.separator + "MM" + File.separator + "dd").format(new Date());
+		//String formattedDate = baseDir + new SimpleDateFormat("yyyy" + File.separator + "MM" + File.separator + "dd").format(new Date());
 		System.out.println("==========================");
-		System.out.println(formattedDate);
+		//System.out.println(formattedDate);
+		System.out.println(baseDir);
 		System.out.println("==========================");
 		
 		for (MultipartFile mf : fileList) {
@@ -323,7 +306,7 @@ public class BoardServiceImp implements BoardService {
 
 			String fileName = Long.toString(System.currentTimeMillis()) + "_" + mf.getOriginalFilename();
 			
-            File path = new File(formattedDate);
+            File path = new File(baseDir);
             if(!path.exists()){
             	path.mkdirs();
             }
