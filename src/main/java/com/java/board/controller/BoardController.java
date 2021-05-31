@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dto.BoardDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.service.BoardService;
 
 @Controller
@@ -109,20 +110,30 @@ public class BoardController {
 	}
 	
 	//나의여행일기게시판으로 넘어가기
-		@RequestMapping(value="/board/mydiary.do")
-		public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response) {
-			return new ModelAndView("board/mydiary");
-			
-		}
+	@RequestMapping(value="/board/mydiary.do")
+	public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("board/mydiary");
+		
+	}
 	//나의여행일기 업로드
 	@RequestMapping(value="/board/mydiaryUpload.do")
 	public ModelAndView MydiaryUpload(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
 		mav.addObject("request", request);
 		
-		boardService.dairyUpload(mav);
+		boardService.diaryUpload(mav);
 		
 		return new ModelAndView("board/mydiaryUpload");
 		
+	}
+	//나의여행일기 업로드ok
+	@RequestMapping(value="/board/mydiaryUploadOk.do")
+	public ModelAndView MydiaryUploadOk(HttpServletRequest request, HttpServletResponse response, DiaryDto diaryDto) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		mav.addObject("diaryDto", diaryDto);
+		
+		boardService.diaryUploadOk(mav);
+		return mav;
 	}
 }

@@ -39,6 +39,13 @@
 		<result column="write_date" property="writeDate"/>
 		<result column="update_date" property="updateDate"/>
 	</resultMap>
+	<resultMap type="com.java.board.dto.DiaryDto" id="diaryDto">
+		<result column="diary_no" property="diaryNo"/>
+		<result column="di_id" property="diId"/>
+		<result column="di_content" property="diContent"/>
+		<result column="di_date" property="diDate"/>
+		<result column="img_name" property="imgName"/>
+	</resultMap>
 
 	<!-- 일반글작성_파일,지도 포함 -->
 	<insert id="board_file_map_insert" parameterType="java.util.Map">
@@ -239,4 +246,16 @@
 		where board_no=#{boardNo}
 	</select>
 	
+	<!-- 나의여행일지 insert -->
+	<insert id="diary_insert" parameterType="java.util.List">
+	insert into diary (diary_no, di_id, di_content, di_date, img_name)
+	select diary_no_seq.nextval, a.*
+	from(<foreach item="item" collection="list" separator="union all ">
+			select #{item.diId} as di_id,
+					#{item.diContent} as di_content,
+					sysdate,
+					#{item.imgName} as img_name
+			from dual
+		</foreach>)a
+	</insert>
 </mapper>

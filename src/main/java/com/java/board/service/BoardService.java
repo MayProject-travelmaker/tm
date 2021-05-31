@@ -21,5 +21,7 @@ public interface BoardService {
 	
 	
 	//내 여행일지 업로드
-	void dairyUpload (ModelAndView mav);
+	void diaryUpload (ModelAndView mav);
+	//내 여행일지 업로드Ok
+	void diaryUploadOk(ModelAndView mav);
 }

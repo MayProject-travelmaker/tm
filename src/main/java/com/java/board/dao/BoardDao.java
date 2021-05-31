@@ -3,6 +3,7 @@ package com.java.board.dao;
 import java.util.HashMap;
 import java.util.List;
 import com.java.board.dto.BoardDto;
+import com.java.board.dto.DiaryDto;
 
 public interface BoardDao {
 
@@ -30,6 +31,8 @@ public interface BoardDao {
 
 	//update
 	public BoardDto boardupdate(int boardNo);
+
+	public int diaryUploadOk(List<DiaryDto> newFileList);
 	
 	
 

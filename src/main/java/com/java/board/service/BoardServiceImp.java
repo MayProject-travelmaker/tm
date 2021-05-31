@@ -1,11 +1,15 @@
 package com.java.board.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dao.BoardDao;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.NoticeDto;
 
@@ -26,7 +31,7 @@ public class BoardServiceImp implements BoardService {
 	@Autowired
 	private BoardDao boardDao;
 
-	//글쓰기
+	//湲��곌린
 	@Override
 	public void boardWriteOk(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -43,12 +48,12 @@ public class BoardServiceImp implements BoardService {
 		mapDto.setxAxis(xAxis);
 		mapDto.setyAxis(yAxis);
 		
-		//일반글,공지글에 따른 isNotice 처리
+		//�쇰�湲�,怨듭�湲��� �곕Ⅸ isNotice 泥�由�
 		int isNotice;
 		String notice = request.getParameter("notice");
-		if (notice == null) {	//일반글작성이면 isNotice 기본값 지정 (-1:일반글, 0:공지내릴때, 1:공지올릴때)
+		if (notice == null) {	//�쇰�湲����깆�대㈃ isNotice 湲곕낯媛� 吏��� (-1:�쇰�湲�, 0:怨듭��대┫��, 1:怨듭��щ┫��)
 			isNotice = -1;
-		} else {				//공지글작성
+		} else {				//怨듭�湲�����
 			isNotice = Integer.parseInt(notice);
 			noticeDto.setIsNotice(isNotice);
 		}
@@ -57,7 +62,7 @@ public class BoardServiceImp implements BoardService {
 		if (upFile.getSize() != 0) {
 			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
 			String fileExtension = StringUtils.getFilenameExtension(fileName);
-			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // 파일 업로드 상대경로
+			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // ���� ��濡��� ����寃쎈�
 			path.mkdir();
 			if (path.exists() && path.isDirectory()) {
 				File file = new File(path, fileName);
@@ -88,7 +93,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/writeOk");
 	}
 
-	// 동행 게시판 리스트
+	// ���� 寃����� 由ъ�ㅽ��
 	@Override
 	public void accompanyboardList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -121,7 +126,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/accompanylist");
 	}
 
-	// 여행후기 리스트
+	// �ы����湲� 由ъ�ㅽ��
 	@Override
 	public void accompanyreviewList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -154,7 +159,7 @@ public class BoardServiceImp implements BoardService {
 
 	}
 
-	// 추천 여행경로 리스트
+	// 異�泥� �ы��寃쎈� 由ъ�ㅽ��
 	@Override
 	public void recommendpathList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -186,7 +191,7 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/recommendpath");
 	}
 
-	// 여행지 후기 리스트
+	// �ы��吏� ��湲� 由ъ�ㅽ��
 	@Override
 	public void travelreviewList(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -219,7 +224,7 @@ public class BoardServiceImp implements BoardService {
 
 	}
 
-	//글 상세보기
+	//湲� ���몃낫湲�
 	@Override
 	public void boardRead(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
@@ -250,9 +255,9 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/update");
 	}
 
-	//여행일지 업로드
+	//�ы���쇱� ��濡���
 	@Override
-	public void dairyUpload(ModelAndView mav) {
+	public void diaryUpload(ModelAndView mav) {
 		Map<String, Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest)map.get("request");
 		
@@ -262,6 +267,51 @@ public class BoardServiceImp implements BoardService {
 		
 		
 		
+	}
+	//내 여행일지 업로드Ok
+	@Override
+	public void diaryUploadOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		
+		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
+		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
+		
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("id");
+		String diContent = request.getParameter("diContent");
+		
+		List<MultipartFile> fileList = request.getFiles("file");
+		List<DiaryDto> newFileList = new ArrayList<DiaryDto>();
+		
+		String baseDir = request2.getSession().getServletContext().getRealPath("/resources/img/");
+		String formattedDate = baseDir + new SimpleDateFormat("yyyy" + File.separator + "MM" + File.separator + "dd").format(new Date());
+		
+		for (MultipartFile mf : fileList) {
+			DiaryDto diaryDto = new DiaryDto();
+			diaryDto.setDiId(id);
+			diaryDto.setDiContent(diContent);
+
+			String fileName = Long.toString(System.currentTimeMillis()) + "_" + mf.getOriginalFilename();
+			
+            File path = new File(formattedDate);
+            if(!path.exists()){
+            	path.mkdirs();
+            }
+            if (path.exists() && path.isDirectory()) {
+				try {
+					mf.transferTo(new File(path, fileName));
+					diaryDto.setImgName(fileName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+			newFileList.add(diaryDto);
+		}
+		
+		int check = boardDao.diaryUploadOk(newFileList);
+		
+		mav.addObject("check", check);
+		mav.setViewName("board/writeOk2");
 	}
 
 }

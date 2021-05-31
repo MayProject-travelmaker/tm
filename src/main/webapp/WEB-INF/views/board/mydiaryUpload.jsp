@@ -54,7 +54,7 @@
 	        <div style="margin-top: 100px; position: fixed; right: 294px;">
 		        <div style="float:right;">
 			       	
-			       	<input type="file" id="image" accept="image/*" onchange="setThumbnail(event);" multiple/> 
+			       	<input type="file" id="image" accept="image/*" onchange="setThumbnail(event);" multiple name="file"/> 
 			       	<button style="" onclick="location.href='${root}/board/mydiary.do'">✔</button>
 	       		</div>
 	       		<br>
@@ -65,8 +65,9 @@
 	       		<div style="position: fixed; bottom: 392px; margin-left: 32%; ">
 	       			<%= sf.format(nowTime) %>
 	       		</div>
-	       		<textarea rows="10%" cols="100%" style="position: fixed; bottom: 144px; margin-left: 31%;"></textarea>
+	       		<textarea rows="10%" cols="100%" style="position: fixed; bottom: 144px; margin-left: 31%;" name="diContent"></textarea>
 	       	</div>
+	       	<input type="submit" value="등록" class="btn btn-primary">
 	    </div>  
 	 </form>     
 	 
