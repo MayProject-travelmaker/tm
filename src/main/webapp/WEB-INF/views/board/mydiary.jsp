@@ -59,16 +59,16 @@
         <hr style="width: 1200px;">
         <div class="diaryrow">
              <div class="col-lg-4 col-md-6 mb-4">
-             	<c:if test="${diaryDto.diaryNo == null}">업로드된 이미지가 없습니다.</c:if>
-             	<c:if test="${diaryDto.diaryNo != null}">
-             		
-					<input type="hidden" id="imgName" name="imgName">
-					<a href="#">${diaryDto.imgName}</a>
-             		<img src="<c:url value='/img/${diaryDto.imgName}'/>">
-	                 <%-- <div class="card h-100">
-	                     <a href="#!"><img class="card-img-top" src="<c:url value='/img/2021/05/31/${diaryDto.imgName}'/> alt="..." /></a>
-	                 </div> --%>
-                 </c:if>
+             	
+             	<c:forEach var="diaryDto" items="${diaryList}">
+             	
+           			<c:if test="${diaryDto.diaryNo == null}">업로드된 이미지가 없습니다.</c:if>
+	             	<c:if test="${diaryDto.diaryNo != null}">
+	             		
+						
+	             		<img alt="이미지" src="<c:url value='/img/${diaryDto.imgName}'/>">
+	           		</c:if>
+           		</c:forEach>
              </div>
          </div>
 	

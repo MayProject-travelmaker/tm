@@ -16,6 +16,15 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	
 	
+	<!--AOP 사용?? -->
+	<context:annotation-config>
+	<Resources>
+  		<PostResources className="org.apache.catalina.webresources.DirResourceSet"
+                 webAppMount="/img" base="C:\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\travelmaker\resources\img\"/>
+	</Resources>
+	</context:annotation-config>
+	
+	<resources mapping="/img/**" location="/resources/img/" />
 	
 	
 	

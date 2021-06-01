@@ -118,7 +118,7 @@ public class BoardController {
 		
 		boardService.diaryList(mav);
 		
-		return new ModelAndView("board/mydiary");
+		return mav;
 		
 		
 	}

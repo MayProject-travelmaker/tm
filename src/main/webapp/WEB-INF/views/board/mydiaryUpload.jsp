@@ -10,10 +10,6 @@
 %>
 
 
-
-
-    
-
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
@@ -55,7 +51,7 @@
 		        <div style="float:right;">
 			       	
 			       	
-			       	<button onclick="location.href='${root}/board/mydiary.do'">❌</button>
+			       	<button onclick="location.href='${root}/board/mydiary.do'" type="button">❌</button>
 			       	<input type="file" id="image" accept="image/*" onchange="setThumbnail(event);" multiple name="file"/> 
 			       	<input type="submit" value="✔" class="btn btn-light">
 	       		</div>

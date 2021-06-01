@@ -132,9 +132,9 @@ public class BoardDaoImp implements BoardDao {
 	 */
 	//나의여행일지 list select
 	@Override
-	public DiaryDto diaryList(String diId) {
+	public List<DiaryDto> diaryList(String diId) {
 		// TODO Auto-generated method stub
-		return sqlSessionTemplate.selectOne("diary_list", diId);
+		return sqlSessionTemplate.selectList("diary_list", diId);
 	}
 	
 	

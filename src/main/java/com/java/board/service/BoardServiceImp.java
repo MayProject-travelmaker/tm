@@ -265,13 +265,13 @@ public class BoardServiceImp implements BoardService {
 		HttpSession session = request.getSession();
 		String diId = (String) session.getAttribute("id");
 		
-		DiaryDto diaryDto = boardDao.diaryList(diId);
+		List<DiaryDto> diaryDto = boardDao.diaryList(diId);
 		
-		diaryDto.setDiId(diId);
 		System.out.println("============11111");
 		System.out.println(diaryDto);
 		System.out.println("============111111");
-		mav.addObject("diaryDto",diaryDto);
+		
+		mav.addObject("diaryList",diaryDto);
 		
 		mav.setViewName("board/mydiary");
 		

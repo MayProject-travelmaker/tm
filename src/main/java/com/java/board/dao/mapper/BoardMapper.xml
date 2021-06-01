@@ -262,7 +262,7 @@
 	<!-- 나의여행일지 list -->
 	<select id="diary_list" parameterType="String" resultMap="diaryDto" >
 		<![CDATA[
-		select img_name from diary where di_id = #{diId} 
+		select * from diary where di_id = #{diId} 
        ]]>
 	</select>
 </mapper>
