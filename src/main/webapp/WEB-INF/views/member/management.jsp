@@ -278,6 +278,7 @@
 	     		    data:"id="+id,
 	     		    
 					success:function(data) {
+						location.reload();
 	     		   },
 	       			error:function(){
 	       				alert("블랙리스트 연결 실패")
