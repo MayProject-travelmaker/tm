@@ -57,21 +57,23 @@
 	       	<button style="float:right;margin-right: 515px;" onclick="location.href='${root}/board/mydiaryUpload.do'">➕</button>
        	</div>
         <hr style="width: 1200px;">
-        <div class="diaryrow">
-             <div class="col-lg-4 col-md-6 mb-4">
-             	
-             	<c:forEach var="diaryDto" items="${diaryList}">
-             	
-           			<c:if test="${diaryDto.diaryNo == null}">업로드된 이미지가 없습니다.</c:if>
-	             	<c:if test="${diaryDto.diaryNo != null}">
-	             		
-						
-	             		<img alt="이미지" src="<c:url value='/img/${diaryDto.imgName}'/>">
-	           		</c:if>
-           		</c:forEach>
-             </div>
-         </div>
-	
+        <div style="overflow:hidden;">
+	        <div style="margin-top: 100px; position: fixed; left: 110px;">
+		        	<div style="overflow-y: scroll; max-height:400px;" id="image_container">
+						             	
+						           			<c:if test="${diaryDto.diaryNo == null}">업로드된 이미지가 없습니다.</c:if>
+						             	<c:forEach var="diaryDto" items="${diaryList}">
+						             	
+							             	<c:if test="${diaryDto.diaryNo != null}">
+							             		
+											
+							             			<img style="max-height: 75%; max-width: 75%" alt="이미지" src="<c:url value='/img/${diaryDto.imgName}'/>">
+							             		
+							           		</c:if>
+						           		</c:forEach>
+					 </div>
+			 </div>
+		</div>
         
         
         
