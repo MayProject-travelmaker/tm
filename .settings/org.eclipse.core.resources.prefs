@@ -3,4 +3,5 @@ encoding//src/main/java/com/java/board/dao/BoardDaoImp.java=UTF-8
 encoding//src/main/java/com/java/board/service/BoardServiceImp.java=UTF-8
 encoding//src/main/java/com/java/member/controller/MemberController.java=UTF-8
 encoding//src/main/java/com/java/member/service/MemberServiceImp.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/chat/chat.jsp=UTF-8
 encoding/<project>=UTF-8

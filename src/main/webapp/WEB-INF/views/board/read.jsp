@@ -164,7 +164,16 @@ function delFunc(root, boardNo) {
 									</td>
 								</tr>
 								
-								
+								<!-- 채팅 참여 버튼 -->
+								<c:if test="${chatRoomNo > 0}">
+									<tr>
+										<td class="border-right">채팅방</td>
+										<td colspan="2" align="center">
+											 <a href="${root}/chat/chat.do?chatRoomNo=${chatRoomNo}">채팅 참여하기</a>
+											 <!-- <input type="button" id="enterBtn" value="입장"> -->
+										</td>
+									</tr>
+								</c:if>
 								
 								<tr>
 									<td colspan="3" class="text-center">

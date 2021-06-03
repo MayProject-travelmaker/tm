@@ -64,6 +64,9 @@
 	                        <li class="nav-item">
 	                        	<a class="nav-link" href="${root}/member/mypage.do">마이페이지</a>
 	                        </li>
+	                        <li class="nav-item">
+	                        	<a class="nav-link" href="${root}/chat/chatRoomList.do">채팅</a>
+	                        </li>
 		                    <c:if test="${sessionScope.memberLevel=='1'}">
 					  			<li class="nav-item"><a class="nav-link" href="${root}/member/management.do">회원관리</a></li>
 					  		</c:if>
@@ -175,4 +178,4 @@
         </footer>
         
     </body>
-</html>
+</html>	

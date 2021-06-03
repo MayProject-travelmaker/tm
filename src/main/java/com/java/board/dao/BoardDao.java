@@ -7,6 +7,7 @@ import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
+import com.java.chat.dto.ChatRoomDto;
 
 public interface BoardDao {
 
@@ -79,5 +80,8 @@ public interface BoardDao {
 
 	// 인기글 세팅
 	public int IsPopularUpdate(int boardCode);
+
+	// 게시글번호별 채팅방 찾기
+	public int findChatRoomByBoardNo(int boardNo);
 	
 }

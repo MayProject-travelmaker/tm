@@ -87,6 +87,7 @@
 				#{mapDto.xAxis},
 				#{mapDto.yAxis}
 				)
+		<include refid="createChatRoom"></include>
 		select * from dual
 	</insert>
 	<!-- 일반글_파일만 -->
@@ -113,6 +114,7 @@
 				#{boardFileDto.filePath}, 
 				#{boardFileDto.fileExtension}
 				)
+		<include refid="createChatRoom"></include>
 		select * from dual
 	</insert>
 	<!-- 일반글_지도만 -->
@@ -138,11 +140,12 @@
 				#{mapDto.xAxis},
 				#{mapDto.yAxis}
 				)
+		<include refid="createChatRoom"></include>
 		select * from dual
 	</insert>
 	<!-- 일반글_글만 -->
 	<insert id="board_insert" parameterType="java.util.Map">
-		insert
+		insert all
 		into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
@@ -154,6 +157,8 @@
 				sysdate,
 				0
 				)
+		<include refid="createChatRoom"></include>
+		select * from dual
 	</insert>
 	
 	<!-- 공지글작성 -->
@@ -184,6 +189,19 @@
 				and title like '%' || #{keyword} || '%'
 					or content like '%' || #{keyword} || '%'
 			</if>
+		</if>
+	</sql>
+	
+	<!-- 채팅룸 생성 조건문 -->
+	<sql id="createChatRoom">
+		<if test="chatRoom == true">
+			into chat_room(chat_room_no, board_no, post_id, board_code, chat_room_date) values(
+			chat_room_no_seq.nextval,
+			board_no_seq.currval,
+			#{boardDto.postId},
+			11,
+			sysdate
+			)
 		</if>
 	</sql>
 	<!-- ============================================================================================================ -->
@@ -566,4 +584,14 @@
 							where rownum between 1 and 3 )
 	</update>
 	
+	<!-- 게시글 별 채팅방 생성 유무 확인 -->
+	<select id="findChatRoom" parameterType="int" resultType="int">
+		select count(*) from chat_room
+		where board_no = #{boardNo}
+	</select>
+	<!-- 게시글 별로 채팅방번호 찾기 -->
+	<select id="findChatRoomByBoardNo" parameterType="int" resultType="int">
+		select chat_room_no from chat_room
+		where board_no = #{boardNo}
+	</select>
 </mapper>

@@ -19,12 +19,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.ReplyDto;
 import com.java.board.service.BoardService;
+import com.java.chat.service.ChatService;
 
 @Controller
 public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
+	@Autowired
+	private ChatService chatService;
 	
 	//동행게시판 넘어가기
 	@RequestMapping(value="/board/accompanylist.do", method= RequestMethod.GET)
@@ -99,7 +102,12 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request", request);
 		mav.addObject("boardDto", boardDto);
+		System.out.println("createChatRoom : " + request.getParameter("chatRoom"));
 		
+		// 동행 채팅방 만들기
+		if(request.getParameter("chatRoom") != null) {
+			mav.addObject("chatRoom", true);
+		}
 		boardService.boardWriteOk(mav);
 		return mav;
 	}

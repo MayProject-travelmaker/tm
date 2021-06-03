@@ -21,6 +21,7 @@ import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
+import com.java.chat.dto.ChatRoomDto;
 
 @Component
 public class BoardServiceImp implements BoardService {
@@ -40,6 +41,13 @@ public class BoardServiceImp implements BoardService {
 		BoardFileDto boardFileDto = new BoardFileDto();
 		MapDto mapDto = new MapDto();
 		
+		// 채팅방 생성
+		boolean chatRoom = false;
+		if(map.get("chatRoom") != null) {
+			chatRoom= (boolean) map.get("chatRoom");
+		} else {
+			chatRoom = false;
+		}
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
 		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
 		String xAxis = request.getParameter("xAxis");
@@ -62,6 +70,7 @@ public class BoardServiceImp implements BoardService {
 			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
 			String fileExtension = StringUtils.getFilenameExtension(fileName);
 			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // 파일 업로드 상대경로
+			System.out.println(path);
 			path.mkdir();
 			if (path.exists() && path.isDirectory()) {
 				File file = new File(path, fileName);
@@ -80,11 +89,10 @@ public class BoardServiceImp implements BoardService {
 		dtoMap.put("boardDto", boardDto);
 		dtoMap.put("boardFileDto", boardFileDto);
 		dtoMap.put("mapDto", mapDto);
-		
+		dtoMap.put("chatRoom", chatRoom); // 채팅방 생성
 		HashMap<String, String> map2 = new HashMap<String, String>();
 		map2.put("file", String.valueOf(upFile.isEmpty()));
 		map2.put("map", request.getParameter("placeName"));
-		
 		int check = boardDao.boardWriteOk(dtoMap, isNotice, map2);
 
 		mav.addObject("check", check);
@@ -252,7 +260,8 @@ public class BoardServiceImp implements BoardService {
 		BoardDto boardDto = boardDao.boardRead(boardNo);
 		MapDto mapDto = boardDao.mapRead(mapNo);
 		BoardFileDto boardFileDto = boardDao.fileRead(fileNo);
-	 	
+		// 채팅방 번호
+	 	int chatRoomNo = boardDao.findChatRoomByBoardNo(boardNo);
 		// 좋아요
 		int isLiked = 0;
 		if(likeId != null) {
@@ -269,7 +278,8 @@ public class BoardServiceImp implements BoardService {
 		mav.addObject("boardDto", boardDto);
 		mav.addObject("mapDto", mapDto);
 		mav.addObject("boardFileDto", boardFileDto);
-		
+		// 채팅방
+		mav.addObject("chatRoomNo",chatRoomNo);
 		mav.setViewName("board/read");
 	}
 	

@@ -183,6 +183,16 @@
 										<div id="result"></div> 
 									</td>
 								</tr>
+								<c:if test="<%= boardCode == 11%>">
+									<tr>
+										<td class="text-center" colspan="2">
+											<div>
+												<input type="checkbox" id="createChatRoom" name="chatRoom">
+												<label for="createChatRoom">채팅방 생성</label>
+											</div>
+										</td>
+									</tr>
+								</c:if>
 								<tr>
 									<td colspan="2" class="text-center">
 										<input type="submit" value="등록" class="btn btn-primary"> 

@@ -12,6 +12,7 @@ import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
+import com.java.chat.dto.ChatRoomDto;
 
 @Component
 public class BoardDaoImp implements BoardDao {
@@ -312,5 +313,16 @@ public class BoardDaoImp implements BoardDao {
 		sqlSessionTemplate.update("isPopluar_reset", boardCode);
 		int check = sqlSessionTemplate.update("isPopular_update", boardCode);
 		return check;
+	}
+
+	// 게시글번호 별 채팅방 번호 찾기
+	@Override
+	public int findChatRoomByBoardNo(int boardNo) {
+		int check = sqlSessionTemplate.selectOne("findChatRoom", boardNo);
+		if(check == 0) {
+			return 0;
+		} else {
+			return sqlSessionTemplate.selectOne("findChatRoomByBoardNo", boardNo);
+		}
 	}
 }
