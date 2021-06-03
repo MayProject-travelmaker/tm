@@ -24,7 +24,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
 <script src="${root}/resources/js/scripts.js"></script>
-<script type="text/javascript" src="${root}/resources/js/board.js"></script>
+<script type="text/javascript" src="${root}/resources/js/board.js?v=<%=System.currentTimeMillis() %>"></script>
 <script type="text/javascript">
 function updateFunc(root, boardNo){
 	var url=root+"/board/update.do?boardNo="+boardNo;
@@ -125,45 +125,45 @@ function delFunc(root, boardNo) {
 										<c:if test="${boardFileDto.fileNo != null}">
 											<input type="hidden" id="filePath" name="filePath">
 											<input type="hidden" id="fileName" name="fileName">
-											<a href="#">${boardFileDto.fileName}</a>
+											<a href="#">${boardFileDto.fileName}</a><br>
 											<img src="<c:url value='/img/${boardFileDto.fileName}'/>">
 										</c:if>
 									</td>
 								</tr>
 								 
-								
-								<tr>
-									<td class="border-right">지도</td>
-									<td colspan="2">
-									<c:if test="${mapDto.mapNo == null}"> 선택된 좌표가 없습니다.</c:if>
-									<c:if test="${mapDto.mapNo != null}">
-										<div id="staticMap" style="width:600px;height:350px;"></div>    
-										
-										<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d22f00b438fdc58950b8771f7c3989ef"></script>
-										<script>
-										// 이미지 지도에서 마커가 표시될 위치입니다 
-										var markerPosition  = new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}); 
-										
-										// 이미지 지도에 표시할 마커입니다
-										// 이미지 지도에 표시할 마커는 Object 형태입니다
-										var marker = {
-										    position: markerPosition
-										};
-										
-										var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
-										    staticMapOption = { 
-										        center: new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}), // 이미지 지도의 중심좌표
-										        level: 3, // 이미지 지도의 확대 레벨
-										        marker: marker // 이미지 지도에 표시할 마커 
-										    };    
-										
-										// 이미지 지도를 생성합니다
-										var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-										</script>
-									</c:if>
-									</td>
-								</tr>
-								
+								<c:if test="${boardDto.area != null}">
+									<tr>
+										<td class="border-right">지도</td>
+										<td colspan="2">
+										<c:if test="${mapDto.mapNo == null}"> 선택된 좌표가 없습니다.</c:if>
+										<c:if test="${mapDto.mapNo != null}">
+											<div id="staticMap" style="width:600px;height:350px;"></div>    
+											
+											<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d22f00b438fdc58950b8771f7c3989ef"></script>
+											<script>
+											// 이미지 지도에서 마커가 표시될 위치입니다 
+											var markerPosition  = new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}); 
+											
+											// 이미지 지도에 표시할 마커입니다
+											// 이미지 지도에 표시할 마커는 Object 형태입니다
+											var marker = {
+											    position: markerPosition
+											};
+											
+											var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+											    staticMapOption = { 
+											        center: new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}), // 이미지 지도의 중심좌표
+											        level: 3, // 이미지 지도의 확대 레벨
+											        marker: marker // 이미지 지도에 표시할 마커 
+											    };    
+											
+											// 이미지 지도를 생성합니다
+											var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+											</script>
+										</c:if>
+										</td>
+									</tr>
+								</c:if>
 								
 								
 								<tr>

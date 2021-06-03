@@ -31,15 +31,6 @@
 		<result column="x_axis" property="xAxis"/>
 		<result column="y_axis" property="yAxis"/>
 	</resultMap>
-	<resultMap type="com.java.board.dto.NoticeDto" id="noticeDto">
-		<result column="notice_no" property="noticeNo"/>
-		<result column="title" property="title"/>
-		<result column="content" property="content"/>
-		<result column="read_cnt" property="readCnt"/>
-		<result column="is_notice" property="isNotice"/>
-		<result column="write_date" property="writeDate"/>
-		<result column="update_date" property="updateDate"/>
-	</resultMap>
 	<resultMap type="com.java.board.dto.ReplyDto" id="replyDto">
 		<result column="reply_no" property="replyNo"/>
 		<result column="board_no" property="boardNo" />
@@ -52,6 +43,13 @@
 		<result column="is_del" property="isDel"/>
 		<result column="group_no" property="groupNo"/>
 		<result column="sequence_no" property="sequenceNo"/>
+	</resultMap>
+	<resultMap type="com.java.board.dto.DiaryDto" id="diaryDto">
+		<result column="diary_no" property="diaryNo"/>
+		<result column="di_id" property="diId"/>
+		<result column="di_content" property="diContent"/>
+		<result column="di_date" property="diDate"/>
+		<result column="img_name" property="imgName"/>
 	</resultMap>
 
 	<!-- 일반글작성_파일,지도 포함 -->
@@ -101,7 +99,7 @@
 				#{boardDto.content},
 				#{boardDto.area},
 				sysdate,
-				0
+				#{boardDto.isNotice}
 				)
 		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
 		values(
@@ -152,22 +150,7 @@
 				#{boardDto.content},
 				#{boardDto.area},
 				sysdate,
-				0
-				)
-	</insert>
-	
-	<!-- 공지글작성 -->
-	<insert id="notice_insert" parameterType="java.util.Map">
-		insert into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
-		values(
-				board_no_seq.nextval,
-				#{boardDto.postId},
-				#{boardDto.boardCode},
-				#{boardDto.title},
-				#{boardDto.content},
-				#{boardDto.area},
-				sysdate,
-				1
+				#{boardDto.isNotice}
 				)
 	</insert>
 	
@@ -192,23 +175,23 @@
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 11 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 11 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 11 and is_del = 0
                             )
@@ -236,23 +219,23 @@
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 12 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 12 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 12 and is_del = 0
                             )
@@ -278,23 +261,23 @@
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 13 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 13 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 13 and is_del = 0
                             )
@@ -320,23 +303,23 @@
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 14 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 14 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 14 and is_del = 0
                             )
@@ -390,7 +373,7 @@
 	<!-- update content -->
 	<update id="board_updateOk" parameterType="java.util.Map">
 		update board 
-		set area=#{boardDto.area}, title=#{boardDto.title}, content=#{boardDto.content}, update_date=sysdate
+		set area=#{boardDto.area}, title=#{boardDto.title}, content=#{boardDto.content}, update_date=sysdate, is_notice=#{boardDto.isNotice}
 		where board_no=#{boardDto.boardNo}
 	</update>
 	
@@ -565,5 +548,25 @@
 									order by like_cnt desc)
 							where rownum between 1 and 3 )
 	</update>
+	
+	<!-- 나의여행일지 insert -->
+	<insert id="diary_insert" parameterType="java.util.List">
+	insert into diary (diary_no, di_id, di_content, di_date, img_name)
+	select diary_no_seq.nextval, a.*
+	from(<foreach item="item" collection="list" separator="union all ">
+			select #{item.diId} as di_id,
+					#{item.diContent} as di_content,
+					sysdate,
+					#{item.imgName} as img_name
+			from dual
+		</foreach>)a
+	</insert>
+	
+	<!-- 나의여행일지 list -->
+	<select id="diary_list" parameterType="String" resultMap="diaryDto" >
+		<![CDATA[
+		select * from diary where di_id = #{diId} 
+       ]]>
+	</select>
 	
 </mapper>

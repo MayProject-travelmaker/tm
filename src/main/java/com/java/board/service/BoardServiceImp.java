@@ -1,6 +1,7 @@
 package com.java.board.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dao.BoardDao;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 
@@ -28,8 +30,6 @@ public class BoardServiceImp implements BoardService {
 	@Autowired
 	private BoardDao boardDao;
 	
-	@Resource(name="uploadPath")
-	private String uploadPath;
 
 	//글쓰기
 	@Override
@@ -41,27 +41,29 @@ public class BoardServiceImp implements BoardService {
 		MapDto mapDto = new MapDto();
 		
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
-		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
 		String xAxis = request.getParameter("xAxis");
 		String yAxis = request.getParameter("yAxis");
 		mapDto.setxAxis(xAxis);
 		mapDto.setyAxis(yAxis);
 		
+		//content 개행문자 처리
+		boardDto.setContent(boardDto.getContent().replace("\r\n", "<br>"));
+		
 		//일반글,공지글에 따른 isNotice 처리
 		int isNotice;
 		String notice = request.getParameter("notice");
-		if (notice == null) {	//일반글작성이면 isNotice 기본값 지정 (-1:일반글, 0:공지내릴때, 1:공지올릴때)
-			isNotice = -1;
-		} else {				//공지글작성
-			isNotice = Integer.parseInt(notice);
-			boardDto.setIsNotice(isNotice);
+		if (notice == null) {	//일반글일때
+			isNotice = 0;
+		} else {				//공지글일때
+			isNotice = Integer.parseInt(notice); //1
 		}
+		boardDto.setIsNotice(isNotice);
 		
 		MultipartFile upFile = request.getFile("file");
 		if (upFile.getSize() != 0) {
 			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
 			String fileExtension = StringUtils.getFilenameExtension(fileName);
-			File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); // 파일 업로드 상대경로
+			File path = new File("C:/resources/img/"); // 파일 업로드 경로
 			path.mkdir();
 			if (path.exists() && path.isDirectory()) {
 				File file = new File(path, fileName);
@@ -85,7 +87,7 @@ public class BoardServiceImp implements BoardService {
 		map2.put("file", String.valueOf(upFile.isEmpty()));
 		map2.put("map", request.getParameter("placeName"));
 		
-		int check = boardDao.boardWriteOk(dtoMap, isNotice, map2);
+		int check = boardDao.boardWriteOk(dtoMap, map2);
 
 		mav.addObject("check", check);
 		mav.setViewName("board/writeOk");
@@ -296,66 +298,66 @@ public class BoardServiceImp implements BoardService {
 	}
 
 	//updateOk
-		@Override
-		public void boardUpdateOk(ModelAndView mav) {
-			Map<String, Object> map = mav.getModelMap();
-			
-			BoardDto boardDto = (BoardDto) map.get("boardDto");
-			BoardFileDto boardFileDto = new BoardFileDto();
-			MapDto mapDto = new MapDto();
-//			NoticeDto noticeDto = new NoticeDto();
-			
-			MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
-			HttpServletRequest request2 = (HttpServletRequest) map.get("request");
-			String xAxis = request.getParameter("xAxis");
-			String yAxis = request.getParameter("yAxis");
-			mapDto.setxAxis(xAxis);
-			mapDto.setyAxis(yAxis);
-			
-			//isNotice
-			int isNotice;
-			String notice = request.getParameter("notice");
-			if (notice == null) {
-				isNotice = -1;
-			} else {				
-				isNotice = Integer.parseInt(notice);
-				boardDto.setIsNotice(isNotice);
-			}
-			
-			MultipartFile upFile = request.getFile("file");
-			if (upFile.getSize() != 0) {
-				String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
-				String fileExtension = StringUtils.getFilenameExtension(fileName);
-				File path = new File(request2.getSession().getServletContext().getRealPath("/resources/img/")); 
-				path.mkdir();
-				if (path.exists() && path.isDirectory()) {
-					File file = new File(path, fileName);
-					try {
-						upFile.transferTo(file);
-						boardFileDto.setFileName(fileName);
-						boardFileDto.setFilePath(file.getAbsolutePath());
-						boardFileDto.setFileExtension(fileExtension);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+	@Override
+	public void boardUpdateOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		
+		BoardDto boardDto = (BoardDto) map.get("boardDto");
+		BoardFileDto boardFileDto = new BoardFileDto();
+		MapDto mapDto = new MapDto();
+		
+		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
+		String xAxis = request.getParameter("xAxis");
+		String yAxis = request.getParameter("yAxis");
+		mapDto.setxAxis(xAxis);
+		mapDto.setyAxis(yAxis);
+		
+		//content 개행문자 처리
+		boardDto.setContent(boardDto.getContent().replace("\r\n", "<br>"));
+		
+		//일반글,공지글에 따른 isNotice 처리
+		int isNotice;
+		String notice = request.getParameter("notice");
+		if (notice == null) {	//일반글일때
+			isNotice = 0;
+		} else {				//공지글일때
+			isNotice = Integer.parseInt(notice); //0 or 1
+		}
+		boardDto.setIsNotice(isNotice);
+		
+		MultipartFile upFile = request.getFile("file");
+		if (upFile.getSize() != 0) {
+			String fileName = Long.toString(System.currentTimeMillis()) + "_" + upFile.getOriginalFilename();
+			String fileExtension = StringUtils.getFilenameExtension(fileName);
+			File path = new File("C:/resources/img/"); // 파일 업로드 경로
+			path.mkdir();
+			if (path.exists() && path.isDirectory()) {
+				File file = new File(path, fileName);
+				try {
+					upFile.transferTo(file);
+					boardFileDto.setFileName(fileName);
+					boardFileDto.setFilePath(file.getAbsolutePath());
+					boardFileDto.setFileExtension(fileExtension);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-			
-			HashMap<String, Object> dtoMap = new HashMap<String, Object>();
-			dtoMap.put("boardDto", boardDto);
-			dtoMap.put("boardFileDto", boardFileDto);
-			dtoMap.put("mapDto", mapDto);
-//			dtoMap.put("noticeDto", noticeDto);
-			
-			HashMap<String, String> map2 = new HashMap<String, String>();
-			map2.put("file", String.valueOf(upFile.isEmpty()));
-			map2.put("map", request.getParameter("placeName"));
-			
-			int check = boardDao.boardUpdateOk(dtoMap, map2);
-
-			mav.addObject("check", check);
-			mav.setViewName("board/updateOk");
 		}
+		
+		HashMap<String, Object> dtoMap = new HashMap<String, Object>();
+		dtoMap.put("boardDto", boardDto);
+		dtoMap.put("boardFileDto", boardFileDto);
+		dtoMap.put("mapDto", mapDto);
+		
+		HashMap<String, String> map2 = new HashMap<String, String>();
+		map2.put("file", String.valueOf(upFile.isEmpty()));
+		map2.put("map", request.getParameter("placeName"));
+		
+		int check = boardDao.boardUpdateOk(dtoMap, map2);
+
+		mav.addObject("check", check);
+		mav.setViewName("board/updateOk");
+	}
 	
 	//deleteOk
 	@Override
@@ -378,7 +380,6 @@ public class BoardServiceImp implements BoardService {
 		mav.setViewName("board/deleteOk");
 	}
 	
-	//=====================================================================즐겨찾기
 	//즐겨찾기
 	@Override
 	public int bookmark(ModelAndView mav) {
@@ -400,7 +401,6 @@ public class BoardServiceImp implements BoardService {
 		return check;
 	}
 	
-	//=====================================================================댓글
 	//댓글입력
 	@Override
 	public int replyWrite(ReplyDto replyDto) {
@@ -484,5 +484,84 @@ public class BoardServiceImp implements BoardService {
 		result.put("likeType", likeType);
 
 		return result;
+	}
+	
+	//여행일지 리스트
+	
+	@Override
+	public void diaryList(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		HttpServletRequest request=(HttpServletRequest)map.get("request");
+		
+		HttpSession session = request.getSession();
+		String diId = (String) session.getAttribute("id");
+		
+		List<DiaryDto> diaryDto = boardDao.diaryList(diId);
+		
+		System.out.println("============11111");
+		System.out.println(diaryDto);
+		System.out.println("============111111");
+		
+		mav.addObject("diaryList",diaryDto);
+		
+		mav.setViewName("board/mydiary");
+		
+	}
+
+	//내 여행일지 업로드Ok
+	@Override
+	public void diaryUploadOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		
+		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
+		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
+		
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("id");
+		String diContent = request.getParameter("diContent");
+		
+		List<MultipartFile> fileList = request.getFiles("file");
+		List<DiaryDto> newFileList = new ArrayList<DiaryDto>();
+		
+		String baseDir = request2.getSession().getServletContext().getRealPath("/resources/img/");
+		//String formattedDate = baseDir + new SimpleDateFormat("yyyy" + File.separator + "MM" + File.separator + "dd").format(new Date());
+		System.out.println("==========================");
+		//System.out.println(formattedDate);
+		System.out.println(baseDir);
+		System.out.println("==========================");
+		
+		for (MultipartFile mf : fileList) {
+			DiaryDto diaryDto = new DiaryDto();
+			diaryDto.setDiId(id);
+			diaryDto.setDiContent(diContent);
+
+			String fileName = Long.toString(System.currentTimeMillis()) + "_" + mf.getOriginalFilename();
+			
+            File path = new File(baseDir);
+            if(!path.exists()){
+            	path.mkdirs();
+            }
+            if (path.exists() && path.isDirectory()) {
+				try {
+					mf.transferTo(new File(path, fileName));
+					diaryDto.setImgName(fileName);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+			newFileList.add(diaryDto);
+		}
+		
+		int check = boardDao.diaryUploadOk(newFileList);
+		
+		mav.addObject("check", check);
+		mav.setViewName("board/writeOk2");
+	}
+
+	@Override
+	public void diaryUpload(ModelAndView mav) {
+		// TODO Auto-generated method stub
+		
 	}
 }

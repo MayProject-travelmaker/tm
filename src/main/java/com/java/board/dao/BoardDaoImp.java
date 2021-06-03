@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 
@@ -21,22 +22,19 @@ public class BoardDaoImp implements BoardDao {
 
 	//글쓰기
 	@Override
-	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2) {
+	public int boardWriteOk(HashMap<String, Object> dtoMap, HashMap<String, String> map2) {
 		
-		if (isNotice == 1) {
-			return sqlSessionTemplate.insert("notice_insert", dtoMap);	//공지글
-			
-		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
+		if (map2.get("file") != "true" && map2.get("map").isEmpty() != true) {
 			return sqlSessionTemplate.insert("board_file_map_insert", dtoMap);	//일반글_파일,지도 포함
 			
 		} else if (map2.get("file") != "true" && map2.get("map").isEmpty() == true) {
-			return sqlSessionTemplate.insert("board_file_insert", dtoMap);	//일반글_파일만
+			return sqlSessionTemplate.insert("board_file_insert", dtoMap);	//일반글,공지글_파일만
 			
 		} else if (map2.get("file") == "true" && map2.get("map").isEmpty() != true) {
 			return sqlSessionTemplate.insert("board_map_insert", dtoMap);	//일반글_지도만
 			
 		} 
-		return sqlSessionTemplate.insert("board_insert", dtoMap);	//일반글_글만
+		return sqlSessionTemplate.insert("board_insert", dtoMap);	//일반글,공지글
 	}
 
 	//동행 게시판 리스트
@@ -169,7 +167,6 @@ public class BoardDaoImp implements BoardDao {
 				} else {
 					return 0;
 				}
-				//return sqlSessionTemplate.update("board_file_map_update", dtoMap);	//일반글_파일,지도 포함
 			}
 				
 				
@@ -233,7 +230,6 @@ public class BoardDaoImp implements BoardDao {
 		return sqlSessionTemplate.selectOne("bmCheck", map);
 	}
 	
-	//=====================================================================댓글
 	//댓글입력
 	@Override
 	public int replyWrite(ReplyDto replyDto) {
@@ -312,5 +308,24 @@ public class BoardDaoImp implements BoardDao {
 		sqlSessionTemplate.update("isPopluar_reset", boardCode);
 		int check = sqlSessionTemplate.update("isPopular_update", boardCode);
 		return check;
+	}
+	
+	//나의여행일지 insert
+	@Override
+	public int diaryUploadOk(List<DiaryDto> newFileList) {
+		
+		return sqlSessionTemplate.insert("diary_insert", newFileList);
+	}
+
+	//나의여행일지 list select
+	/*
+	 * @Override public DiaryDto diaryList(String diId) { // TODO Auto-generated
+	 * method stub return sqlSessionTemplate.selectOne("diary_list", diId); }
+	 */
+	//나의여행일지 list select
+	@Override
+	public List<DiaryDto> diaryList(String diId) {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.selectList("diary_list", diId);
 	}
 }

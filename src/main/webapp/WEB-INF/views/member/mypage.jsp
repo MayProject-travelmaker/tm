@@ -125,7 +125,7 @@
 	        	<br><br>
 	        	<a href="${root}/mypage/myBookmark.do">⭐ 즐겨찾기</a>
 	        	<br><br>
-	        	<a href="${root}/member/">나의 여행기록</a> 
+	        	<a href="${root}/board/mydiary.do">✈️ 나의 여행기록</a> 
 	        	
         	</div>
         	<div style="float:right; width: 800px; margin:50px;" id='calendar'>

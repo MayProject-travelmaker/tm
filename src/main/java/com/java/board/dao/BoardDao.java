@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 
 public interface BoardDao {
 
 	//글쓰기
-	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
+	public int boardWriteOk(HashMap<String, Object> dtoMap, HashMap<String, String> map2);
 
 	//동행 게시판 리스트, 카운트
 	public List<BoardDto> accompanyboardList(int startRow, int endRow, String searchType, String keyword);
@@ -80,4 +81,8 @@ public interface BoardDao {
 	// 인기글 세팅
 	public int IsPopularUpdate(int boardCode);
 	
+	
+	public int diaryUploadOk(List<DiaryDto> newFileList);
+	
+	public List<DiaryDto> diaryList(String diId);
 }

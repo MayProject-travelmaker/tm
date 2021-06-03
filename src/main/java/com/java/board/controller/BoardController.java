@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.java.board.dto.BoardDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.ReplyDto;
 import com.java.board.service.BoardService;
 
@@ -145,7 +146,6 @@ public class BoardController {
 		return mav;
 	}
 	
-	//=====================================================================즐겨찾기
 	//즐겨찾기
 	@ResponseBody
 	@RequestMapping(value = "/board/bookmark.do", method = RequestMethod.POST)
@@ -171,7 +171,6 @@ public class BoardController {
 		return check;
 	}
 	
-	//=====================================================================댓글
 	//댓글입력
 	@ResponseBody
 	@RequestMapping(value = "/board/replyWrite.do", method = RequestMethod.POST)
@@ -222,4 +221,39 @@ public class BoardController {
 
 		return boardService.boardLikeOk(mav);
 	}
+	
+	//나의여행일기게시판으로 넘어가기
+	@RequestMapping(value="/board/mydiary.do", method= RequestMethod.GET)
+	public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response, DiaryDto diaryDto) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		//mav.addObject("diaryDto", diaryDto);
+		
+		boardService.diaryList(mav);
+		
+		return mav;
+		
+		
+	}
+	//나의여행일기 업로드
+	@RequestMapping(value="/board/mydiaryUpload.do")
+	public ModelAndView MydiaryUpload(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.diaryUpload(mav);
+		
+		return new ModelAndView("board/mydiaryUpload");
+		
+	}
+	//나의여행일기 업로드ok
+	@RequestMapping(value="/board/mydiaryUploadOk.do")
+	public ModelAndView MydiaryUploadOk(HttpServletRequest request, HttpServletResponse response, DiaryDto diaryDto) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		mav.addObject("diaryDto", diaryDto);
+		
+		boardService.diaryUploadOk(mav);
+		return mav;
+	}	
 }
