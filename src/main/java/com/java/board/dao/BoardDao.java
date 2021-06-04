@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 import com.java.chat.dto.ChatRoomDto;
@@ -83,5 +84,16 @@ public interface BoardDao {
 
 	// 게시글번호별 채팅방 찾기
 	public int findChatRoomByBoardNo(int boardNo);
+	
+	// 여행일지 업로드
+	public int diaryUploadOk(List<DiaryDto> newFileList);
+	// 여행일지 리스트
+	public List<DiaryDto> diaryList(String diId);
+	// 여행일지 삭제
+	public int diaryDel(int diaryNo);
+	// 여행일지 수정
+	public DiaryDto diaryUpd(int diaryNo);
+	// 여행일지 수정 완료
+	public int diaryUpdOk(int diaryNo, String diContent);
 	
 }

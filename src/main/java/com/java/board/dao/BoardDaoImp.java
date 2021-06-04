@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 import com.java.chat.dto.ChatRoomDto;
@@ -318,5 +319,36 @@ public class BoardDaoImp implements BoardDao {
 		} else {
 			return sqlSessionTemplate.selectOne("findChatRoomByBoardNo", boardNo);
 		}
+	}
+	
+	//나의여행일지 업로드
+	@Override
+	public int diaryUploadOk(List<DiaryDto> newFileList) {
+		return sqlSessionTemplate.insert("diary_insert", newFileList);
+	}
+
+	//나의여행일지 list select
+	@Override
+	public List<DiaryDto> diaryList(String diId) {
+		return sqlSessionTemplate.selectList("diary_list", diId);
+	}
+	//여행일지 삭제
+	@Override
+	public int diaryDel(int diaryNo) {
+		return sqlSessionTemplate.update("diary_del", diaryNo);
+	}
+	//여행일지 수정
+	@Override
+	public DiaryDto diaryUpd(int diaryNo) {
+		return sqlSessionTemplate.selectOne("diary_upd", diaryNo);
+	}
+	//여행일지 수정 완료
+	@Override
+	public int diaryUpdOk(int diaryNo, String diContent) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("diaryNo", diaryNo);
+		map.put("diContent", diContent);
+		
+		return sqlSessionTemplate.update("diary_upd_ok", map);
 	}
 }

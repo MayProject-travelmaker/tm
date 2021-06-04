@@ -37,9 +37,9 @@
 						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
+						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/mypage.do">마이페이지 <span class="sr-only">(current)</span></a></li>
-						<li class="nav-item"><a class="nav-link"
+						<li class="nav-item active"><a class="nav-link"
 							href="${root}/chat/chatRoomList.do">채팅 <span class="sr-only">(current)</span></a></li>
 					</c:if>
 				</ul>

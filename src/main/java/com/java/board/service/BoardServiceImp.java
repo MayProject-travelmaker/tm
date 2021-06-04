@@ -1,6 +1,7 @@
 package com.java.board.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dao.BoardDao;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
 import com.java.chat.dto.ChatRoomDto;
@@ -492,5 +494,94 @@ public class BoardServiceImp implements BoardService {
 		result.put("likeType", likeType);
 
 		return result;
+	}
+
+	//여행일지 리스트
+	@Override
+	public void diaryList(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		HttpServletRequest request=(HttpServletRequest)map.get("request");
+		
+		HttpSession session = request.getSession();
+		String diId = (String) session.getAttribute("id");
+		
+		List<DiaryDto> diaryDto = boardDao.diaryList(diId);
+		
+		System.out.println("============11111");
+		System.out.println(diaryDto);
+		System.out.println("============111111");
+		
+		mav.addObject("diaryList",diaryDto);
+		
+		mav.setViewName("board/mydiary");
+		
+	}
+
+	//내 여행일지 업로드Ok
+	@Override
+	public void diaryUploadOk(ModelAndView mav) {
+		Map<String, Object> map = mav.getModelMap();
+		
+		MultipartHttpServletRequest request = (MultipartHttpServletRequest) map.get("request");
+		HttpServletRequest request2 = (HttpServletRequest) map.get("request");
+		
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("id");
+		String diContent = request.getParameter("diContent");
+		
+		List<MultipartFile> fileList = request.getFiles("file");
+		List<DiaryDto> newFileList = new ArrayList<DiaryDto>();
+		
+		for (MultipartFile mf : fileList) {
+			DiaryDto diaryDto = new DiaryDto();
+			diaryDto.setDiId(id);
+			diaryDto.setDiContent(diContent.replace("\r\n", "<br>"));	//개행처리
+
+			String fileName = Long.toString(System.currentTimeMillis()) + "_" + mf.getOriginalFilename();
+			
+            File path = new File("C:/resources/diaryImg/");
+            if(!path.exists()){
+            	path.mkdirs();
+            }
+            if (path.exists() && path.isDirectory()) {
+				try {
+					mf.transferTo(new File(path, fileName));
+					diaryDto.setImgName(fileName);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+			newFileList.add(diaryDto);
+		}
+		
+		int check = boardDao.diaryUploadOk(newFileList);
+		
+		mav.addObject("check", check);
+		mav.setViewName("board/writeOk2");
+	}
+	//여행일지 삭제
+	@Override
+	public int diaryDel(int diaryNo) {
+		return boardDao.diaryDel(diaryNo);
+	}
+	//여행일지 수정
+	@Override
+	public void diaryUpd(ModelAndView mav) {
+		Map<String, Object> map=mav.getModelMap();
+		HttpServletRequest request=(HttpServletRequest)map.get("request");
+		
+		int diaryNo = Integer.parseInt(request.getParameter("diaryNo"));
+		
+		DiaryDto diaryDto = boardDao.diaryUpd(diaryNo);
+		
+		mav.addObject("diaryDto", diaryDto);
+		mav.setViewName("board/mydiaryUpdate");
+	}
+	//여행일지 수정 완료
+	@Override
+	public int diaryUpdOk(int diaryNo, String diContent) {
+		int check = boardDao.diaryUpdOk(diaryNo, diContent);
+		return check;
 	}
 }

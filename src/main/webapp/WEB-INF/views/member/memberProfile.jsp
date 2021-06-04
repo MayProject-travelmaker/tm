@@ -7,7 +7,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -44,12 +44,8 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active">
-						<a class="nav-link" href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span></a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="${root}/member/mypage.do">마이페이지</a>
-					</li>
+					<li class="nav-item active"><a class="nav-link" href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="${root}/member/mypage.do">마이페이지</a></li>
 				</ul>
 			</div>
             </div>

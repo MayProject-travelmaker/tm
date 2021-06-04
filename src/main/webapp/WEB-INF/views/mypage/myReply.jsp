@@ -46,7 +46,7 @@
 						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
+						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/mypage.do">마이페이지</a></li>
 					</c:if>
 				</ul>
@@ -113,32 +113,38 @@
 							</c:choose>
 
 						<!-- 페이징처리 -->
-						<div align="center">
-							<fmt:parseNumber var="pageCount"
-								value="${count/boardSize+(count%boardSize==0?0:1)}"
-								integerOnly="true"></fmt:parseNumber>
-							<c:set var="pageBlock" value="${5}" />
-							<fmt:parseNumber var="result"
-								value="${(currentPage-1)/pageBlock}" integerOnly="true"></fmt:parseNumber>
+						<div>
+							<fmt:parseNumber var="pageCount" value="${count/boardSize+(count%boardSize==0?0:1)}" integerOnly="true"></fmt:parseNumber>
+							<c:set var="pageBlock" value="${10}" />
+							<fmt:parseNumber var="result" value="${(currentPage-1)/pageBlock}" integerOnly="true"></fmt:parseNumber>
 							<c:set var="startPage" value="${result*pageBlock+1}"></c:set>
 							<c:set var="endPage" value="${startPage+pageBlock-1}"></c:set>
 							<c:if test="${endPage > pageCount}">
 								<c:set var="endPage" value="${pageCount}" />
 							</c:if>
-							<c:if test="${startPage > pageBlock}">
-								<a
-									href="${root}/mypage/myReply.do?pageNumber=${startPage-pageBlock}"
-									style="text-decoration: none">◀</a>
-							</c:if>
-							<c:forEach var="i" begin="${startPage}" end="${endPage}">
-								<a href="${root}/mypage/myReply.do?pageNumber=${i}"
-									style="text-decoration: none">${i}</a>
-							</c:forEach>
-							<c:if test="${endPage < pageCount}">
-								<a
-									href="${root}/mypage/myReply.do?pageNumber=${startPage+pageBlock}"
-									style="text-decoration: none">▶</a>
-							</c:if>
+							
+							<ul class="pagination"  style="justify-content: center">
+								<li class="page-item">
+									<c:if test="${startPage > pageBlock}">
+											<a class="page-link" 
+											href="${root}/mypage/myReply.do?pageNumber=${startPage-pageBlock}" style="text-decoration: none">◀</a>
+									</c:if>
+								</li>
+								
+								<c:forEach var="i" begin="${startPage}" end="${endPage}">
+										<li class="page-item">
+											<a class="page-link"
+											href="${root}/mypage/myReply.do?pageNumber=${i}" style="text-decoration: none">${i}</a>
+										</li>
+								</c:forEach>
+								
+								<li class="page-item">
+									<c:if test="${endPage < pageCount}">
+										<a class="page-link" 
+										href="${root}/mypage/myReply.do?pageNumber=${startPage+pageBlock}" style="text-decoration: none">▶</a>
+									</c:if>
+								</li>
+							</ul>
 						</div>
 
 					</div>

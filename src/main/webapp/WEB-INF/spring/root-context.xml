@@ -14,7 +14,7 @@
 		<property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" />
 		<property value="jdbc:oracle:thin:@localhost:1521:xe" name="url" />
 
-		<property value="travlemaker" name="username" />
+		<property value="travelmaker" name="username" />
 
 		<property value="1234" name="password" />
 

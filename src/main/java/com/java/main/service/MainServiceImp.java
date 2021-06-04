@@ -52,10 +52,6 @@ public class MainServiceImp implements MainService {
 	      mav.addObject("boardFileList", boardFileList);
 	      mav.addObject("boardReviewList", boardReviewList);
 	      
-	      System.out.println("boardFileList :" + boardFileList);
-	      System.out.println("boardReviewList :" + boardReviewList);
-
-
 	      mav.setViewName("index");
 	   }
 

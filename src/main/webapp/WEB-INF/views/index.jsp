@@ -6,7 +6,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -64,9 +64,6 @@
 		                   		</a>
 		                   	</li>
 		                        
-	                        <%-- <li class="nav-item"><a class="nav-link" href="${root}/member/register.do">회원가입</a></li>
-	                        <li class="nav-item"><a class="nav-link" href="${root}/member/management.do">회원관리</a></li>
-	                        <li class="nav-item"><a class="nav-link" href="${root}/member/mypage.do">마이페이지</a></li> --%>
 	                    </c:if> 
 	                    <c:if test = "${sessionScope.memberLevel!=null}">
 	                    	<li class="nav-item active"><span class="nav-link">${sessionScope.id }님 반갑습니다.</span></li>
@@ -76,14 +73,10 @@
 		                        	<span class="sr-only">(current)</span>
 		                   		</a>		                        
 	                        </li>
-	                        <li class="nav-item">
-	                        	<a class="nav-link" href="${root}/member/mypage.do">마이페이지</a>
-	                        </li>
-	                        <li class="nav-item">
-	                        	<a class="nav-link" href="${root}/chat/chatRoomList.do">채팅</a>
-	                        </li>
+	                        <li class="nav-item active"><a class="nav-link" href="${root}/member/mypage.do">마이페이지</a></li>
+	                        <li class="nav-item active"><a class="nav-link" href="${root}/chat/chatRoomList.do">채팅</a></li>
 		                    <c:if test="${sessionScope.memberLevel=='1'}">
-					  			<li class="nav-item"><a class="nav-link" href="${root}/member/management.do">회원관리</a></li>
+					  			<li class="nav-item active"><a class="nav-link" href="${root}/member/management.do">회원관리</a></li>
 					  		</c:if>
 	                    </c:if>
                     </ul>
@@ -134,7 +127,7 @@
                     <div class="panel-body">
 	                    <div class="panel-heading">👫 동행 게시판</div>
 		                    <!-- 게시글리스트 -->
-						<table class="table table-body">
+						<table class="table table-body table-hover">
 							<thead>
 								<tr class="text-center">
 									<th width="60px">글번호</th>
@@ -163,7 +156,7 @@
 											<td class="text-center">${boardDto.boardNo}</td>
 										</c:if>
 										<c:if test="${boardDto.isPopular == 1}">
-											<td class="text-center">인기글</td>
+											<td class="text-center">${boardDto.boardNo}</td>
 										</c:if>
 										<td>
 											<c:if test="${boardDto.area == null}">	<!-- 공지글일경우 -->

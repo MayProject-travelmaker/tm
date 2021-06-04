@@ -7,7 +7,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR"> 
@@ -43,6 +43,12 @@ function delFunc(root, boardNo) {
 	}
 }
 </script>
+<style>
+	img {
+	     max-width: 100%;
+	     max-height: 100%;
+	}
+</style>
 </head>
 <body>
 <!-- 세션 확인 -->
@@ -68,7 +74,7 @@ function delFunc(root, boardNo) {
 						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
+						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/mypage.do">마이페이지</a></li>
 					</c:if>
 				</ul>
@@ -132,38 +138,39 @@ function delFunc(root, boardNo) {
 									</td>
 								</tr>
 								 
-								
-								<tr>
-									<td class="border-right">지도</td>
-									<td colspan="2">
-									<c:if test="${mapDto.mapNo == null}"> 선택된 좌표가 없습니다.</c:if>
-									<c:if test="${mapDto.mapNo != null}">
-										<div id="staticMap" style="width:600px;height:350px;"></div>    
-										
-										<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d22f00b438fdc58950b8771f7c3989ef"></script>
-										<script>
-										// 이미지 지도에서 마커가 표시될 위치입니다 
-										var markerPosition  = new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}); 
-										
-										// 이미지 지도에 표시할 마커입니다
-										// 이미지 지도에 표시할 마커는 Object 형태입니다
-										var marker = {
-										    position: markerPosition
-										};
-										
-										var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
-										    staticMapOption = { 
-										        center: new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}), // 이미지 지도의 중심좌표
-										        level: 3, // 이미지 지도의 확대 레벨
-										        marker: marker // 이미지 지도에 표시할 마커 
-										    };    
-										
-										// 이미지 지도를 생성합니다
-										var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-										</script>
-									</c:if>
-									</td>
-								</tr>
+								<c:if test="${boardDto.area != null}">
+									<tr>
+										<td class="border-right">지도</td>
+										<td colspan="2">
+										<c:if test="${mapDto.mapNo == null}"> 선택된 좌표가 없습니다.</c:if>
+										<c:if test="${mapDto.mapNo != null}">
+											<div id="staticMap" style="width:600px;height:350px;"></div>    
+											
+											<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d22f00b438fdc58950b8771f7c3989ef"></script>
+											<script>
+											// 이미지 지도에서 마커가 표시될 위치입니다 
+											var markerPosition  = new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}); 
+											
+											// 이미지 지도에 표시할 마커입니다
+											// 이미지 지도에 표시할 마커는 Object 형태입니다
+											var marker = {
+											    position: markerPosition
+											};
+											
+											var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+											    staticMapOption = { 
+											        center: new kakao.maps.LatLng(${mapDto.yAxis}, ${mapDto.xAxis}), // 이미지 지도의 중심좌표
+											        level: 3, // 이미지 지도의 확대 레벨
+											        marker: marker // 이미지 지도에 표시할 마커 
+											    };    
+											
+											// 이미지 지도를 생성합니다
+											var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+											</script>
+										</c:if>
+										</td>
+									</tr>
+								</c:if>
 								
 								<!-- 채팅 참여 버튼 -->
 								<c:if test="${chatRoomNo > 0}">

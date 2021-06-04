@@ -44,6 +44,14 @@
 		<result column="group_no" property="groupNo"/>
 		<result column="sequence_no" property="sequenceNo"/>
 	</resultMap>
+	<resultMap type="com.java.board.dto.DiaryDto" id="diaryDto">
+		<result column="diary_no" property="diaryNo"/>
+		<result column="di_id" property="diId"/>
+		<result column="di_content" property="diContent"/>
+		<result column="di_date" property="diDate"/>
+		<result column="img_name" property="imgName"/>
+	</resultMap>
+	
 	<!-- 일반글작성_파일,지도 포함 -->
 	<insert id="board_file_map_insert" parameterType="java.util.Map">
 		insert all
@@ -570,4 +578,44 @@
 		select chat_room_no from chat_room
 		where board_no = #{boardNo}
 	</select>
+	
+	<!-- 나의여행일지 insert -->
+	<insert id="diary_insert" parameterType="java.util.List">
+	insert into diary (diary_no, di_id, di_content, di_date, img_name)
+	select diary_no_seq.nextval, a.*
+	from(<foreach item="item" collection="list" separator="union all ">
+			select #{item.diId} as di_id,
+					#{item.diContent} as di_content,
+					sysdate,
+					#{item.imgName} as img_name
+			from dual
+		</foreach>)a
+	</insert>
+	
+	<!-- 나의여행일지 list -->
+	<select id="diary_list" parameterType="String" resultMap="diaryDto" >
+		<![CDATA[
+		select * from diary where di_id = #{diId} and is_del = 0
+		order by diary_no desc
+       ]]>
+	</select>
+	
+	<!-- 다이어리삭제 -->
+	<update id="diary_del" parameterType="int">
+		update diary
+		set is_del = 1
+		where diary_no = #{diaryNo}
+	</update>
+	<!-- 다이어리수정 -->
+	<select id="diary_upd" parameterType="int" resultMap="diaryDto">
+		select *
+		from diary
+		where diary_no = #{diaryNo}
+	</select>
+	<!-- 다이어리수정완료 -->
+	<update id="diary_upd_ok" parameterType="java.util.Map">
+		update diary
+		set di_content = #{diContent}
+		where diary_no = #{diaryNo}
+	</update>
 </mapper>

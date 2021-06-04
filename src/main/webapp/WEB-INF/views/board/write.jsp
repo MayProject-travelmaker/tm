@@ -7,7 +7,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -57,7 +57,7 @@
 						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
+						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/mypage.do">마이페이지</a></li>
 					</c:if>
 				</ul>
@@ -157,42 +157,49 @@
 										</script>
 									</td>
 								</tr>
-								<tr>
-									<td class="border-right">지도</td>
-									<td>
-										<div class="map_wrap">
-											<div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden;"></div>
-											<div id="menu_wrap" class="bg_white">
-												<div class="option">
-													<div>
-														키워드 : 
-														<input type="text" value="이태원 맛집" id="keyword" size="15"> 
-														<input type="button" id="searchBtn" onclick="searchPlaces()" value="검색">
-													</div>
-												</div>
-												<hr>
-												<ul id="placesList"></ul>
-												<div id="pagination"></div>
-											</div>
-										</div> 
-										<script type="text/javascript" src="${root}/resources/js/map.js"></script>
-										
-										<input type="hidden" id="placeName" name="placeName" value="">
-										<input type="hidden" id="latitude" name="xAxis" value="">
-										<input type="hidden" id="longitude" name="yAxis" value="">
-										<div id="result"></div> 
-									</td>
-								</tr>
-								<!-- 동행게시판 : 채팅방 생성 -->
-								<c:if test="<%= boardCode == 11%>">
+								<c:if test="${memberLevel == 1}">
+									<input type="hidden" id="placeName" name="placeName" value="">
+								</c:if>
+								<c:if test="${memberLevel != 1}">
 									<tr>
-										<td class="text-center" colspan="2">
-											<div>
-												<input type="checkbox" id="createChatRoom" name="chatRoom">
-												<label for="createChatRoom">채팅방 생성</label>
-											</div>
+										<td class="border-right">지도</td>
+										<td>
+											<div class="map_wrap">
+												<div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden;"></div>
+												<div id="menu_wrap" class="bg_white">
+													<div class="option">
+														<div>
+															키워드 : 
+															<input type="text" value="이태원 맛집" id="keyword" size="15"> 
+															<input type="button" id="searchBtn" onclick="searchPlaces()" value="검색">
+														</div>
+													</div>
+													<hr>
+													<ul id="placesList"></ul>
+													<div id="pagination"></div>
+												</div>
+											</div> 
+											<script type="text/javascript" src="${root}/resources/js/map.js"></script>
+											
+											<input type="hidden" id="placeName" name="placeName" value="">
+											<input type="hidden" id="latitude" name="xAxis" value="">
+											<input type="hidden" id="longitude" name="yAxis" value="">
+											<div id="result"></div> 
 										</td>
 									</tr>
+								</c:if>
+								<!-- 동행게시판 : 채팅방 생성 -->
+								<c:if test="${memberLevel != 1}">
+									<c:if test="<%= boardCode == 11%>">
+										<tr>
+											<td class="text-center" colspan="2">
+												<div>
+													<input type="checkbox" id="createChatRoom" name="chatRoom">
+													<label for="createChatRoom">채팅방 생성</label>
+												</div>
+											</td>
+										</tr>
+									</c:if>
 								</c:if>
 								<tr>
 									<td colspan="2" class="text-center">

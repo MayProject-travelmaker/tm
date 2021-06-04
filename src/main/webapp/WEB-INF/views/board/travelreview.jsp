@@ -7,7 +7,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -42,8 +42,11 @@
 						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/logout.do"> 로그아웃 <span class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link"
+						<li class="nav-item active"><a class="nav-link"
 							href="${root}/member/mypage.do">마이페이지</a></li>
+						<li class="nav-item active">
+	                        	<a class="nav-link" href="${root}/chat/chatRoomList.do">채팅</a>
+                        </li>
 					</c:if>
 				</ul>
 			</div>
@@ -88,7 +91,7 @@
 						</form>
 
 						<!-- 게시글리스트 -->
-						<table class="table table-body">
+						<table class="table table-body table-hover">
 							<thead>
 								<tr class="text-center">
 									<th width="60px">글번호</th>
@@ -155,7 +158,8 @@
 								
 								<c:forEach var="i" begin="${startPage}" end="${endPage}">
 									<li class="page-item">
-										<a class="page-link"href="${root}/board/travelreview.do?pageNumber=${i}&searchType=${searchType}&keyword=${keyword}">${i}</a>
+										<a class="page-link"
+										href="${root}/board/travelreview.do?pageNumber=${i}&searchType=${searchType}&keyword=${keyword}">${i}</a>
 									</li>
 								</c:forEach>
 								

@@ -52,4 +52,15 @@ public interface BoardService {
 
 	// 좋아요
 	HashMap<String, Object> boardLikeOk(ModelAndView mav);
+	
+	//내 여행일지 업로드Ok
+	void diaryUploadOk(ModelAndView mav);
+	//내 여행일지 리스트
+	void diaryList(ModelAndView mav);
+	//여행일지 삭제
+	int diaryDel(int diaryNo);
+	//여행일지 수정
+	void diaryUpd(ModelAndView mav);
+	//여행일지 수정 완료
+	int diaryUpdOk(int diaryNo, String diContent);
 }

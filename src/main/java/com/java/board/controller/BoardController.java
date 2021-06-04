@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.java.board.dto.BoardDto;
+import com.java.board.dto.DiaryDto;
 import com.java.board.dto.ReplyDto;
 import com.java.board.service.BoardService;
 import com.java.chat.service.ChatService;
@@ -229,5 +230,55 @@ public class BoardController {
 		mav.addObject("postId", (String) param.get("postId")); // 작성자 아이디
 
 		return boardService.boardLikeOk(mav);
+	}
+	
+	//나의여행일기게시판으로 넘어가기
+	@RequestMapping(value="/board/mydiary.do", method= RequestMethod.GET)
+	public ModelAndView boardMydiary(HttpServletRequest request, HttpServletResponse response, DiaryDto diaryDto) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		//mav.addObject("diaryDto", diaryDto);
+		
+		boardService.diaryList(mav);
+		
+		return mav;
+	}
+	//나의여행일기 업로드 넘어가기
+	@RequestMapping(value="/board/mydiaryUpload.do")
+	public ModelAndView MydiaryUpload(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("board/mydiaryUpload");
+	}
+	//나의여행일기 업로드ok
+	@RequestMapping(value="/board/mydiaryUploadOk.do")
+	public ModelAndView MydiaryUploadOk(HttpServletRequest request, HttpServletResponse response, DiaryDto diaryDto) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		mav.addObject("diaryDto", diaryDto);
+		
+		boardService.diaryUploadOk(mav);
+		return mav;
+	}	
+	//나의여행일기 삭제
+	@ResponseBody
+	@RequestMapping(value="/board/diaryDel.do", method = RequestMethod.POST)
+	public int diaryDel(int diaryNo) {
+		int check = boardService.diaryDel(diaryNo); 
+		return check;
+	}
+	//나의여행일기 수정
+	@RequestMapping(value="/board/diaryUpd.do")
+	public ModelAndView diaryUpd(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("request", request);
+		
+		boardService.diaryUpd(mav);
+		return mav;
+	}
+	//나의여행일기 수정 완료
+	@ResponseBody
+	@RequestMapping(value="/board/diaryUpdOk.do", method = RequestMethod.POST)
+	public int diaryUpdOk(int diaryNo, String diContent) {
+		int check = boardService.diaryUpdOk(diaryNo, diContent);
+		return check;
 	}
 }

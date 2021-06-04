@@ -12,7 +12,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>

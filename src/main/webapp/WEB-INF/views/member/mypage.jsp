@@ -7,7 +7,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
     <head>
     	
     
@@ -44,7 +44,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-	                    <c:if test = "${sessionScope.memberLevel==null}">
+	                    <c:if test = "${sessionScope.memberLevel!=null}">
 	                        <li class="nav-item active">
 		                    	<a class="nav-link" href="${root}/member/logout.do">
 		                                로그아웃
@@ -53,6 +53,10 @@
 	                        </li>
 	                        <li class="nav-item active"><a class="nav-link" href="${root}/member/memberProfile.do">회원정보수정</a></li>
 	                        <li class="nav-item active"><a class="nav-link" href="${root}/member/memberdelete.do">회원탈퇴</a></li>
+	                        <li class="nav-item active"><a class="nav-link" href="${root}/chat/chatRoomList.do">채팅</a></li>
+		                    <c:if test="${sessionScope.memberLevel=='1'}">
+					  			<li class="nav-item active"><a class="nav-link" href="${root}/member/management.do">회원관리</a></li>
+					  		</c:if>
 	                    </c:if>   
                     </ul>
                 </div>
@@ -71,7 +75,7 @@
 	        	<br><br>
 	        	<a href="${root}/mypage/myBookmark.do">⭐ 즐겨찾기</a>
 	        	<br><br>
-	        	<a href="${root}/member/">✈ 나의 여행기록</a> 
+	        	<a href="${root}/board/mydiary.do">✈ 나의 여행기록</a> 
 	        	
         	</div>
         	
