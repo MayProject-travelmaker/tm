@@ -19,14 +19,17 @@ import org.springframework.web.servlet.ModelAndView;
 import com.java.board.dto.BoardDto;
 import com.java.board.dto.ReplyDto;
 import com.java.board.service.BoardService;
+import com.java.chat.service.ChatService;
 
 @Controller
 public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
+	@Autowired
+	private ChatService chatService;
 	
-	//ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
+	//µ¿Çà°Ô½ÃÆÇ ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/accompanylist.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyList(HttpServletRequest request, HttpServletResponse response
 											, @RequestParam(required = false) String searchType
@@ -41,7 +44,7 @@ public class BoardController {
 		return mav;
 	}
 		
-	//ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
+	//µ¿ÇàÈÄ±â°Ô½ÃÆÇ ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/accompanyreview.do", method= RequestMethod.GET)
 	public ModelAndView boardAccompanyReview(HttpServletRequest request, HttpServletResponse response
 											, @RequestParam(required = false) String searchType
@@ -56,7 +59,7 @@ public class BoardController {
 		return mav;
 	}
 	
-	//ï¿½ï¿½Ãµï¿½ï¿½Î°Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
+	//ÃßÃµ°æ·Î°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/recommendpath.do", method= RequestMethod.GET)
 	public ModelAndView boardRecommendPath(HttpServletRequest request, HttpServletResponse response
 											, @RequestParam(required = false) String searchType
@@ -71,7 +74,7 @@ public class BoardController {
 		return mav;
 	}
 	
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½
+	//¿©ÇàÁöÈÄ±â°Ô½ÃÆÇÀ¸·Î ³Ñ¾î°¡±â
 	@RequestMapping(value="/board/travelreview.do", method= RequestMethod.GET)
 	public ModelAndView boardTravelReview(HttpServletRequest request, HttpServletResponse response
 											, @RequestParam(required = false) String searchType
@@ -86,25 +89,30 @@ public class BoardController {
 		return mav;	
 	}
 	
-	//ï¿½Û¾ï¿½ï¿½ï¿½
+	//±Û¾²±â
 	@RequestMapping(value="/board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("board/write");
 	}
 	
 	
-	//ï¿½Û¾ï¿½ï¿½ï¿½Ï·ï¿½
+	//±Û¾²±â¿Ï·á
 	@RequestMapping(value="/board/writeOk.do", method= RequestMethod.POST)
 	public ModelAndView boardWriteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request", request);
 		mav.addObject("boardDto", boardDto);
+		System.out.println("createChatRoom : " + request.getParameter("chatRoom"));
 		
+		// µ¿Çà Ã¤ÆÃ¹æ ¸¸µé±â
+		if(request.getParameter("chatRoom") != null) {
+			mav.addObject("chatRoom", true);
+		}
 		boardService.boardWriteOk(mav);
 		return mav;
 	}
 
-	//ï¿½ï¿½ï¿½Ð±ï¿½
+	//±ÛÀÐ±â
 	@RequestMapping(value="/board/read.do")
 	public ModelAndView boardRead(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
@@ -113,7 +121,7 @@ public class BoardController {
 		boardService.boardRead(mav);
 		return mav;
 	}
-	//ï¿½Û¼ï¿½ï¿½ï¿½
+	//±Û¼öÁ¤
 	@RequestMapping(value="/board/update.do")
 	public ModelAndView boardUpdate(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
@@ -122,7 +130,7 @@ public class BoardController {
 		boardService.boardUpdate(mav);
 		return mav;
 	}
-	//ï¿½Û¼ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
+	//±Û¼öÁ¤¿Ï·á
 	@RequestMapping(value="/board/updateOk.do", method= RequestMethod.POST)
 	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		
@@ -133,7 +141,7 @@ public class BoardController {
 		boardService.boardUpdateOk(mav);
 		return mav;
 	}
-	//ï¿½Û»ï¿½ï¿½ï¿½ï¿½Ï·ï¿½
+	//±Û»èÁ¦¿Ï·á
 	@RequestMapping(value="/board/deleteOk.do", method= RequestMethod.GET)
 	public ModelAndView boardDeleteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		
@@ -145,8 +153,8 @@ public class BoardController {
 		return mav;
 	}
 	
-	//=====================================================================ï¿½ï¿½ï¿½Ã£ï¿½ï¿½
-	//ï¿½ï¿½ï¿½Ã£ï¿½ï¿½
+	//=====================================================================Áñ°ÜÃ£±â
+	//Áñ°ÜÃ£±â
 	@ResponseBody
 	@RequestMapping(value = "/board/bookmark.do", method = RequestMethod.POST)
 	public int bookmark(HttpSession session, BoardDto boardDto) {
@@ -160,7 +168,7 @@ public class BoardController {
 		return check;	
 	}
 	
-	//ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½ßºï¿½Ã¼Å©
+	//Áñ°ÜÃ£±â Áßº¹Ã¼Å©
 	@ResponseBody
 	@RequestMapping(value = "/board/bmCheck.do", method = RequestMethod.POST)
 	public int bmCheck(HttpSession session, int boardNo) {
@@ -171,8 +179,8 @@ public class BoardController {
 		return check;
 	}
 	
-	//=====================================================================ï¿½ï¿½ï¿½
-	//ï¿½ï¿½ï¿½ï¿½Ô·ï¿½
+	//=====================================================================´ñ±Û
+	//´ñ±ÛÀÔ·Â
 	@ResponseBody
 	@RequestMapping(value = "/board/replyWrite.do", method = RequestMethod.POST)
 	public int replyWrite(HttpSession session, ReplyDto replyDto) {
@@ -181,7 +189,7 @@ public class BoardController {
 		return boardService.replyWrite(replyDto);
 	}
 	
-	//ï¿½ï¿½Û¸ï¿½ï¿½ï¿½Æ®
+	//´ñ±Û¸®½ºÆ®
 	@ResponseBody
 	@RequestMapping(value = "/board/replyList.do", method = RequestMethod.POST)
 	public List<ReplyDto> replyList(int boardNo) {
@@ -189,7 +197,7 @@ public class BoardController {
 		return list;
 	}
 	
-	//ï¿½ï¿½Û»ï¿½ï¿½ï¿½
+	//´ñ±Û»èÁ¦
 	@ResponseBody
 	@RequestMapping(value = "/board/replyDel.do", method = RequestMethod.POST)
 	public int replyDel(int replyNo) {
@@ -197,7 +205,7 @@ public class BoardController {
 		return check;
 	}
 	
-	//ï¿½ï¿½Û¼ï¿½ï¿½ï¿½
+	//´ñ±Û¼öÁ¤
 	@ResponseBody
 	@RequestMapping(value = "/board/replyUpd.do", method = RequestMethod.POST)
 	public int replyUpd(int replyNo, String content) {
@@ -208,7 +216,7 @@ public class BoardController {
 		return check;
 	}
 	
-	// ï¿½ï¿½ï¿½Æ¿ï¿½ ï¿½ï¿½Æ°
+	// ÁÁ¾Æ¿ä ¹öÆ°
 	@ResponseBody
 	@RequestMapping(value = "/board/likeOk.do", method = RequestMethod.GET)
 	public HashMap<String, Object> boardLikeOk(@RequestParam Map<String, Object> param, HttpServletRequest request,
@@ -216,12 +224,10 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView();
 
 		mav.addObject("request", request);
-		mav.addObject("boardNo", (String) param.get("boardNo")); // ï¿½Ô½Ã±ï¿½ ï¿½ï¿½È£
-		mav.addObject("boardCode", (String) param.get("boardCode")); // ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
-		mav.addObject("postId", (String) param.get("postId")); // ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
+		mav.addObject("boardNo", (String) param.get("boardNo")); // °Ô½Ã±Û ¹øÈ£
+		mav.addObject("boardCode", (String) param.get("boardCode")); // °Ô½ÃÆÇ ÄÚµå
+		mav.addObject("postId", (String) param.get("postId")); // ÀÛ¼ºÀÚ ¾ÆÀÌµð
 
 		return boardService.boardLikeOk(mav);
 	}
-	
-	
 }

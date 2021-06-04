@@ -118,13 +118,7 @@
 			<scope>test</scope>
 		</dependency>  
 		
-		
-		
-		
-		
-				<!--  일단은 추가한 사항 -->
-		
-		
+		<!--  일단은 추가한 사항 -->
 		
 		<!-- STANDARD -->
 		<!-- https://mvnrepository.com/artifact/taglibs/standard -->
@@ -156,16 +150,6 @@
 			<artifactId>cglib</artifactId>
 			<version>2.2.2</version>
 		</dependency>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		<!-- DB/ spring.jdbc, mybatis, spring mybatis, oracle(tomcat server) apache-tomcat-9.0.35\bin안에 
 			오라클 드라이브 -->
@@ -286,8 +270,12 @@
 		    <version>2.9.2</version>
 		</dependency>
 		
-		
-		
+		<!-- 웹소켓 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>4.3.3.RELEASE</version>
+		</dependency>
 		
         
 </dependencies>

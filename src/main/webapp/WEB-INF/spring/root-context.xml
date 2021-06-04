@@ -14,7 +14,7 @@
 		<property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" />
 		<property value="jdbc:oracle:thin:@localhost:1521:xe" name="url" />
 
-		<property value="hmj" name="username" />
+		<property value="travlemaker" name="username" />
 
 		<property value="1234" name="password" />
 
@@ -30,6 +30,8 @@
 				<value>classpath:com/java/report/dao/mapper/ReportMapper.xml</value>
 				<value>classpath:com/java/mypage/dao/mapper/MypageMapper.xml</value>
 				<value>classpath:com/java/calendar/dao/mapper/CalendarMapper.xml</value>
+				<value>classpath:com/java/main/dao/mapper/MainMapper.xml</value>
+				<value>classpath:com/java/chat/dao/mapper/ChatMapper.xml</value>
 			</list>
 
 		</property>

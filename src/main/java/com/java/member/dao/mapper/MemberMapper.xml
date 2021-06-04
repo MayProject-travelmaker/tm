@@ -88,7 +88,7 @@
 	<select id="member_login" parameterType="java.util.Map" resultType="java.util.HashMap">
 		select id, password, member_level
 		from member
-		where id=#{id} and member_level between 1 and 3
+		where id=#{id}
 	</select>
 	
 	<!-- 수정완료 버튼 변경되기로 한 항목들 추가로 적어주기-->

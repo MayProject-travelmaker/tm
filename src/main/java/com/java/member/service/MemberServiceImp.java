@@ -118,7 +118,16 @@ public class MemberServiceImp implements MemberService{
 			session.setAttribute("id", id); // 세션에 id 저장하기
 			session.setAttribute("memberLevel", result.get("MEMBER_LEVEL")); // 세션에 memberLevel 저장하기
 			
-			mav.setViewName("redirect:/");
+			if(String.valueOf(result.get("MEMBER_LEVEL")).equals("4")) {
+				mav.addObject("message", "탈퇴한 회원입니다");
+				mav.setViewName("member/login");
+			} else if(String.valueOf(result.get("MEMBER_LEVEL")).equals("3")) {
+				mav.addObject("message", "차단된 회원입니다");
+				mav.setViewName("member/login");
+			}
+			else {
+				mav.setViewName("redirect:/");
+			}
 		} else {
 			// 로그인 실패
 			// 아이디가 없거나 비밀번호가 match되지 않을경우 로그인 실패

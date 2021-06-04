@@ -71,7 +71,7 @@
 	        	<br><br>
 	        	<a href="${root}/mypage/myBookmark.do">⭐ 즐겨찾기</a>
 	        	<br><br>
-	        	<a href="${root}/member/">나의 여행기록</a> 
+	        	<a href="${root}/member/">✈ 나의 여행기록</a> 
 	        	
         	</div>
         	

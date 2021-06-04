@@ -7,11 +7,12 @@ import com.java.board.dto.BoardDto;
 import com.java.board.dto.BoardFileDto;
 import com.java.board.dto.MapDto;
 import com.java.board.dto.ReplyDto;
+import com.java.chat.dto.ChatRoomDto;
 
 public interface BoardDao {
 
 	//글쓰기
-	public int boardWriteOk(HashMap<String, Object> dtoMap, int isNotice, HashMap<String, String> map2);
+	public int boardWriteOk(HashMap<String, Object> dtoMap, HashMap<String, String> map2);
 
 	//동행 게시판 리스트, 카운트
 	public List<BoardDto> accompanyboardList(int startRow, int endRow, String searchType, String keyword);
@@ -79,5 +80,8 @@ public interface BoardDao {
 
 	// 인기글 세팅
 	public int IsPopularUpdate(int boardCode);
+
+	// 게시글번호별 채팅방 찾기
+	public int findChatRoomByBoardNo(int boardNo);
 	
 }

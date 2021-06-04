@@ -7,7 +7,7 @@
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kr">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -28,12 +28,12 @@
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
         <script type="text/javascript">
-        	$(function(){
-        		var loginMessage = "<c:out value="${message}"/>";
-        		if(loginMessage != ""){
-        			alert(loginMessage)
-        		}
-        	})
+           $(function(){
+              var loginMessage = "<c:out value="${message}"/>";
+              if(loginMessage != ""){
+                 alert(loginMessage)
+              }
+           })
         </script>
     </head>
     <body>
@@ -44,14 +44,14 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-	                    <c:if test = "${memberLevel==null}">
-	                        <li class="nav-item active">
-		                    	<a class="nav-link" href="${root}/member/register.do">
-		                                회원가입
-		                        	<span class="sr-only">(current)</span>
-		                   		</a>
-	                        </li>
-	                    </c:if>   
+                       <c:if test = "${memberLevel==null}">
+                           <li class="nav-item active">
+                             <a class="nav-link" href="${root}/member/register.do">
+                                      회원가입
+                                 <span class="sr-only">(current)</span>
+                               </a>
+                           </li>
+                       </c:if>   
                     </ul>
                 </div>
             </div>
@@ -60,32 +60,32 @@
         
         <br><br><br><br><br><br>
         <div align="center">
-		
-			<div class="container">
-		<div class="col-lg-4"></div>
-		<div class="col-lg-4">
-			<div class="jumbotron" style="padding-top: 20px;">
-				<form method="post" action="loginOk.do">
-					<h3 style="text-align: center;">로그인</h3>
-					<div class="form-group">
-					<div align ="left">아이디</div>
-						<input type="text" class="form-control" placeholder="ID" name="id" maxlength="20">
-					</div>
-					<div class="form-group">
-					<div align ="left">비밀번호</div>
-						<input type="password" class="form-control" placeholder="비밀번호" name="password" maxlength="20">
-					</div>
-					<input type="submit" class="btn btn-primary form-control" value="로그인">
-					<div align ="left">
-					&nbsp;<a href="findId.do">아이디 찾기</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="findPassword.do">비밀번호 찾기</a>
-					</div>
-				</form>
-			</div>
-		</div>
-		
-		</div>
-		</div>
+      
+         <div class="container">
+      <div class="col-lg-4"></div>
+      <div class="col-lg-4">
+         <div class="jumbotron" style="padding-top: 20px;">
+            <form method="post" action="loginOk.do">
+               <h3 style="text-align: center;">로그인</h3>
+               <div class="form-group">
+               <div align ="left">아이디</div>
+                  <input type="text" class="form-control" placeholder="ID" name="id" maxlength="20">
+               </div>
+               <div class="form-group">
+               <div align ="left">비밀번호</div>
+                  <input type="password" class="form-control" placeholder="비밀번호" name="password" maxlength="20">
+               </div>
+               <input type="submit" class="btn btn-primary form-control" value="로그인">
+               <div align ="left">
+               <span style="float: left;"><a href="findId.do">아이디 찾기</a></span>
+               <span style="float: right;"><a href="findPassword.do">비밀번호 찾기</a></span>
+               </div>
+            </form>
+         </div>
+      </div>
+      
+      </div>
+      </div>
         <br><br><br><br><br><br>
         
         

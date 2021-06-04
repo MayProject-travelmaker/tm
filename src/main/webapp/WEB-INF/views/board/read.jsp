@@ -126,6 +126,7 @@ function delFunc(root, boardNo) {
 											<input type="hidden" id="filePath" name="filePath">
 											<input type="hidden" id="fileName" name="fileName">
 											<a href="#">${boardFileDto.fileName}</a>
+											<br>
 											<img src="<c:url value='/img/${boardFileDto.fileName}'/>">
 										</c:if>
 									</td>
@@ -164,7 +165,15 @@ function delFunc(root, boardNo) {
 									</td>
 								</tr>
 								
-								
+								<!-- 채팅 참여 버튼 -->
+								<c:if test="${chatRoomNo > 0}">
+									<tr>
+										<td class="border-right">채팅방</td>
+										<td colspan="2" align="center">
+											 <a href="${root}/chat/chat.do?chatRoomNo=${chatRoomNo}">채팅 참여하기</a>
+										</td>
+									</tr>
+								</c:if>
 								
 								<tr>
 									<td colspan="3" class="text-center">

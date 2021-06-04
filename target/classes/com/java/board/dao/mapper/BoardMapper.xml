@@ -31,15 +31,6 @@
 		<result column="x_axis" property="xAxis"/>
 		<result column="y_axis" property="yAxis"/>
 	</resultMap>
-	<resultMap type="com.java.board.dto.NoticeDto" id="noticeDto">
-		<result column="notice_no" property="noticeNo"/>
-		<result column="title" property="title"/>
-		<result column="content" property="content"/>
-		<result column="read_cnt" property="readCnt"/>
-		<result column="is_notice" property="isNotice"/>
-		<result column="write_date" property="writeDate"/>
-		<result column="update_date" property="updateDate"/>
-	</resultMap>
 	<resultMap type="com.java.board.dto.ReplyDto" id="replyDto">
 		<result column="reply_no" property="replyNo"/>
 		<result column="board_no" property="boardNo" />
@@ -53,7 +44,6 @@
 		<result column="group_no" property="groupNo"/>
 		<result column="sequence_no" property="sequenceNo"/>
 	</resultMap>
-
 	<!-- 일반글작성_파일,지도 포함 -->
 	<insert id="board_file_map_insert" parameterType="java.util.Map">
 		insert all
@@ -87,6 +77,7 @@
 				#{mapDto.xAxis},
 				#{mapDto.yAxis}
 				)
+		<include refid="createChatRoom"></include>
 		select * from dual
 	</insert>
 	<!-- 일반글_파일만 -->
@@ -101,7 +92,7 @@
 				#{boardDto.content},
 				#{boardDto.area},
 				sysdate,
-				0
+				#{boardDto.isNotice}
 				)
 		into board_file (file_no, board_no, post_id, board_code, file_name, file_path, file_extension)
 		values(
@@ -113,6 +104,7 @@
 				#{boardFileDto.filePath}, 
 				#{boardFileDto.fileExtension}
 				)
+		<include refid="createChatRoom"></include>
 		select * from dual
 	</insert>
 	<!-- 일반글_지도만 -->
@@ -138,11 +130,12 @@
 				#{mapDto.xAxis},
 				#{mapDto.yAxis}
 				)
+		<include refid="createChatRoom"></include>
 		select * from dual
 	</insert>
 	<!-- 일반글_글만 -->
 	<insert id="board_insert" parameterType="java.util.Map">
-		insert
+		insert all
 		into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
 		values(
 				board_no_seq.nextval,
@@ -152,23 +145,10 @@
 				#{boardDto.content},
 				#{boardDto.area},
 				sysdate,
-				0
+				#{boardDto.isNotice}
 				)
-	</insert>
-	
-	<!-- 공지글작성 -->
-	<insert id="notice_insert" parameterType="java.util.Map">
-		insert into board (board_no, post_id, board_code, title, content, area, write_date, is_notice)
-		values(
-				board_no_seq.nextval,
-				#{boardDto.postId},
-				#{boardDto.boardCode},
-				#{boardDto.title},
-				#{boardDto.content},
-				#{boardDto.area},
-				sysdate,
-				1
-				)
+		<include refid="createChatRoom"></include>
+		select * from dual
 	</insert>
 	
 	<!-- 게시글검색조건 -->
@@ -186,29 +166,43 @@
 			</if>
 		</if>
 	</sql>
+	
+	<!-- 채팅룸 생성 조건문 -->
+	<sql id="createChatRoom">
+		<if test="chatRoom == true">
+			into chat_room(chat_room_no, board_no, post_id, board_code, chat_room_date) values(
+			chat_room_no_seq.nextval,
+			board_no_seq.currval,
+			#{boardDto.postId},
+			11,
+			sysdate
+			)
+		</if>
+	</sql>
+	
 	<!-- ============================================================================================================ -->
 	<!-- 동행 게시판 리스트, 카운트 -->
 	<select id="accompanyboard_list" parameterType="java.util.Map" resultMap="boardDto">
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 11 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 11 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 11 and is_del = 0
                             )
@@ -229,6 +223,7 @@
 		select nvl(count(*),0) from board where board_code = 11 and is_del = 0
 		<include refid="searchCondition"></include>
 	</select>
+	
 	<!-- ============================================================================================================ -->
 	<!-- 동행 후기 게시판 리스트, 카운트 -->
 	<select id="accompanyreview_list" parameterType="java.util.Map" resultMap="boardDto">
@@ -236,23 +231,23 @@
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 12 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 12 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 12 and is_del = 0
                             )
@@ -271,30 +266,29 @@
 		select nvl(count(*),0) from board where board_code = 12 and is_del = 0
 		<include refid="searchCondition"></include>
 	</select>
-	
 	<!-- 추천 여행 경로 게시판 리스트, 카운트 -->
 	<select id="recommendpath_list" parameterType="java.util.Map" resultMap="boardDto">
 		
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 13 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 13 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 13 and is_del = 0
                             )
@@ -320,23 +314,23 @@
 		<![CDATA[
 		select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
 		from (
-		        select row_number() over(order by is_notice desc,  is_popular desc, write_date desc) rn, a.*
+		        select row_number() over(order by is_notice desc,  is_popular desc, like_cnt desc, write_date desc) rn, a.*
 		        from (
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from board
                         where board_code = 14 and is_notice = 1 and is_del = 0
 		                
 		                union
 		                
-		                select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular
+		                 select  board_no, title, post_id, write_date, read_cnt, area, is_notice,  is_popular, like_cnt
                         from board
                         where board_code = 14 and is_del = 0
                         
                         union
                         
-                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                        select board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                         from (
-                                select  rank() over(order by like_cnt desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular
+                                select  rank() over(order by like_cnt desc, board_no desc) rank, board_no, title, post_id, write_date, read_cnt, area, is_notice, is_popular, like_cnt
                                 from board
                                 where board_code = 14 and is_del = 0
                             )
@@ -390,7 +384,7 @@
 	<!-- update content -->
 	<update id="board_updateOk" parameterType="java.util.Map">
 		update board 
-		set area=#{boardDto.area}, title=#{boardDto.title}, content=#{boardDto.content}, update_date=sysdate
+		set area=#{boardDto.area}, title=#{boardDto.title}, content=#{boardDto.content}, update_date=sysdate, is_notice=#{boardDto.isNotice}
 		where board_no=#{boardDto.boardNo}
 	</update>
 	
@@ -566,4 +560,14 @@
 							where rownum between 1 and 3 )
 	</update>
 	
+	<!-- 게시글 별 채팅방 생성 유무 확인 -->
+	<select id="findChatRoom" parameterType="int" resultType="int">
+		select count(*) from chat_room
+		where board_no = #{boardNo}
+	</select>
+	<!-- 게시글 별로 채팅방번호 찾기 -->
+	<select id="findChatRoomByBoardNo" parameterType="int" resultType="int">
+		select chat_room_no from chat_room
+		where board_no = #{boardNo}
+	</select>
 </mapper>

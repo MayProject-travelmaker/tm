@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chat">
+
+<resultMap type="com.java.chat.dto.ChatRoomDto" id="chatRoomDto">
+	<result column = "chat_room_no" property = "chatRoomNo"/>
+	<result column = "board_no" property = "boardNo"/>
+	<result column = "post_id" property = "postId"/>
+	<result column = "board_code" property = "boardCode"/>
+	<result column = "chat_room_date" property = "chatRoomDate"/>
+	<result column = "users" property="users"/>
+</resultMap>
+
+	<!-- 참가한 채팅방 정보 얻어오기 -->
+	<select id="getChatRoom" parameterType="int" resultMap="chatRoomDto">
+		select * from chat_room where chat_room_no = #{chatRoomNo}
+	</select>
+	<!-- 모든 채팅방 조회 -->
+	<select id="findAllRoom" resultMap="chatRoomDto">
+		select * from chat_room
+	</select>
+
+	<select id="findRoomByIdCnt" parameterType="String" resultType="int">
+		select count(*) from chat_room where post_id = #{id} or users like '%' || #{id} || '%'
+	</select>
+	<!-- 회원아이디 별로 채팅방 찾기 -->
+	<select id="findRoomById" parameterType="String" resultMap="chatRoomDto">
+		select * from chat_room where post_id = #{id} or users like '%' || #{id} || '%'
+	</select>
+	
+	<!-- 채팅 메시지 저장 -->
+	<insert id="insertChatMsg" parameterType="com.java.chat.dto.ChatMessageDto">
+		insert into chat_msg values(
+			chat_msg_no_nextval,
+			#{chat_room_no},
+			#{id},
+			(select board_no from chat_room where chat_room_no = #{chat_room_no}),
+			(select post_id from chat_room where chat_room_no = #{chat_room_no}),
+			#{msg},
+			0,
+			sysdate
+		)
+	</insert>
+	
+	<!-- 채팅방에 유저 참여자 확인하기 -->
+	<select id="findUserToChatRoom" parameterType="java.util.Map" resultType="int">
+		<![CDATA[
+		select count(*) from chat_room where chat_room_no = #{chatRoomNo}
+		and ( post_id = #{id} or users like '%' || #{id} || '%')	 
+		]]>	
+	</select>
+	
+	<!-- 채팅방에 유저 추가 -->
+	<update id="addUserToChatRoom" parameterType="java.util.Map">
+		update chat_room set users = users || #{id} || ';'
+		where chat_room_no = #{chatRoomNo}
+	</update>
+	
+	<!-- 채팅방을 나가는 유저가 채팅개설자인지, 일반 참여자인지 확인 -->
+	<select id="isChatRoomHost" parameterType="java.util.Map" resultType="int">
+		select count(*) from chat_room
+		where chat_room_no = #{chatRoomNo} and post_id = #{id}
+	</select>
+	
+	<!-- 채팅방 나가기 - 일반 참여자인 경우 -->
+	<update id="exitChatRoom" parameterType="java.util.Map">
+		update chat_room set users = replace(users, #{id} || ';' , '')
+		where chat_room_no = #{chatRoomNo}
+	</update>
+</mapper>

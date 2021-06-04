@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dto.mainDto">
+
+   <resultMap type="com.java.board.dto.BoardDto" id="boardDto">
+      <result column="board_no" property="boardNo" />
+      <result column="post_id" property="postId" />
+      <result column="board_code" property="boardCode" />
+      <result column="title" property="title" />
+      <result column="content" property="content" />
+      <result column="area" property="area" />
+      <result column="write_date" property="writeDate" />
+      <result column="update_date" property="updateDate" />
+      <result column="read_cnt" property="readCnt" />
+      <result column="like_cnt" property="likeCnt" />
+      <result column="is_del" property="isDel" />
+      <result column="is_popular" property="isPopular" />
+      <result column="is_notice" property="isNotice" />
+   </resultMap>
+   <resultMap type="com.java.board.dto.BoardFileDto" id="boardFileDto">
+      <result column="file_no" property="fileNo"/>
+      <result column="file_name" property="fileName"/>
+      <result column="file_path" property="filePath"/>
+      <result column="file_extension" property="fileExtension"/>
+   </resultMap>
+   <resultMap type="com.java.board.dto.MapDto" id="mapDto">
+      <result column="map_no" property="mapNo"/>
+      <result column="x_axis" property="xAxis"/>
+      <result column="y_axis" property="yAxis"/>
+   </resultMap>
+   <resultMap type="com.java.board.dto.ReplyDto" id="replyDto">
+      <result column="reply_no" property="replyNo"/>
+      <result column="board_no" property="boardNo" />
+      <result column="board_code" property="boardCode" />
+      <result column="post_id" property="postId"/>
+      <result column="id" property="id"/>
+      <result column="content" property="content"/>
+      <result column="write_date" property="writeDate"/>
+      <result column="update_date" property="updateDate"/>
+      <result column="is_del" property="isDel"/>
+      <result column="group_no" property="groupNo"/>
+      <result column="sequence_no" property="sequenceNo"/>
+   </resultMap>
+   
+   <!-- main page board getCount -->
+   <select id="boardList_getCount" resultType="int">
+      select nvl(count(*),0) from board
+   </select>
+   
+   <!-- accompany board list -->
+   <select id="board_list" parameterType="java.util.Map" resultMap="boardDto">
+      <![CDATA[
+      select *
+      from (
+      select *
+      from board
+      where board_code = '11' and is_del = '0' and is_notice != '1' 
+      order by board_no desc )
+      where rownum <= 5
+      ]]>
+   </select>
+
+   <!-- main page popular img getCount -->
+   <select id="boardFile_Count" resultType="int">
+      select nvl(count(*),0) from board_file
+   </select>
+
+   
+      <!-- board file read list -->
+   <select id="boardFile_list" parameterType="java.util.Map" resultMap="boardFileDto">
+      <![CDATA[
+      select *
+      from (
+      select board_no, title, file_name, RANK() over (order by board.like_cnt desc, board_no desc) rank
+      from board natural join board_file
+      where board_code = '14' and is_del = '0' and is_popular = '1' )
+      where rownum <= 3
+      ]]>
+   </select>
+   
+   <select id="boardReview_list" parameterType="java.util.Map" resultMap="boardDto">
+      <![CDATA[
+      select *
+      from (
+      select board_no, title, file_name, RANK() over (order by board.like_cnt desc, board_no desc) rank
+      from board natural join board_file
+      where board_code = '14' and is_del = '0' and is_popular = '1' )
+      where rownum <= 3
+      ]]>
+   </select>
+   
+   <!-- test -->
+      <select id="boardReview_no" parameterType="java.util.Map" resultMap="boardDto">
+      <![CDATA[
+      select board_no
+      from (
+      select board_no, title, file_name, RANK() over (order by board.like_cnt desc, board_no desc) rank
+      from board natural join board_file
+      where board_code = '14' and is_del = '0' and is_popular = '1' )
+      where rownum <= 3
+      ]]>
+   </select>
+   
+   <select id="boardReview_fileName" parameterType="java.util.Map" resultMap="boardDto">
+      <![CDATA[
+      select file_name
+      from (
+      select board_no, title, file_name, RANK() over (order by board.like_cnt desc, board_no desc) rank
+      from board natural join board_file
+      where board_code = '14' and is_del = '0' and is_popular = '1' )
+      where rownum <= 3
+      ]]>
+   </select>
+   
+   <select id="boardReview_title" parameterType="java.util.Map" resultMap="boardDto">
+      <![CDATA[
+      select title
+      from (
+      select board_no, title, file_name, RANK() over (order by board.like_cnt desc, board_no desc) rank
+      from board natural join board_file
+      where board_code = '14' and is_del = '0' and is_popular = '1' )
+      where rownum <= 3
+      ]]>
+   </select>
+   
+   <select id="board_read_popular" parameterType="int">
+      <![CDATA[
+      select *
+      from (
+      select board_no, title, file_name, RANK() over (order by board.like_cnt desc, board_no desc) rank
+      from board natural join board_file
+      where board_code = '14' and is_del = '0' and is_popular = '1' )
+      where rownum <= 3
+      ]]>
+   </select>
+   
+</mapper>
