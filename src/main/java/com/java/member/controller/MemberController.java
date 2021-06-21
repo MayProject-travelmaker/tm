@@ -1,6 +1,7 @@
 package com.java.member.controller;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -298,7 +299,24 @@ public class MemberController {
 		return blacklist;
 	}
 	
-	
+	@ResponseBody
+	@RequestMapping(value = "/member/VerifyRecaptcha", method = RequestMethod.POST)
+	public int VerifyRecaptcha(HttpServletRequest request) {
+		VerifyRecaptcha.setSecretKey("6LfJuj4bAAAAACMHnm0ixYJfErlhUNJM1qAg61zX");
+		String gRecaptchaResponse = request.getParameter("recaptcha");
+//		System.out.println(gRecaptchaResponse);
+		// 0 = 성공, 1 = 실패, -1 = 오류
+		try {
+			if (VerifyRecaptcha.verify(gRecaptchaResponse))
+				return 0;
+			else 
+				return 1;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
 }
 	
 	

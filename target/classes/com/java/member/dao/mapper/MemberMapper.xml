@@ -86,7 +86,7 @@
 	
 	<!-- 로그인  -->
 	<select id="member_login" parameterType="java.util.Map" resultType="java.util.HashMap">
-		select id, password, member_level
+		select id, password, member_level, login_fail_cnt, login_fail_datetime
 		from member
 		where id=#{id}
 	</select>
@@ -151,5 +151,14 @@
 		where member_level=3
 	</select>
 
+	<!-- 로그인 실패 횟수 증가  -->
+	<update id="loginFailCount" parameterType="String">
+		update member set login_fail_cnt = login_fail_cnt + 1, login_fail_datetime = SYSDATE + 1 where id=#{id}
+	</update>
+	
+	<!-- 로그인 실패 횟수 초기화  -->
+	<update id="resetLoginFailCount" parameterType="String">
+		update member set login_fail_cnt = 0, login_fail_datetime = null where id=#{id}
+	</update>
 
 </mapper>

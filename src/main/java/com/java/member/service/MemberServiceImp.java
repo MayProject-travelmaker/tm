@@ -2,9 +2,13 @@ package com.java.member.service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -37,7 +41,8 @@ public class MemberServiceImp implements MemberService{
 	private MemberDao memberDao;
 	@Inject
 	JavaMailSender mailSender;
-	
+	DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
 	// 회원가입
 	@Override
 	public void memberRegisterOk(ModelAndView mav) {
@@ -106,35 +111,67 @@ public class MemberServiceImp implements MemberService{
 	@Override
 	public void memberloginOk(ModelAndView mav) {
 		BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder(); // 비밀번호 암호화
-		Map<String,Object> map = mav.getModelMap();
+		Map<String, Object> map = mav.getModelMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
-		
+
 		String id = request.getParameter("id");
 		String password = request.getParameter("password"); // 암호화시킨 비밀번호
-		HashMap<String,Object> result = memberDao.loginOk(id, password);
-		if(result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD"))) {
+		HashMap<String, Object> result = memberDao.loginOk(id, password);
+		System.out.println("result : " + result);
+
+		// 로그인 실패 시간이 15분 지나있으면 로그인 실패횟수 0으로 초기화
+		if(result.get("LOGIN_FAIL_DATETIME") != null) {
+			try {
+				Date login_fail_datetime = format.parse(String.valueOf(result.get("LOGIN_FAIL_DATETIME")));
+				Date today = new Date();
+				long minute = (today.getTime()- login_fail_datetime.getTime()) / 60000;
+				// 최근 로그인 시간 - 현재시간 차이 구함
+				if(Math.abs(minute) >= 15) {
+					memberDao.resetLoginFailCount(id);	// 15분 이상 차이가 나면 로그인실패 횟수 0으로 초기화
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// 로그인 시도
+		result = memberDao.loginOk(id, password);
+		if (result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD"))) {
 			// 로그인 성공
+
+			// 로그인 실패 횟수 0으로 초기화
+			memberDao.resetLoginFailCount(id);
+
 			HttpSession session = request.getSession();
 			session.setAttribute("id", id); // 세션에 id 저장하기
 			session.setAttribute("memberLevel", result.get("MEMBER_LEVEL")); // 세션에 memberLevel 저장하기
-			
-			if(String.valueOf(result.get("MEMBER_LEVEL")).equals("4")) {
+
+			if (String.valueOf(result.get("MEMBER_LEVEL")).equals("4")) {
 				mav.addObject("message", "탈퇴한 회원입니다");
 				mav.setViewName("member/login");
-			} else if(String.valueOf(result.get("MEMBER_LEVEL")).equals("3")) {
+			} else if (String.valueOf(result.get("MEMBER_LEVEL")).equals("3")) {
 				mav.addObject("message", "차단된 회원입니다");
 				mav.setViewName("member/login");
-			}
-			else {
+			} else {
 				mav.setViewName("redirect:/");
 			}
+
+		} else if (result == null) {
+			// 존재하지 않는 회원
+			mav.addObject("message", "존재하지 않는 회원입니다");
+			mav.setViewName("member/login");
 		} else {
-			// 로그인 실패
-			// 아이디가 없거나 비밀번호가 match되지 않을경우 로그인 실패
-			mav.addObject("message","로그인이 실패했습니다.");
+			// 비밀번호 불일치
+			String str = String.valueOf(result.get("LOGIN_FAIL_CNT"));
+			int loginFailCount = Integer.parseInt(str);
+			loginFailCount++;
+			memberDao.loginFailCount(id);
+
+			mav.addObject("message", "로그인에 실패했습니다.");
+			mav.addObject("loginFailCount", loginFailCount);
 			mav.setViewName("member/login");
 		}
-		
+
 	}
 
 	// 회원정보 확인

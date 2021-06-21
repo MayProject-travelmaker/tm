@@ -2,6 +2,9 @@ package com.java.member.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.servlet.ModelAndView;
+
 import java.util.HashMap;
 
 import com.java.member.dto.MemberDto;
@@ -34,4 +37,9 @@ public interface MemberDao {
 	public int updateAuthKey(String id, String email, String authKey);
 
 	public int changePassword(String id, String password, String authKey);
+
+	// 로그인 실패 횟수
+	public int loginFailCount(String id);
+	// 로그인 실패 횟수 초기화
+	public int resetLoginFailCount(String id);
 }
