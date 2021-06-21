@@ -23,17 +23,25 @@
         <link href="${root}/resources/css/styles.css" rel="stylesheet" />
         
         <!-- Bootstrap core JS-->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- 구글 캡챠 -->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <!-- Core theme JS-->
         <script src="${root}/resources/js/scripts.js"></script>
+        <!-- 구글 캡챠 javascript -->
+        <script src="${root}/resources/js/member/reCaptcha.js"></script>
         <script type="text/javascript">
            $(function(){
               var loginMessage = "<c:out value="${message}"/>";
+              var loginFailCount = "<c:out value="${loginFailCount}"/>";
               if(loginMessage != ""){
                  alert(loginMessage)
               }
-           })
+              if(loginFailCount!=null && loginFailCount >= 5){
+            	  $(".g-recaptcha").css("display", "block");
+              }
+            })
         </script>
     </head>
     <body>
@@ -65,7 +73,7 @@
       <div class="col-lg-4"></div>
       <div class="col-lg-4">
          <div class="jumbotron" style="padding-top: 20px;">
-            <form method="post" action="loginOk.do">
+            <form method="post" action="loginOk.do" onsubmit="return reCaptcha();">
                <h3 style="text-align: center;">로그인</h3>
                <div class="form-group">
                <div align ="left">아이디</div>
@@ -80,6 +88,8 @@
                <span style="float: left;"><a href="findId.do">아이디 찾기</a></span>
                <span style="float: right;"><a href="findPassword.do">비밀번호 찾기</a></span>
                </div>
+      			<br/>
+                <div class="g-recaptcha" data-sitekey="6LfJuj4bAAAAAKVCO1bPW066-ur9Wtzl5O3J3rDM" style="display: none"></div>
             </form>
          </div>
       </div>
