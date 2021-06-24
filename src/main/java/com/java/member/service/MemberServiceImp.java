@@ -41,7 +41,7 @@ public class MemberServiceImp implements MemberService{
 	private MemberDao memberDao;
 	@Inject
 	JavaMailSender mailSender;
-	DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	// 회원가입
 	@Override
@@ -120,13 +120,19 @@ public class MemberServiceImp implements MemberService{
 		System.out.println("result : " + result);
 
 		// 로그인 실패 시간이 15분 지나있으면 로그인 실패횟수 0으로 초기화
-		if(result.get("LOGIN_FAIL_DATETIME") != null) {
+		if(result != null && result.get("LOGIN_FAIL_DATETIME") != null ) {
 			try {
 				Date login_fail_datetime = format.parse(String.valueOf(result.get("LOGIN_FAIL_DATETIME")));
 				Date today = new Date();
-				long minute = (today.getTime()- login_fail_datetime.getTime()) / 60000;
+				long minute = Math.abs((today.getTime()-login_fail_datetime.getTime()) / 60000);
+//				System.out.println("today =="+today.getTime());
+//				System.out.println("fail  =="+login_fail_datetime.getTime());
+//				System.out.println("타임스탬프 차이 =="+Math.abs((today.getTime()-login_fail_datetime.getTime())));
+//				System.out.println("시간차 분단위 ==" + minute);
+//				System.out.println("minute=="+Math.abs((today.getTime()-login_fail_datetime.getTime()) / 60000));
 				// 최근 로그인 시간 - 현재시간 차이 구함
-				if(Math.abs(minute) >= 15) {
+				if(minute >= 15) {
+					System.out.println("True");
 					memberDao.resetLoginFailCount(id);	// 15분 이상 차이가 나면 로그인실패 횟수 0으로 초기화
 				}
 			} catch (ParseException e) {
