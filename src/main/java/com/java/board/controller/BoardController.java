@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.java.board.dto.BoardDto;
@@ -99,7 +100,7 @@ public class BoardController {
 	
 	//글쓰기완료
 	@RequestMapping(value="/board/writeOk.do", method= RequestMethod.POST)
-	public ModelAndView boardWriteOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
+	public ModelAndView boardWriteOk(MultipartHttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request", request);
 		mav.addObject("boardDto", boardDto);
@@ -133,7 +134,7 @@ public class BoardController {
 	}
 	//글수정완료
 	@RequestMapping(value="/board/updateOk.do", method= RequestMethod.POST)
-	public ModelAndView boardUpdateOk(HttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
+	public ModelAndView boardUpdateOk(MultipartHttpServletRequest request, HttpServletResponse response, BoardDto boardDto) {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("request", request);

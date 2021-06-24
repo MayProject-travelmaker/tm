@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
 	http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
-	
+		
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
 	<!-- 스프링 데이터베이스  -->
@@ -111,7 +111,5 @@
             </props>
         </property>
     </bean>
-	
-	
 	
 </beans>

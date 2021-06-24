@@ -150,7 +150,7 @@
 								<tr>
 									<td class="border-right" width="100px">작성일</td>
 									<td><input type="text" class="form-control" name="writeDate"
-										value="${boardDto.writeDate}" disabled="disabled"></td>
+										value="<fmt:formatDate value="${boardDto.writeDate}" pattern="yyyy-MM-dd  HH:mm:ss" />" disabled="disabled"></td>
 								</tr>
 								<tr>
 									<td class="border-right">제목</td>

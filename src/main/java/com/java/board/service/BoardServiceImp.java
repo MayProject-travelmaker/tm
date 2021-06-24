@@ -262,6 +262,7 @@ public class BoardServiceImp implements BoardService {
 		BoardDto boardDto = boardDao.boardRead(boardNo);
 		MapDto mapDto = boardDao.mapRead(mapNo);
 		BoardFileDto boardFileDto = boardDao.fileRead(fileNo);
+		
 		// 채팅방 번호
 	 	int chatRoomNo = boardDao.findChatRoomByBoardNo(boardNo);
 		// 좋아요
@@ -298,6 +299,9 @@ public class BoardServiceImp implements BoardService {
 		BoardDto boardDto=boardDao.boardupdate(boardNo);
 		MapDto mapDto = boardDao.mapRead(mapNo);
 		BoardFileDto boardFileDto = boardDao.fileRead(fileNo);
+		
+		//content 개행문자 처리
+		boardDto.setContent(boardDto.getContent().replace("<br>","\r\n"));
 		
 		mav.addObject("boardDto", boardDto);
 		mav.addObject("boardNo", boardNo);
