@@ -153,7 +153,7 @@
 
 	<!-- 로그인 실패 횟수 증가  -->
 	<update id="loginFailCount" parameterType="String">
-		update member set login_fail_cnt = login_fail_cnt + 1, login_fail_datetime = SYSDATE + 1 where id=#{id}
+		update member set login_fail_cnt = login_fail_cnt + 1, login_fail_datetime = SYSDATE where id=#{id}
 	</update>
 	
 	<!-- 로그인 실패 횟수 초기화  -->
