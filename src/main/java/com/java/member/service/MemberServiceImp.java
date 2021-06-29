@@ -117,32 +117,42 @@ public class MemberServiceImp implements MemberService{
 		String id = request.getParameter("id");
 		String password = request.getParameter("password"); // 암호화시킨 비밀번호
 		HashMap<String, Object> result = memberDao.loginOk(id, password);
-		System.out.println("result : " + result);
-
-		// 로그인 실패 시간이 15분 지나있으면 로그인 실패횟수 0으로 초기화
+		System.out.println(result);
+		
+		// 존재하는 회원인 경우
 		if(result != null && result.get("LOGIN_FAIL_DATETIME") != null ) {
-			try {
-				Date login_fail_datetime = format.parse(String.valueOf(result.get("LOGIN_FAIL_DATETIME")));
-				Date today = new Date();
-				long minute = Math.abs((today.getTime()-login_fail_datetime.getTime()) / 60000);
-//				System.out.println("today =="+today.getTime());
-//				System.out.println("fail  =="+login_fail_datetime.getTime());
-//				System.out.println("타임스탬프 차이 =="+Math.abs((today.getTime()-login_fail_datetime.getTime())));
-//				System.out.println("시간차 분단위 ==" + minute);
-//				System.out.println("minute=="+Math.abs((today.getTime()-login_fail_datetime.getTime()) / 60000));
-				// 최근 로그인 시간 - 현재시간 차이 구함
-				if(minute >= 15) {
-					System.out.println("True");
-					memberDao.resetLoginFailCount(id);	// 15분 이상 차이가 나면 로그인실패 횟수 0으로 초기화
+			// 차단되지 않은 회원만 로그인 실패 시간이 15분 지나있으면 로그인 실패횟수 0으로 초기화
+			if(String.valueOf(result.get("IS_ENABLE")).equals("1")) {
+				try {
+					Date login_fail_datetime = format.parse(String.valueOf(result.get("LOGIN_FAIL_DATETIME")));
+					Date today = new Date();
+					long minute = Math.abs((today.getTime()-login_fail_datetime.getTime()) / 60000);
+					// 최근 로그인 시간 - 현재시간 차이 구함
+					if(minute >= 15) {
+						memberDao.resetLoginFailCount(id);	// 15분 이상 차이가 나면 로그인실패 횟수 0으로 초기화
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
-			} catch (ParseException e) {
-				e.printStackTrace();
+			} else {
+				// 계정이 잠겨있는 경우
+				try {
+					Date login_fail_datetime = format.parse(String.valueOf(result.get("LOGIN_FAIL_DATETIME")));
+					Date today = new Date();
+					long minute = Math.abs((today.getTime()-login_fail_datetime.getTime()) / 60000);
+					// 최근 로그인 실패 시간 - 현재시간 차이 구함
+					if(minute >= 5) {
+						memberDao.resetLoginFailCount(id);	// 5분이상 차이가나면 계정잠금 초기화
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
 		// 로그인 시도
 		result = memberDao.loginOk(id, password);
-		if (result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD"))) {
+		if (result != null && result.size() > 0 && cryptPassword.matches(password, (String) result.get("PASSWORD")) && String.valueOf(result.get("IS_ENABLE")).equals("1")) {
 			// 로그인 성공
 
 			// 로그인 실패 횟수 0으로 초기화
@@ -165,6 +175,10 @@ public class MemberServiceImp implements MemberService{
 		} else if (result == null) {
 			// 존재하지 않는 회원
 			mav.addObject("message", "존재하지 않는 회원입니다");
+			mav.setViewName("member/login");
+		} else if(String.valueOf(result.get("IS_ENABLE")).equals("0")) {
+			// 계정이 잠긴 회원
+			mav.addObject("message", "로그인 시도 횟수 초과로 인해 계정이 잠금되었습니다. 관리자에게 문의 부탁드립니다.");
 			mav.setViewName("member/login");
 		} else {
 			// 비밀번호 불일치
